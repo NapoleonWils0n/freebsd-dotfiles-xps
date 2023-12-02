@@ -1,0 +1,5700 @@
+#+TITLE: Freebsd Dotfiles
+#+STARTUP: overview hideblocks
+#+OPTIONS: num:nil author:nil
+#+PROPERTY: header-args :mkdirp yes
+* tangle dotfiles
+** tangle document
+
+C-c C-v t
+
+** tangle only one code block
+
+C-u C-c C-v t
+
+** tangle from the command line
+
+#+BEGIN_SRC sh
+emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/freebsd-dotfiles.org")'
+#+END_SRC
+
+* freebsd dotfiles
+:PROPERTIES:
+:VISIBILITY: children
+:END:
+** emacs
+*** emacs config
+**** init.el
+
+#+NAME: init.el
+#+BEGIN_SRC emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emacs init.el - also using early-init.el
+;; ----------------------------------------------------------------------------------
+
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+
+;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+;; package-selected-packages
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil)
+ '(custom-safe-themes
+   '("ffafb0e9f63935183713b204c11d22225008559fa62133a69848835f4f4a758c"
+     "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561"
+     "" default))
+ '(package-selected-packages
+   '(ednc async evil-collection google-translate elfeed-org elfeed-tub
+          elfeed-tube-mpv embark-consult emmet-mode evil-leader
+          fd-dired git-auto-commit-mode hydra iedit mpv ob-async rg s
+          shrink-path undo-tree marginalia orderless embark vertico
+          wgrep which-key yaml-mode doom-themes doom-modeline
+          nerd-icons))
+ '(warning-suppress-types '((comp))))
+
+;; require package
+(require 'package)
+
+;; package archive
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+;; package initialize
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(package-install-selected-packages)
+
+;; emacs aysnc - asynchronous compilation of your (M)elpa packages
+(async-bytecomp-package-mode 1)
+(setq async-bytecomp-allowed-packages '(all))
+
+;;(setq native-comp-deferred-compilation nil
+;;comp-enable-subr-trampolines nil)
+
+
+;; ----------------------------------------------------------------------------------
+;; general settings
+;; ----------------------------------------------------------------------------------
+
+;; Save all tempfiles in $TMPDIR/emacs$UID/                                                        
+(defconst emacs-tmp-dir (expand-file-name (format "emacs%d" (user-uid)) temporary-file-directory))
+(setq backup-directory-alist
+    `((".*" . ,emacs-tmp-dir)))
+(setq auto-save-file-name-transforms
+    `((".*" ,emacs-tmp-dir t)))
+(setq auto-save-list-file-prefix
+    emacs-tmp-dir)
+
+
+;; dont backup files opened by sudo or doas
+(setq backup-enable-predicate
+      (lambda (name)
+        (and (normal-backup-enable-predicate name)
+             (not
+              (let ((method (file-remote-p name 'method)))
+                (when (stringp method)
+                  (member method '("su" "sudo" "doas"))))))))
+
+
+;; save
+(save-place-mode 1)         ;; save cursor position
+(desktop-save-mode 0)       ;; dont save the desktop session
+(savehist-mode 1)           ;; save history
+(global-auto-revert-mode 1) ;; revert buffers when the underlying file has changed
+
+;; scrolling
+(pixel-scroll-precision-mode 1)
+
+
+;; ----------------------------------------------------------------------------------
+;; fonts
+;; ----------------------------------------------------------------------------------
+
+(defvar efs/default-font-size 180)
+(defvar efs/default-variable-font-size 180)
+
+
+;; ----------------------------------------------------------------------------------
+;; set-face-attribute
+;; ----------------------------------------------------------------------------------
+
+;; Set the default pitch face
+(set-face-attribute 'default nil :font "Fira Code" :height efs/default-font-size)
+
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height efs/default-font-size)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+
+;; tab bar background
+(set-face-attribute 'tab-bar nil
+                    :foreground "#93a1a1")
+
+;; active tab
+(set-face-attribute 'tab-bar-tab nil
+                    :foreground "#51AFEF")
+
+;; inactive tab
+(set-face-attribute 'tab-bar-tab-inactive nil
+                    :foreground "grey50")
+
+
+;; ----------------------------------------------------------------------------------
+;; doom-modeline 
+;; ----------------------------------------------------------------------------------
+
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+;; M-x nerd-icons-install-fonts
+(setq doom-modeline-icon t)
+
+;; doom modeline truncate text
+(setq doom-modeline-buffer-file-name-style 'truncate-except-project)
+
+;; hide the time icon
+(setq doom-modeline-time-icon nil)
+
+;; dont display the buffer encoding.
+(setq doom-modeline-buffer-encoding nil)
+
+
+;; ----------------------------------------------------------------------------------
+;; TAB bar mode 
+;; ----------------------------------------------------------------------------------
+
+(setq tab-bar-show 1)                     ;; hide bar if <= 1 tabs open
+(setq tab-bar-close-button-show nil)      ;; hide close tab button
+(setq tab-bar-new-button-show nil)        ;; hide new tab button
+(setq tab-bar-new-tab-choice "*scratch*") ;; default tab scratch
+(setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable) 
+(setq tab-bar-close-tab-select 'recent)
+(setq tab-bar-new-tab-to 'right)
+(setq tab-bar-tab-hints nil)
+(setq tab-bar-separator " ")
+
+;; Customize the tab bar format to add the global mode line string
+(setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator tab-bar-format-align-right tab-bar-format-global))
+
+;; menubar in tab bar
+(add-to-list 'tab-bar-format #'tab-bar-format-menu-bar)
+
+;; Turn on tab bar mode after startup
+(tab-bar-mode 1)
+
+;; tab bar menu bar button
+(setq tab-bar-menu-bar-button "👿")
+
+;; ----------------------------------------------------------------------------------
+;; evil
+;; ----------------------------------------------------------------------------------
+
+;; evil
+(setq evil-want-keybinding nil)
+
+;; fix tab in evil for org mode
+(setq evil-want-C-i-jump nil)
+
+;; evil
+(require 'evil)
+(evil-collection-init)
+(evil-mode 1)
+
+;; dired use h and l
+(evil-collection-define-key 'normal 'dired-mode-map
+    "e" 'dired-find-file
+    "h" 'dired-up-directory
+    "l" 'dired-find-file-mpv)
+
+
+;; ----------------------------------------------------------------------------------
+;; require
+;; ----------------------------------------------------------------------------------
+
+;; tree-sitter
+(require 'treesit)
+
+;; ob-async
+(require 'ob-async)
+
+;; which key
+(require 'which-key)
+(which-key-mode)
+
+;; undo tree
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+(setq undo-tree-visualizer-timestamps t)
+(setq undo-tree-visualizer-diff t)
+
+;;(require 'openwith)
+;;(setq openwith-associations
+;;      (list
+;;;;       (list (openwith-make-extension-regexp
+;;;;              '("mpg" "mpeg" "mp3" "mp4" "m4v"
+;;;;                "avi" "wmv" "wav" "mov" "flv"
+;;;;                "ogm" "ogg" "mkv" "webm"))
+;;;;          "mpv --fs --fs-screen=1"
+;;;;          '(file))
+;;       (list (openwith-make-extension-regexp
+;;              '("pdf"))
+;;             "evince"
+;;             '(file))))
+;;
+;;(openwith-mode 1)
+
+;; ----------------------------------------------------------------------------------
+;; tree-sitter
+;; ----------------------------------------------------------------------------------
+
+;; M-x treesit-install-language-grammar bash
+(add-to-list
+ 'treesit-language-source-alist
+ '(bash "https://github.com/tree-sitter/tree-sitter-bash.git"))
+
+;; sh-mode use bash-ts-mode
+(add-to-list 'major-mode-remap-alist
+             '(sh-mode . bash-ts-mode))
+
+
+;; treesitter explore open in side window
+(add-to-list 'display-buffer-alist
+   '("^*tree-sitter explorer *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.40)))
+
+
+;; ----------------------------------------------------------------------------------
+;; setq
+;; ----------------------------------------------------------------------------------
+
+;; general
+(setq version-control t)
+(setq vc-make-backup-files t)
+(setq backup-by-copying t)
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq create-lockfiles nil)
+(setq undo-tree-auto-save-history nil)
+
+;; pinentry
+(defvar epa-pinentry-mode)
+(setq epa-pinentry-mode 'loopback)
+
+;; display time in mode line, hide load average
+(setq display-time-format "%H:%M")
+(setq display-time-default-load-average nil)
+(display-time-mode 1)       ;; display time
+
+;; change prompt from yes or no, to y or n
+(setq use-short-answers t)
+
+;; turn off blinking cursor
+(setq blink-cursor-mode nil)
+
+;; suppress large file prompt
+(setq large-file-warning-threshold nil)
+
+;; always follow symlinks
+(setq vc-follow-symlinks t)
+
+;; case insensitive search
+(setq read-file-name-completion-ignore-case t)
+(setq completion-ignore-case t)
+
+;; M-n, M-p recall previous mini buffer commands
+(setq history-length 25)
+
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+
+;; revert dired and other buffers
+(setq global-auto-revert-non-file-buffers t)
+
+;; eww browser text width
+(setq shr-width 80)
+
+;; company auto complete
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 3)
+
+;; ediff
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+;; disable ring bell
+(setq ring-bell-function 'ignore)
+
+;; side windows
+(setq switch-to-buffer-obey-display-actions t)
+
+;; hippie expand
+(setq hippie-expand-try-functions-list
+      '(try-expand-all-abbrevs
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-dabbrev
+        try-expand-dabbrev-from-kill
+        try-expand-dabbrev-all-buffers
+        try-expand-list
+        try-expand-line
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
+
+;; ----------------------------------------------------------------------------------
+;; emacs 28 - dictionary server
+;; ----------------------------------------------------------------------------------
+
+(setq dictionary-server "dict.org")
+
+;; mandatory, as the dictionary misbehaves!
+(add-to-list 'display-buffer-alist
+   '("^\\*Dictionary\\*" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
+
+
+;; ----------------------------------------------------------------------------------
+;; functions
+;; ----------------------------------------------------------------------------------
+
+;; clear the kill ring
+(defun clear-kill-ring ()
+  "Clear the results on the kill ring."
+  (interactive)
+  (setq kill-ring nil))
+
+;; reload init.el
+(defun my-reload-init ()
+  "reload init.el"
+  (interactive)
+  (load-file "~/.config/emacs/init.el"))
+
+
+;; ----------------------------------------------------------------------------------
+;; completion
+;; ----------------------------------------------------------------------------------
+
+;; Vertico
+(require 'vertico)
+(require 'vertico-directory)
+
+(with-eval-after-load 'evil
+  (define-key vertico-map (kbd "C-j") 'vertico-next)
+  (define-key vertico-map (kbd "C-k") 'vertico-previous)
+  (define-key vertico-map (kbd "M-h") 'vertico-directory-up))
+
+;; Cycle back to top/bottom result when the edge is reached
+(customize-set-variable 'vertico-cycle t)
+
+;; Start Vertico
+(vertico-mode 1)
+
+;;; Marginalia
+(require 'marginalia)
+(customize-set-variable 'marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+(marginalia-mode 1)
+
+
+;; consult
+(global-set-key (kbd "C-s") 'consult-line)
+(define-key minibuffer-local-map (kbd "C-r") 'consult-history)
+
+;; remap switch-to-buffer "C-x b" to consult-buffer
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
+
+(setq completion-in-region-function #'consult-completion-in-region)
+
+;; consult-yank-pop
+(global-set-key (kbd "M-y") 'consult-yank-pop)
+
+;; It lets you use a new minibuffer when you're in the minibuffer
+(setq enable-recursive-minibuffers t)
+
+;;; Orderless
+
+;; Set up Orderless for better fuzzy matching
+(require 'orderless)
+(customize-set-variable 'completion-styles '(orderless basic))
+(customize-set-variable 'completion-category-overrides '((file (styles . (partial-completion)))))
+
+
+;;; Embark
+(require 'embark)
+(require 'embark-consult)
+
+(global-set-key [remap describe-bindings] #'embark-bindings)
+(global-set-key (kbd "C-,") 'embark-act)
+
+;; Use Embark to show bindings in a key prefix with `C-h`
+(setq prefix-help-command #'embark-prefix-help-command)
+
+(with-eval-after-load 'embark-consult
+  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; keymap-global-set
+;; ----------------------------------------------------------------------------------
+
+;; magit
+;;(keymap-global-set "C-x g" 'magit-status)
+
+;; org-capture
+(keymap-global-set "C-c c" 'org-capture)
+
+;; press M-/ and invoke hippie-expand
+(keymap-global-set "M-/" 'hippie-expand)
+
+;; window-toggle-side-windows
+(keymap-global-set "C-x x w" 'window-toggle-side-windows)
+
+;; ----------------------------------------------------------------------------------
+;; keymap-set
+;; ----------------------------------------------------------------------------------
+
+(keymap-set global-map "C-c o" 'iedit-mode)
+(keymap-set global-map "C-c l" 'org-store-link)
+(keymap-set global-map "C-c a" 'org-agenda)
+
+
+;; ----------------------------------------------------------------------------------
+;; dired 
+;; ----------------------------------------------------------------------------------
+
+;; Toggle Hidden Files in Emacs dired with C-x M-o
+(require 'dired-x)
+
+;; dired-async
+(autoload 'dired-async-mode "dired-async.el" nil t)
+(dired-async-mode 1)
+
+;; kill the current buffer when selecting a new directory to display
+(setq dired-kill-when-opening-new-dired-buffer t)
+
+;; dired directory listing options for ls
+(setq dired-use-ls-dired t)
+;; freebsd gls fix
+(setq insert-directory-program "/usr/local/bin/gls")
+(setq dired-listing-switches "-ahlv")
+
+;; hide dotfiles
+(setq dired-omit-mode t)
+
+;; recursive delete and copy
+(setq dired-recursive-copies 'always)
+(setq dired-recursive-deletes 'always)
+
+;; dired hide free space
+(setq dired-free-space nil)
+
+;; dired dwim
+(setq dired-dwim-target t)
+
+;; hide dotfiles
+(setq dired-omit-files
+      (concat dired-omit-files "\\|^\\..+$"))
+
+
+;; dired hide long listing by default
+(defun my-dired-mode-setup ()
+  "show less information in dired buffers"
+  (dired-hide-details-mode 1))
+(add-hook 'dired-mode-hook 'my-dired-mode-setup)
+
+;; dired omit
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+
+;; dired hide aync output buffer
+(add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+
+;; ob-async sentinel fix
+(defun no-hide-overlays (orig-fun &rest args)
+(setq org-babel-hide-result-overlays nil))
+(advice-add 'ob-async-org-babel-execute-src-block :before #'no-hide-overlays)
+
+;; ----------------------------------------------------------------------------------
+;; dired-fd
+;; ----------------------------------------------------------------------------------
+
+;; switch to buffer results automatically
+
+(defcustom fd-dired-display-in-current-window nil
+  "Whether display result"
+  :type 'boolean
+  :safe #'booleanp
+  :group 'fd-dired)
+
+
+;; ----------------------------------------------------------------------------------
+;; rip-grep
+;; ----------------------------------------------------------------------------------
+
+;; rip-grep automatically switch to results buffer
+;; https://github.com/dajva/rg.el/issues/142
+
+(with-eval-after-load 'rg
+  (advice-add 'rg-run :after
+              #'(lambda (_pattern _files _dir &optional _literal _confirm _flags) (pop-to-buffer (rg-buffer-name)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; tramp
+;; ----------------------------------------------------------------------------------
+
+;; tramp
+(require 'tramp)
+
+;; tramp setq
+(setq tramp-default-method "ssh")
+
+;; tramp ssh
+(tramp-set-completion-function "ssh"
+                               '((tramp-parse-sconfig "/etc/ssh_config")
+                                 (tramp-parse-sconfig "~/.ssh/config")))
+
+;; set tramp shell to bash to avoid zsh problems
+(setenv "SHELL" "/bin/sh")
+(setq tramp-allow-unsafe-temporary-files t)
+
+;; tramp backup directory
+(add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode
+;; ----------------------------------------------------------------------------------
+
+;; org mode
+(require 'org)
+(require 'org-tempo)
+(require 'org-protocol)
+(require 'org-capture)
+(setq org-agenda-files '("~/git/personal/org/"))
+
+;; org babel supress do you want to execute code message
+(setq org-confirm-babel-evaluate nil
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t)
+
+;; org hide markup
+(setq org-hide-emphasis-markers t)
+
+;; org column spacing for tags
+(setq org-tags-column 0)
+
+;; dont indent src block for export
+(setq org-src-preserve-indentation t)
+
+;; org src to use the current window
+(setq org-src-window-setup 'current-window)
+
+;; dont show images full size
+(setq org-image-actual-width nil)
+
+;; prevent demoting heading also shifting text inside sections
+(setq org-adapt-indentation nil)
+
+;; asynchronous tangle
+(setq org-export-async-debug t)
+
+(setq org-capture-templates
+    '(("w" "web site" entry
+      (file+olp "~/git/personal/bookmarks/bookmarks.org" "sites")
+      "** [[%c][%^{link-description}]]"
+       :empty-lines-after 1)))
+
+;; refile
+(setq org-refile-targets '((nil :maxlevel . 2)
+                                (org-agenda-files :maxlevel . 2)))
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+
+;; ox-pandoc export
+(setq org-pandoc-options-for-latex-pdf '((latex-engine . "xelatex")))
+
+;; Prepare stuff for org-export-backends
+(setq org-export-backends '(org md html latex icalendar odt ascii))
+
+;; todo keywords
+(setq org-todo-keywords
+      '((sequence "TODO(t@/!)" "IN-PROGRESS(p/!)" "WAITING(w@/!)" "|" "DONE(d@)")))
+(setq org-log-done t)
+
+;; Fast Todo Selection - Changing a task state is done with C-c C-t KEY
+(setq org-use-fast-todo-selection t)
+
+;; org todo logbook
+(setq org-log-into-drawer t)
+
+;; org open files
+(setq org-file-apps
+     (quote
+     ((auto-mode . emacs)
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default)
+     ("\\.mkv\\'" . "mpv %s")
+     ("\\.mp4\\'" . "mpv %s")
+     ("\\.mov\\'" . "mpv %s")
+     ("\\.pdf\\'" . default))))
+
+  
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-link ((t (:inherit link :underline nil)))))
+
+(defadvice org-capture
+    (after make-full-window-frame activate)
+  "Advise capture to be the only window when used as a popup"
+  (if (equal "emacs-capture" (frame-parameter nil 'name))
+      (delete-other-windows)))
+
+(defadvice org-capture-finalize
+    (after delete-capture-frame activate)
+  "Advise capture-finalize to close the frame"
+  (if (equal "emacs-capture" (frame-parameter nil 'name))
+      (delete-frame)))
+
+; org-babel shell script
+(org-babel-do-load-languages
+'org-babel-load-languages
+'((shell . t))) 
+
+;; yank-media--registered-handlers org mode
+(with-eval-after-load 'org
+  (setq yank-media--registered-handlers '(("image/.*" . #'org-mode--image-yank-handler))))
+
+;; org mode image yank handler
+(yank-media-handler "image/.*" #'org-mode--image-yank-handler)
+
+;; org-mode insert image as file link from the clipboard
+(defun org-mode--image-yank-handler (type image)
+  (let ((file (read-file-name (format "Save %s image to: " type))))
+    (when (file-directory-p file)
+      (user-error "%s is a directory"))
+    (when (and (file-exists-p file)
+               (not (yes-or-no-p (format "%s exists; overwrite?" file))))
+      (user-error "%s exists"))
+    (with-temp-buffer
+      (set-buffer-multibyte nil)
+      (insert image)
+      (write-region (point-min) (point-max) file))
+    (insert (format "[[file:%s]]\n" (file-relative-name file)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; mutt
+;; ----------------------------------------------------------------------------------
+
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; add-hook
+;; ----------------------------------------------------------------------------------
+
+;; Make shebang (#!) file executable when saved
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+
+;; global company mode
+;;(add-hook 'after-init-hook 'global-company-mode)
+
+;; visual line mode
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+;; h1 line mode
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+
+;; flycheck syntax linting
+(add-hook 'sh-mode-hook 'flycheck-mode)
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv.el
+;; ----------------------------------------------------------------------------------
+
+;; mpv-default-options play fullscreen on second display
+(setq mpv-default-options '("--fs" "--fs-screen=1"))
+
+;; org-link-set-parameters
+;;(org-link-set-parameters "mpv" :follow #'mpv-play)
+;;(defun org-mpv-complete-link (&optional arg)
+;;  (replace-regexp-in-string
+;;   "file:" "mpv:"
+;;   (org-link-complete-file arg)
+;;   t t))
+
+(defun org-mpv-complete-link (&optional arg)
+  (replace-regexp-in-string
+   "file:" "mpv:"
+   (org-link-complete-file arg)
+   t t))
+(org-link-set-parameters "mpv"
+  :follow #'mpv-play :complete #'org-mpv-complete-link)
+
+;; M-RET will insert a new item with the timestamp of the current playback position
+(defun my:mpv/org-metareturn-insert-playback-position ()
+  (when-let ((item-beg (org-in-item-p)))
+    (when (and (not org-timer-start-time)
+               (mpv-live-p)
+               (save-excursion
+                 (goto-char item-beg)
+                 (and (not (org-invisible-p)) (org-at-item-timer-p))))
+      (my/mpv-insert-playback-position t))))
+(add-hook 'org-metareturn-hook #'my:mpv/org-metareturn-insert-playback-position)
+
+;; mpv insert playback position
+(with-eval-after-load 'mpv
+  (defun my/mpv-insert-playback-position (&optional arg)
+    "Insert the current playback position at point.
+
+  When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
+    (interactive "P")
+    (let ((time (mpv-get-playback-position)))
+      (funcall
+       (if arg #'mpv--position-insert-as-org-item #'insert)
+       (my/org-timer-secs-to-hms (float time))))))
+
+
+;; seek to position
+(with-eval-after-load 'mpv
+  (defun my/mpv-seek-to-position-at-point ()
+    "Jump to playback position as inserted by `mpv-insert-playback-position'.
+
+  This can be used with the `org-open-at-point-functions' hook."
+    (interactive)
+    (save-excursion
+      (skip-chars-backward ":[:digit:]" (point-at-bol))
+      (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}\\([.]?[0-9]\\{0,3\\}\\)"))
+        (let ((secs (my/org-timer-hms-to-secs (match-string 0))))
+          (when (>= secs 0)
+            (mpv-seek secs))))))
+
+;; mpv seek to position at point
+(keymap-set global-map "C-x ," 'my/mpv-seek-to-position-at-point)
+
+
+;; ----------------------------------------------------------------------------------
+;; org-timer milliseconds for mpv
+;; ----------------------------------------------------------------------------------
+
+;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun my/org-timer-secs-to-hms (s)
+    "Convert integer S into hh:mm:ss.m
+  If the integer is negative, the string will start with \"-\"."
+    (let (sign m h)
+      (setq x (number-to-string s)
+            seconds (car (split-string x "[.]"))
+            milliseconds (cadr (split-string x "[.]"))
+            sec (string-to-number seconds)
+            ms (string-to-number milliseconds))
+      (setq sign (if (< sec 0) "-" "")
+          sec (abs sec)
+          m (/ sec 60) sec (- sec (* 60 m))
+          h (/ m 60) m (- m (* 60 h)))
+      (format "%s%02d:%02d:%02d.%02d" sign h m sec ms))))
+
+;; org-timer covert hours, minutes, seconds, milliseconds to seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun my/org-timer-hms-to-secs (hms)
+    "Convert h:mm:ss string to an integer time.
+  If the string starts with a minus sign, the integer will be negative."
+    (if (not (string-match
+            "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\([.]?[0-9]\\{0,3\\}\\)"
+            hms))
+        0
+      (let* ((h (string-to-number (match-string 1 hms)))
+           (m (string-to-number (match-string 2 hms)))
+           (s (string-to-number (match-string 3 hms)))
+           (ms (string-to-number (match-string 4 hms)))
+           (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+        (setq h (abs h))
+        (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv commands
+;; ----------------------------------------------------------------------------------
+
+;; frame step forward
+(with-eval-after-load 'mpv
+  (defun mpv-frame-step ()
+    "Step one frame forward."
+    (interactive)
+    (mpv--enqueue '("frame-step") #'ignore)))
+
+
+;; frame step backward
+(with-eval-after-load 'mpv
+  (defun mpv-frame-back-step ()
+    "Step one frame backward."
+    (interactive)
+    (mpv--enqueue '("frame-back-step") #'ignore)))
+
+
+;; mpv take a screenshot
+(with-eval-after-load 'mpv
+  (defun mpv-screenshot ()
+    "Take a screenshot"
+    (interactive)
+    (mpv--enqueue '("screenshot") #'ignore)))
+
+
+;; mpv show osd
+(with-eval-after-load 'mpv
+  (defun mpv-osd ()
+    "Show the osd"
+    (interactive)
+    (mpv--enqueue '("set_property" "osd-level" "3") #'ignore)))
+
+
+;; add a newline in the current document
+(defun end-of-line-and-indented-new-line ()
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv dired
+;; ----------------------------------------------------------------------------------
+
+;; video and audio mime types
+(defvar supported-mime-types
+  '("video/quicktime"
+    "video/x-matroska"
+    "video/mp4"
+    "video/webm"
+    "video/x-m4v"
+    "video/x-msvideo"
+    "audio/x-wav"
+    "audio/mpeg"
+    "audio/x-hx-aac-adts"
+    "audio/mp4"
+    "audio/flac"
+    "audio/ogg"))
+
+;; subr-x
+(load "subr-x")
+
+;; get files mime type
+(defun get-mimetype (filepath)
+  (string-trim
+   (shell-command-to-string (concat "file -b --mime-type "
+                                    (shell-quote-argument filepath)))))
+
+;; dired-find-file-mpv
+(defun dired-find-file-mpv ()
+  "Start an mpv process playing the file at PATH append subsequent files to the playlist"
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (member (get-mimetype file) supported-mime-types)
+        (mpv-play-dired file)
+      (dired-find-file))))
+
+
+;; mpv-play-dired
+(with-eval-after-load 'mpv
+  (defun mpv-play-dired (path)
+  "Start an mpv process playing the file at PATH append subsequent files to the playlist"
+    (if (not mpv--process)
+        ;; mpv isnt running play file
+        (mpv-start (expand-file-name path))
+        ;; mpv running append file to playlist
+      (mpv--playlist-append (expand-file-name path)))))
+
+
+;; mpv play dired marked files
+(defun mpv-play-marked-files ()
+  "Play marked files with mpv"
+  (interactive)
+  (mapc 'mpv-play-dired (dired-get-marked-files nil nil nil t)))
+
+;; mpv dired embark
+(with-eval-after-load 'embark
+  (define-key embark-file-map "l" #'mpv-play-marked-files))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv eww
+;; ----------------------------------------------------------------------------------
+
+(defun mpv-play-eww ()
+  "Start an mpv process playing the video stream at URL."
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+  (unless (mpv--url-p url)
+    (user-error "Invalid argument: `%s' (must be a valid URL)" url))
+  (if (not mpv--process)
+      ;; mpv isnt running play file
+      (mpv-start url)
+      ;; mpv running append file to playlist
+    (mpv--playlist-append url))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "l" 'mpv-play-eww)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww pinch
+;; ----------------------------------------------------------------------------------
+
+(defun eww-pinch ()
+  "Send the url under the point to mpd with pinch"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "pinch -i " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "n" 'eww-pinch)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww taskspooler yt-dlp
+;; ----------------------------------------------------------------------------------
+
+(defun eww-yt-dlp ()
+  "Send the url under the point to taskspooler and yt-dlp"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "tsp yt-dlp -P ${HOME}/Downloads " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "x" 'eww-yt-dlp)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww taskspooler aria2c
+;; ----------------------------------------------------------------------------------
+
+(defun eww-aria2c ()
+  "Send the url under the point to taskspooler and aria2c"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "tsp aria2c -d ${HOME}/Downloads " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "b" 'eww-aria2c)
+
+
+;; ----------------------------------------------------------------------------------
+;; hydra
+;; ----------------------------------------------------------------------------------
+
+(defhydra hydra-mpv (global-map "<f2>")
+  "
+  ^Seek^                    ^Actions^                ^General^                       ^Playlists^
+  ^^^^^^^^-----------------------------------------------------------------------------------------------------------
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position   _n_: next item in playlist
+  _j_: seek back -60        _._: forward frame       _m_: insert a newline           _p_: previous item in playlist
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot          _e_: jump to playlist entry
+  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd               _r_: remove playlist entry
+  ^
+  "
+  ("h" mpv-seek-backward "-5")
+  ("j" mpv-seek-backward "-60")
+  ("k" mpv-seek-forward "60")
+  ("l" mpv-seek-forward "5")
+  ("," mpv-frame-back-step)
+  ("." mpv-frame-step)
+  ("SPC" mpv-pause)
+  ("q" mpv-kill)
+  ("i" my/mpv-insert-playback-position)
+  ("m" end-of-line-and-indented-new-line)
+  ("s" mpv-screenshot)
+  ("o" mpv-osd)
+  ("n" mpv-playlist-next)
+  ("p" mpv-playlist-prev)
+  ("e" mpv-jump-to-playlist-entry)
+  ("r" mpv-remove-playlist-entry))
+
+
+;; ----------------------------------------------------------------------------------
+;; emacs desktop notification center
+;; ----------------------------------------------------------------------------------
+
+;; start ednc-mode
+(ednc-mode 1)
+
+(defun show-notification-in-buffer (old new)
+  (let ((name (format "Notification %d" (ednc-notification-id (or old new)))))
+    (with-current-buffer (get-buffer-create name)
+      (if new (let ((inhibit-read-only t))
+                (if old (erase-buffer) (ednc-view-mode))
+                (insert (ednc-format-notification new t))
+                (pop-to-buffer (current-buffer)))
+        (kill-buffer)))))
+
+
+;; notifications hook
+(add-hook 'ednc-notification-presentation-functions
+          #'show-notification-in-buffer)
+
+;; open notifications in side window
+(add-to-list 'display-buffer-alist
+   '("^Notification *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
+
+;; ednc evil - normal mode
+(defun noevil ()
+  (evil-define-key 'normal ednc-view-mode-map "d" 'ednc-dismiss-notification)
+  (evil-define-key 'normal ednc-view-mode-map (kbd "RET") 'ednc-invoke-action)
+)
+
+(add-hook 'ednc-view-mode-hook 'noevil)
+
+; ----------------------------------------------------------------------------------
+;; elfeed
+;; ----------------------------------------------------------------------------------
+
+; elfeed
+(require 'elfeed)
+(require 'elfeed-org)
+(elfeed-org)
+(setq elfeed-db-directory "~/.config/emacs/elfeed") ;; elfeed db location
+(setq rmh-elfeed-org-files (list "~/git/personal/feeds/feeds.org"))
+(global-set-key (kbd "C-x w") 'elfeed)
+
+(require 'elfeed-tube)
+(elfeed-tube-setup)
+(define-key elfeed-show-mode-map (kbd "F") 'elfeed-tube-fetch)
+(define-key elfeed-show-mode-map [remap save-buffer] 'elfeed-tube-save)
+(define-key elfeed-search-mode-map (kbd "F") 'elfeed-tube-fetch)
+(define-key elfeed-search-mode-map [remap save-buffer] 'elfeed-tube-save)
+
+(require 'elfeed-tube-mpv)
+(define-key elfeed-show-mode-map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
+(define-key elfeed-show-mode-map (kbd "C-c C-w") 'elfeed-tube-mpv-where)
+
+;; play video with mpv
+(define-key elfeed-show-mode-map (kbd "C-c C-d") 'elfeed-tube-mpv)
+
+;; mpv play fullscreen on second display
+(setq elfeed-tube-mpv-options
+  '("--force-window=yes" "--fs" "--fs-screen=1"))
+
+; elfeed evil
+(add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
+(add-to-list 'evil-motion-state-modes 'elfeed-show-mode)
+
+;; evil elfeed-search-mode-map
+(evil-collection-define-key 'normal 'elfeed-search-mode-map
+     "l" 'elfeed-search-show-entry        ;; l opens entry
+     "s" #'prot-elfeed-search-tag-filter  ;; s prot search tags
+     "R" 'elfeed-mark-all-as-read         ;; R mark all as read
+     "u" 'elfeed-update                   ;; u elfeed update
+     "b" #'elfeed-search-browse-url       ;; b open in browser
+     "r" 'elfeed-search-untag-all-unread) ;; r mark as read
+
+
+;; evil elfeed-show-mode-map
+(evil-collection-define-key 'normal 'elfeed-show-mode-map
+     "b" #'shr-browse-url)                ;; b open in browser
+
+; elfeed search filter 
+(setq-default elfeed-search-filter "@1-week-ago +unread")
+
+; mark all as read
+(defun elfeed-mark-all-as-read ()
+      (interactive)
+      (mark-whole-buffer)
+      (elfeed-search-untag-all-unread))
+
+
+;; ----------------------------------------------------------------------------------
+;; prot elfeed - requires ~/.config/emacs/lisp/prot-common.el
+;; ----------------------------------------------------------------------------------
+
+(eval-when-compile (require 'subr-x))
+;;(require 'elfeed nil t)
+(require 'url-util)
+(require 'prot-common)
+
+(defgroup prot-elfeed ()
+  "Personal extensions for Elfeed."
+  :group 'elfeed)
+
+;;;; Utilities
+(defvar prot-elfeed--tag-hist '()
+  "History of inputs for `prot-elfeed-toggle-tag'.")
+
+(defun prot-elfeed--character-prompt (tags)
+  "Helper of `prot-elfeed-toggle-tag' to read TAGS."
+  (let ((def (car prot-elfeed--tag-hist)))
+    (completing-read
+     (format "Toggle tag [%s]: " def)
+     tags nil t nil 'prot-elfeed--tag-hist def)))
+
+(defvar elfeed-show-entry)
+(declare-function elfeed-tagged-p "elfeed")
+(declare-function elfeed-search-toggle-all "elfeed")
+(declare-function elfeed-show-tag "elfeed")
+(declare-function elfeed-show-untag "elfeed")
+
+;;;###autoload
+(defun prot-elfeed-toggle-tag (tag)
+  "Toggle TAG for the current item.
+
+When the region is active in the `elfeed-search-mode' buffer, all
+entries encompassed by it are affected.  Otherwise the item at
+point is the target.  For `elfeed-show-mode', the current entry
+is always the target.
+
+The list of tags is provided by `prot-elfeed-search-tags'."
+  (interactive
+   (list
+    (intern
+     (prot-elfeed--character-prompt prot-elfeed-search-tags))))
+  (if (derived-mode-p 'elfeed-show-mode)
+      (if (elfeed-tagged-p tag elfeed-show-entry)
+          (elfeed-show-untag tag)
+        (elfeed-show-tag tag))
+    (elfeed-search-toggle-all tag)))
+
+(defvar elfeed-show-truncate-long-urls)
+(declare-function elfeed-entry-title "elfeed")
+(declare-function elfeed-show-refresh "elfeed")
+
+;;;; General commands
+(defvar elfeed-search-filter-active)
+(defvar elfeed-search-filter)
+(declare-function elfeed-db-get-all-tags "elfeed")
+(declare-function elfeed-search-update "elfeed")
+(declare-function elfeed-search-clear-filter "elfeed")
+
+(defun prot-elfeed--format-tags (tags sign)
+  "Prefix SIGN to each tag in TAGS."
+  (mapcar (lambda (tag)
+            (format "%s%s" sign tag))
+          tags))
+
+;;;###autoload
+(defun prot-elfeed-search-tag-filter ()
+  "Filter Elfeed search buffer by tags using completion.
+
+Completion accepts multiple inputs, delimited by `crm-separator'.
+Arbitrary input is also possible, but you may have to exit the
+minibuffer with something like `exit-minibuffer'."
+  (interactive)
+  (unwind-protect
+      (elfeed-search-clear-filter)
+    (let* ((elfeed-search-filter-active :live)
+           (db-tags (elfeed-db-get-all-tags))
+           (plus-tags (prot-elfeed--format-tags db-tags "+"))
+           (minus-tags (prot-elfeed--format-tags db-tags "-"))
+           (all-tags (delete-dups (append plus-tags minus-tags)))
+           (tags (completing-read-multiple
+                  "Apply one or more tags: "
+                  all-tags #'prot-common-crm-exclude-selected-p t))
+           (input (string-join `(,elfeed-search-filter ,@tags) " ")))
+      (setq elfeed-search-filter input))
+    (elfeed-search-update :force)))
+
+(provide 'prot-elfeed)
+
+;; ----------------------------------------------------------------------------------
+;; mpc
+;; ----------------------------------------------------------------------------------
+
+;; mpd host
+(setq mpc-host "/home/djwilcox/.config/mpd/socket")
+
+
+;; ----------------------------------------------------------------------------------
+;; garbage collection
+;; ----------------------------------------------------------------------------------
+
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
+#+END_SRC
+
+**** early-init.el
+
+#+NAME: early-init.el
+#+begin_src emacs-lisp
+;;; early-init.el -*- lexical-binding: t; -*-
+
+;;; Garbage collection
+;; Increase the GC threshold for faster startup
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq gc-cons-threshold (* 50 1000 1000))
+
+;;; UI configuration
+;; Remove some unneeded UI elements (the user can turn back on anything they wish)
+(setq inhibit-startup-message t)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;; general settings
+(setq initial-scratch-message nil)
+
+;; Don’t compact font caches during GC.
+(setq inhibit-compacting-font-caches t)
+
+;; load theme
+(add-hook 'after-init-hook (lambda () (load-theme 'doom-solarized-dark)))
+
+;; start the initial frame maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+;; start every frame maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;;Tell emacs where is your personal elisp lib dir
+(add-to-list 'load-path "~/.config/emacs/lisp/")
+
+;; Make the initial buffer load faster by setting its mode to fundamental-mode
+(customize-set-variable 'initial-major-mode 'fundamental-mode)
+#+end_src
+
+**** bookmarks config
+
+#+NAME: emacs-bookmarks
+#+BEGIN_SRC emacs-lisp
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("bookmarks"
+ (filename . "~/git/personal/bookmarks/bookmarks.org")
+ (front-context-string . "#+STARTUP: overv")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 25703 35089 410375 479000))
+("feeds"
+ (filename . "~/git/personal/feeds/feeds.org")
+ (front-context-string . "* elfeed :elfeed")
+ (rear-context-string . "TARTUP: content\n")
+ (position . 20)
+ (last-modified 25692 54791 894815 365000))
+("dotfiles"
+ (filename . "~/git/fedora/fedora-dotfiles/fedora-dotfiles.org")
+ (front-context-string . "* fedora dotfile")
+ (rear-context-string . "g\")'\n#+end_src\n\n")
+ (position . 374))
+("org-refile-last-stored"
+ (filename . "~/git/personal/org/web.org")
+ (front-context-string . "** [[https://its")
+ (rear-context-string . "lview\" program.\n")
+ (position . 173198))
+("root"
+ (filename . "/")
+ (front-context-string . "bin -> usr/bin\n ")
+ (rear-context-string . " 7 Oct 30 23:23 ")
+ (position . 197))
+("home"
+ (filename . "~/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . " 3 Oct 30 23:26 ")
+ (position . 178))
+("desktop"
+ (filename . "~/Desktop/")
+ (front-context-string . "zshrc-linux\n  -r")
+ (rear-context-string . "45 Jan 18 17:53 ")
+ (position . 236)
+ (annotation . ""))
+("cerberus"
+ (filename . "~/git/cerberus/")
+ (front-context-string . "7zip\n  drwxr-xr-")
+ (rear-context-string . "96 Jan  4  2016 ")
+ (position . 249))
+)
+#+END_SRC
+
+**** lisp
+***** prot-common
+
+#+NAME: prot-common
+#+BEGIN_SRC emacs-lisp
+;;; prot-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
+
+;; Copyright (C) 2020-2023  Protesilaos Stavrou
+
+;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; URL: https://protesilaos.com/emacs/dotemacs
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "30.1"))
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; Common functions for my Emacs: <https://protesilaos.com/emacs/dotemacs/>.
+;;
+;; Remember that every piece of Elisp that I write is for my own
+;; educational and recreational purposes.  I am not a programmer and I
+;; do not recommend that you copy any of this if you are not certain of
+;; what it does.
+
+;;; Code:
+
+(eval-when-compile
+  (require 'subr-x))
+
+(defgroup prot-common ()
+  "Auxiliary functions for my dotemacs."
+  :group 'editing)
+
+;;;###autoload
+(defun prot-common-number-even-p (n)
+  "Test if N is an even number."
+  (if (numberp n)
+      (= (% n 2) 0)
+    (error "%s is not a number" n)))
+
+;;;###autoload
+(defun prot-common-number-integer-p (n)
+  "Test if N is an integer."
+  (if (integerp n)
+      n
+    (error "%s is not an integer" n)))
+
+;;;###autoload
+(defun prot-common-number-integer-positive-p (n)
+  "Test if N is a positive integer."
+  (if (prot-common-number-integer-p n)
+      (> n 0)
+    (error "%s is not a positive integer" n)))
+
+;; Thanks to Gabriel for providing a cleaner version of
+;; `prot-common-number-negative': <https://github.com/gabriel376>.
+;;;###autoload
+(defun prot-common-number-negative (n)
+  "Make N negative."
+  (if (and (numberp n) (> n 0))
+      (* -1 n)
+    (error "%s is not a valid positive number" n)))
+
+;;;###autoload
+(defun prot-common-reverse-percentage (number percent change-p)
+  "Determine the original value of NUMBER given PERCENT.
+
+CHANGE-P should specify the increase or decrease.  For simplicity,
+nil means decrease while non-nil stands for an increase.
+
+NUMBER must satisfy `numberp', while PERCENT must be `natnump'."
+  (unless (numberp number)
+    (user-error "NUMBER must satisfy numberp"))
+  (unless (natnump percent)
+    (user-error "PERCENT must satisfy natnump"))
+  (let* ((pc (/ (float percent) 100))
+         (pc-change (if change-p (+ 1 pc) pc))
+         (n (if change-p pc-change (float (- 1 pc-change)))))
+    ;; FIXME 2021-12-21: If float, round to 4 decimal points.
+    (/ number n)))
+
+;;;###autoload
+(defun prot-common-percentage-change (n-original n-final)
+  "Find percentage change between N-ORIGINAL and N-FINAL numbers.
+
+When the percentage is not an integer, it is rounded to 4
+floating points: 16.666666666666664 => 16.667."
+  (unless (numberp n-original)
+    (user-error "N-ORIGINAL must satisfy numberp"))
+  (unless (numberp n-final)
+    (user-error "N-FINAL must satisfy numberp"))
+  (let* ((difference (float (abs (- n-original n-final))))
+         (n (* (/ difference n-original) 100))
+         (round (floor n)))
+    ;; FIXME 2021-12-21: Any way to avoid the `string-to-number'?
+    (if (> n round) (string-to-number (format "%0.4f" n)) round)))
+
+;; REVIEW 2023-04-07 07:43 +0300: I just wrote the conversions from
+;; seconds.  Hopefully they are correct, but I need to double check.
+(defun prot-common-seconds-to-minutes (seconds)
+  "Convert a number representing SECONDS to MM:SS notation."
+  (let ((minutes (/ seconds 60))
+        (seconds (% seconds 60)))
+    (format "%.2d:%.2d" minutes seconds)))
+
+(defun prot-common-seconds-to-hours (seconds)
+  "Convert a number representing SECONDS to HH:MM:SS notation."
+  (let* ((hours (/ seconds 3600))
+         (minutes (/ (% seconds 3600) 60))
+         (seconds (% seconds 60)))
+    (format "%.2d:%.2d:%.2d" hours minutes seconds)))
+
+;;;###autoload
+(defun prot-common-seconds-to-minutes-or-hours (seconds)
+  "Convert SECONDS to either minutes or hours, depending on the value."
+  (if (> seconds 3599)
+      (prot-common-seconds-to-hours seconds)
+    (prot-common-seconds-to-minutes seconds)))
+
+;;;###autoload
+(defun prot-common-rotate-list-of-symbol (symbol)
+  "Rotate list value of SYMBOL by moving its car to the end.
+Return the first element before performing the rotation.
+
+This means that if `sample-list' has an initial value of `(one
+two three)', this function will first return `one' and update the
+value of `sample-list' to `(two three one)'.  Subsequent calls
+will continue rotating accordingly."
+  (unless (symbolp symbol)
+    (user-error "%s is not a symbol" symbol))
+  (when-let* ((value (symbol-value symbol))
+              (list (and (listp value) value))
+              (first (car list)))
+    (set symbol (append (cdr list) (list first)))
+    first))
+
+;;;###autoload
+(defun prot-common-empty-buffer-p ()
+  "Test whether the buffer is empty."
+  (or (= (point-min) (point-max))
+      (save-excursion
+        (goto-char (point-min))
+        (while (and (looking-at "^\\([a-zA-Z]+: ?\\)?$")
+                    (zerop (forward-line 1))))
+        (eobp))))
+
+;;;###autoload
+(defun prot-common-minor-modes-active ()
+  "Return list of active minor modes for the current buffer."
+  (let ((active-modes))
+    (mapc (lambda (m)
+            (when (and (boundp m) (symbol-value m))
+              (push m active-modes)))
+          minor-mode-list)
+    active-modes))
+
+;;;###autoload
+(defun prot-common-truncate-lines-silently ()
+  "Toggle line truncation without printing messages."
+  (let ((inhibit-message t))
+    (toggle-truncate-lines t)))
+
+;;;###autoload
+(defun prot-common-disable-hl-line ()
+  "Disable Hl-Line-Mode (for hooks)."
+  (hl-line-mode -1))
+
+;;;###autoload
+(defun prot-common-window-bounds ()
+  "Determine start and end points in the window."
+  (list (window-start) (window-end)))
+
+;;;###autoload
+(defun prot-common-page-p ()
+  "Return non-nil if there is a `page-delimiter' in the buffer."
+  (or (save-excursion (re-search-forward page-delimiter nil t))
+      (save-excursion (re-search-backward page-delimiter nil t))))
+
+;;;###autoload
+(defun prot-common-read-data (file)
+  "Read Elisp data from FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (read (current-buffer))))
+
+;; Thanks to Omar Antolín Camarena for providing this snippet!
+;;;###autoload
+(defun prot-common-completion-table (category candidates)
+  "Pass appropriate metadata CATEGORY to completion CANDIDATES.
+
+This is intended for bespoke functions that need to pass
+completion metadata that can then be parsed by other
+tools (e.g. `embark')."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (category . ,category))
+      (complete-with-action action candidates string pred))))
+
+;; Thanks to Igor Lima for the `prot-common-crm-exclude-selected-p':
+;; <https://github.com/0x462e41>.
+;; This is used as a filter predicate in the relevant prompts.
+(defvar crm-separator)
+
+;;;###autoload
+(defun prot-common-crm-exclude-selected-p (input)
+  "Filter out INPUT from `completing-read-multiple'.
+Hide non-destructively the selected entries from the completion
+table, thus avoiding the risk of inputting the same match twice.
+
+To be used as the PREDICATE of `completing-read-multiple'."
+  (if-let* ((pos (string-match-p crm-separator input))
+            (rev-input (reverse input))
+            (element (reverse
+                      (substring rev-input 0
+                                 (string-match-p crm-separator rev-input))))
+            (flag t))
+      (progn
+        (while pos
+          (if (string= (substring input 0 pos) element)
+              (setq pos nil)
+            (setq input (substring input (1+ pos))
+                  pos (string-match-p crm-separator input)
+                  flag (when pos t))))
+        (not flag))
+    t))
+
+;; The `prot-common-line-regexp-p' and `prot-common--line-regexp-alist'
+;; are contributed by Gabriel: <https://github.com/gabriel376>.  They
+;; provide a more elegant approach to using a macro, as shown further
+;; below.
+(defvar prot-common--line-regexp-alist
+  '((empty . "[\s\t]*$")
+    (indent . "^[\s\t]+")
+    (non-empty . "^.+$")
+    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
+    (heading . "^[=-]+"))
+  "Alist of regexp types used by `prot-common-line-regexp-p'.")
+
+(defun prot-common-line-regexp-p (type &optional n)
+  "Test for TYPE on line.
+TYPE is the car of a cons cell in
+`prot-common--line-regexp-alist'.  It matches a regular
+expression.
+
+With optional N, search in the Nth line from point."
+  (save-excursion
+    (goto-char (line-beginning-position))
+    (and (not (bobp))
+         (or (beginning-of-line n) t)
+         (save-match-data
+           (looking-at
+            (alist-get type prot-common--line-regexp-alist))))))
+
+;; The `prot-common-shell-command-with-exit-code-and-output' function is
+;; courtesy of Harold Carr, who also sent a patch that improved
+;; `prot-eww-download-html' (from the `prot-eww.el' library).
+;;
+;; More about Harold: <http://haroldcarr.com/about/>.
+(defun prot-common-shell-command-with-exit-code-and-output (command &rest args)
+  "Run COMMAND with ARGS.
+Return the exit code and output in a list."
+  (with-temp-buffer
+    (list (apply 'call-process command nil (current-buffer) nil args)
+          (buffer-string))))
+
+(defvar prot-common-url-regexp
+  (concat
+   "~?\\<\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*\\)"
+   "[.@]"
+   "\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]+\\)\\>/?")
+  "Regular expression to match (most?) URLs or email addresses.")
+
+(autoload 'auth-source-search "auth-source")
+
+;;;###autoload
+(defun prot-common-auth-get-field (host prop)
+  "Find PROP in `auth-sources' for HOST entry."
+  (when-let ((source (auth-source-search :host host)))
+    (if (eq prop :secret)
+        (funcall (plist-get (car source) prop))
+      (plist-get (flatten-list source) prop))))
+
+;;;###autoload
+(defun prot-common-parse-file-as-list (file)
+  "Return the contents of FILE as a list of strings.
+Strings are split at newline characters and are then trimmed for
+negative space.
+
+Use this function to provide a list of candidates for
+completion (per `completing-read')."
+  (split-string
+   (with-temp-buffer
+     (insert-file-contents file)
+     (buffer-substring-no-properties (point-min) (point-max)))
+   "\n" :omit-nulls "[\s\f\t\n\r\v]+"))
+
+(provide 'prot-common)
+;;; prot-common.el ends here
+
+#+end_src
+
+*** emacs tangle
+**** init.el
+
++ home dir
+
+#+NAME: emacs-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/init.el"
+<<init.el>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/init.el"
+<<init.el>>
+#+END_SRC
+
+**** early-init.el
+
++ home dir
+
+#+NAME: emacs-early-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/early-init.el"
+<<early-init.el>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-early-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/early-init.el"
+<<early-init.el>>
+#+END_SRC
+
+**** bookmark tangle
+
++ home dir
+
+#+NAME: emacs-bookmarks-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/bookmarks"
+<<emacs-bookmarks>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-bookmarks-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/bookmarks"
+<<emacs-bookmarks>>
+#+END_SRC
+
+**** lisp
+***** prot-common
+
++ home dir
+
+#+NAME: prot-common-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/lisp/prot-common.el"
+<<prot-common>>
+#+END_SRC
+
++ current dir
+
+#+NAME: prot-common-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/lisp/prot-common.el"
+<<prot-common>>
+#+END_SRC
+
+** alacritty
+*** alacritty config
+
+#+NAME: alacritty
+#+BEGIN_SRC yaml
+# Alacritty config
+
+env:
+  TERM: xterm-256color
+
+window:
+  padding:
+    x: 4
+    y: 4
+  decorations: full
+  startup_mode: Windowed
+  #dynamic_title: true
+  class:
+    instance: Alacritty
+    general: Alacritty
+  decorations_theme_variant: Dark
+
+# Font configuration
+font:
+  normal:
+    family: Fira Code
+    style: Regular
+
+  # Bold font face
+  bold:
+    family: Fira Code
+    style: Bold
+
+  # Italic font face
+  italic:
+    family: Fira Code
+    style: Italic
+
+  # Bold italic font face
+  bold_italic:
+    family: Fira Code
+    style: Bold Italic
+
+  # Point size
+  size: 16.0
+
+# Colors (Solarized Dark)
+colors:
+  # Default colors
+  primary:
+    background: '0x002b36'
+    foreground: '0x839496'
+
+  # Normal colors
+  normal:
+    black:   '0x073642'
+    red:     '0xdc322f'
+    green:   '0x859900'
+    yellow:  '0xb58900'
+    blue:    '0x268bd2'
+    magenta: '0xd33682'
+    cyan:    '0x2aa198'
+    white:   '0xeee8d5'
+
+  # Bright colors
+  bright:
+    black:   '0x002b36'
+    red:     '0xcb4b16'
+    green:   '0x586e75'
+    yellow:  '0x657b83'
+    blue:    '0x839496'
+    magenta: '0x6c71c4'
+    cyan:    '0x93a1a1'
+    white:   '0xfdf6e3'
+#+END_SRC
+
+*** alacritty tangle
+
++ home dir
+
+#+NAME: alacritty-home-dir
+#+BEGIN_SRC yaml :noweb yes :tangle "~/.config/alacritty/alacritty.yml"
+<<alacritty>>
+#+END_SRC
+
++ current dir
+
+#+NAME: alacritty-current-dir
+#+BEGIN_SRC yaml :noweb yes :tangle ".config/alacritty/alacritty.yml"
+<<alacritty>>
+#+END_SRC
+
+** zsh
+*** zsh config
+**** zshrc
+
+#+NAME: zshrc
+#+BEGIN_SRC conf
+# ~/.zshrc
+
+# ssh zsh fix
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+
+# variables for PS3 prompt
+newline=$'\n'
+yesmaster='Yes Master ? '
+
+# PS3 prompt function
+function zle-line-init zle-keymap-select {
+    PS1="[%n@%M %~]${newline}${yesmaster}"
+    zle reset-prompt
+}
+
+# run PS3 prompt function
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# set terminal window title to program name
+case $TERM in
+  (*xterm* | xterm-256color)
+    function precmd {
+      print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+    }
+    function preexec {
+      printf "\033]0;%s\a" "$1"
+    }
+  ;;
+esac
+
+# Fix bugs when switching modes
+bindkey -v # vi mode
+bindkey "^?" backward-delete-char
+bindkey "^u" backward-kill-line
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^k" kill-line
+
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+# Set/unset  shell options
+setopt notify globdots pushdtohome cdablevars autolist
+setopt recexact longlistjobs
+setopt autoresume histignoredups pushdsilent noclobber
+setopt autopushd pushdminus extendedglob rcquotes mailwarning
+setopt histignorealldups sharehistory
+#setopt auto_cd
+cdpath=($HOME)
+unsetopt bgnice autoparamslash
+
+# Completion Styles
+
+# list of completers to use
+zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
+
+# allow one error for every three characters typed in approximate completer
+zstyle -e ':completion:*:approximate:*' max-errors \
+    'reply=( $(( ($#PREFIX+$#SUFFIX)/3 )) numeric )'
+    
+# insert all expansions for expand completer
+zstyle ':completion:*:expand:*' tag-order all-expansions
+
+# formatting and messages
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*' group-name ''
+
+#eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+
+# match uppercase from lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# offer indexes before parameters in subscripts
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+# Filename suffixes to ignore during completion (except after rm command)
+zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
+    '*?.old' '*?.pro' '.hidden'
+
+# ignore completion functions (until the _ignored completer)
+zstyle ':completion:*:functions' ignored-patterns '_*'
+
+# kill - red, green, blue
+zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34'
+
+# list optiones colour, white + cyan
+zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
+
+# zsh autocompletion for sudo and doas
+zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin /home/djwilcox/bin
+
+# rehash commands
+zstyle ':completion:*' rehash true
+
+# highlighting
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=cyan,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+
+# aliases
+#========
+
+# keyboard backlight on
+alias backlight-on='sysctl dev.asmc.0.light.control:255'
+
+# keyboard backlight off
+alias backlight-off='sysctl dev.asmc.0.light.control:0'
+#+END_SRC
+
+**** zshenv
+
+#+NAME: zshenv
+#+begin_src sh
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
+
+# firefox
+export MOZ_ENABLE_WAYLAND=1
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# ssh-add
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# less
+export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
+export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
+
+# wget
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+
+# set emacsclient as editor
+#export ALTERNATE_EDITOR=""
+#export EDITOR="emacsclient -a emacs"
+#export VISUAL="emacsclient -a emacs"
+
+# tell ls to be colourfull
+#export LSCOLORS=ExFxCxDxBxegedabagacad
+#export CLICOLOR=1
+
+# vi mode
+export KEYTIMEOUT=1
+
+# mpd host variable for mpc
+export MPD_HOST="/home/djwilcox/.config/mpd/socket"
+#+end_src
+
+*** zsh tangle
+**** zshrc tangle
+
++ home dir
+
+#+NAME: zshrc-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.zshrc"
+<<zshrc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: zshrc-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".zshrc"
+<<zshrc>>
+#+END_SRC
+
+**** zshenv tangle
+
++ home dir
+
+#+NAME: zshenv-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.zshenv"
+<<zshenv>>
+#+END_SRC
+
++ current dir
+
+#+NAME: zshenv-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".zshenv"
+<<zshenv>>
+#+END_SRC
+
+** mpv
+*** input.conf
+
+#+NAME: input.conf
+#+BEGIN_SRC conf
+# vim keybindings
+l seek  5
+h seek -5
+k seek  60
+j seek -60
+
+# subtitles
+J cycle sub 
+K cycle sub down
+
+# Audio filters:
+F1 show-text "F2: loudnorm | F3: dynaudnorm | F4: low Bass | F5: low Treble" 2000
+
+# loudnorm:
+F2 af toggle lavfi=[loudnorm=I=-16:TP=-3:LRA=4]
+
+# dynaudnorm:
+F3 af toggle lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5]
+
+# lowered bass:
+F4  af toggle "superequalizer=6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2:13b=2:14b=2:15b=2:16b=2:17b=2:18b=2"
+
+# lowered treble:
+F5  af toggle "superequalizer=1b=2:2b=2:3b=2:4b=2:5b=2:6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2"
+#+END_SRC
+
+*** mpv.conf
+
+#+NAME: mpv.conf
+#+BEGIN_SRC conf
+# mpv.conf
+
+# list profiles with: mpv --profile=help
+
+# load hwdec profile automatically
+profile=hwdec 
+
+# hardware acceleration profile
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
+vo=gpu
+#hwdec=vaapi
+
+# hide: GNOME's wayland compositor lacks support for the idle inhibit protocol. 
+#msg-level=ffmpeg=fatal,vo/gpu/wayland=no
+
+# cache no for internet streams
+cache=no
+
+# yt-dlp best format 1080 or less
+ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+
+# show milliseconds in the on screen display
+osd-fractions
+
+# alsa pipewire audio device
+#audio-device=alsa/pipewire
+
+# youtube subs - J to switch to subs
+sub-auto=fuzzy
+ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
+sub-font='Noto Color Emoji'
+
+# screenshot timecode
+screenshot-template="%F-[%P]v%#01n"
+
+# show progress bar in the terminal
+#term-osd-bar
+
+
+# cache profile: mpv --profile=cache
+[cache]
+profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+
+
+# youtube conditional auto profile match any youtube url
+[youtube]
+profile-desc="youtube hardware acceleration, cache"
+profile-cond=path:find('youtu%.?be') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=no
+# fullscreen 2nd display
+fs
+#fs-screen=1
+
+
+# invidious conditional auto profile match any youtube url
+[invidious]
+profile-desc="invidious hardware acceleration, cache"
+profile-cond=path:find('http://127.0.0.1:3000') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=no
+# fullscreen 2nd display
+fs
+#fs-screen=1
+
+
+# archive.org conditional auto profile match any archive.org url
+[archive]
+profile-desc="archive hardware acceleration, cache"
+profile-cond=path:find('archive.org') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+# fullscreen 2nd display
+fs
+#fs-screen=1
+
+
+# bbc iplayer conditional auto profile match any bbc iplayer url
+[iplayer]
+profile-desc="archive hardware acceleration, cache"
+profile-cond=path:find('bbc.co.uk/iplayer') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+# fullscreen 2nd display
+fs
+#fs-screen=1
+#+END_SRC
+
+**** mpv tangle
+***** input.conf tangle
+
++ home dir
+
+#+NAME: input.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/input.conf"
+<<input.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: input.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/input.conf"
+<<input.conf>>
+#+END_SRC
+
+***** mpv.conf tangle
+
++ home dir
+
+#+NAME: mpv.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mpv.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
+** tofi
+*** tofi config
+
+#+NAME: tofi
+#+BEGIN_SRC conf
+anchor = top
+background-color = #000008
+border-width = 0
+drun-launch = true
+font = "/usr/local/share/fonts/firacode/FiraCode-Bold.ttf"
+font-size = 10
+height = 30
+hint-font = false
+horizontal = true
+min-input-width = 0
+num-results = 10
+outline-width = 0
+padding-bottom = 0
+padding-left = 0
+padding-right = 0
+padding-top = 8
+prompt-color = #FFFFFF
+prompt-text = "$ "
+input-color = #268bd2
+result-spacing = 15
+selection-color = #268bd2
+text-color = #FFFFFF
+width = 100%
+#+END_SRC
+
+*** tofi tangle
+
++ home dir
+
+#+NAME: tofi-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tofi/config"
+<<tofi>>
+#+END_SRC
+
++ current dir
+
+#+NAME: tofi-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/tofi/config"
+<<tofi>>
+#+END_SRC
+
+** wayfire
+*** wayfire config
+
+#+NAME: wayfire
+#+BEGIN_SRC conf
+[alpha]
+min_value = 0.100000
+modifier = <alt> <super> 
+
+[animate]
+close_animation = zoom
+duration = 400
+enabled_for = (type equals "toplevel" | (type equals "x-or" & focusable equals true))
+fade_duration = 400
+fade_enabled_for = type equals "overlay"
+fire_duration = 300
+fire_enabled_for = none
+fire_particle_size = 16.000000
+fire_particles = 2000
+open_animation = zoom
+startup_duration = 600
+zoom_duration = 500
+zoom_enabled_for = none
+
+[annotate]
+clear_workspace = <alt> <super> KEY_C
+draw = <alt> <super> BTN_LEFT
+from_center = true
+line_width = 3.000000
+method = draw
+stroke_color = \#FF0000FF
+
+[autorotate-iio]
+lock_rotation = false
+rotate_down = <ctrl> <super> KEY_DOWN
+rotate_left = <ctrl> <super> KEY_LEFT
+rotate_right = <ctrl> <super> KEY_RIGHT
+rotate_up = <ctrl> <super> KEY_UP
+
+[autostart]
+autostart_wf_shell = false
+background = wf-background
+
+[background-view]
+command = mpv --loop=inf
+file = 
+
+[bench]
+average_frames = 1
+frames_per_update = 3
+position = top_center
+
+[blur]
+blur_by_default = type is "toplevel"
+bokeh_degrade = 1
+bokeh_iterations = 15
+bokeh_offset = 5.000000
+box_degrade = 1
+box_iterations = 2
+box_offset = 1.000000
+gaussian_degrade = 1
+gaussian_iterations = 2
+gaussian_offset = 1.000000
+kawase_degrade = 8
+kawase_iterations = 2
+kawase_offset = 2.000000
+method = kawase
+saturation = 1.000000
+toggle = none
+
+[command]
+binding_0 = <super> KEY_A
+binding_browser = <alt> <super> KEY_ENTER
+binding_emacs = <ctrl> <super> KEY_ENTER
+binding_terminal = <ctrl> <super> KEY_SPACE
+command_0 = tofi-drun
+command_browser = firefox
+command_emacs = emacsclient --alternate-editor= --create-frame
+command_terminal = alacritty
+
+[core]
+background_color = \#1A1A1AFF
+close_top_view = <alt> <shift> KEY_C
+focus_button_with_modifiers = false
+focus_buttons = BTN_LEFT | BTN_MIDDLE | BTN_RIGHT
+focus_buttons_passthrough = true
+max_render_time = -1
+plugins = autostart command expo grid idle move oswitch place resize switcher vswitch window-rules vswipe extra-gestures wm-actions follow-focus
+preferred_decoration_mode = client
+vheight = 3
+vwidth = 4
+xwayland = false
+xwayland_scale = 1
+
+[crosshair]
+line_color = \#FF0000FF
+line_width = 2
+
+[cube]
+activate = <alt> <ctrl> BTN_LEFT
+background = \#1A1A1AFF
+background_mode = simple
+cubemap_image = 
+deform = 0
+initial_animation = 350
+light = true
+rotate_left = none
+rotate_right = none
+skydome_mirror = true
+skydome_texture = 
+speed_spin_horiz = 0.020000
+speed_spin_vert = 0.020000
+speed_zoom = 0.070000
+zoom = 0.100000
+
+[dbus_interface]
+
+[decoration]
+active_color = \#222222AA
+border_size = 4
+button_order = minimize maximize close
+font = sans-serif
+ignore_views = none
+inactive_color = \#333333DD
+title_height = 30
+
+[expo]
+background = \#1A1A1AFF
+duration = 100
+offset = 10
+toggle = <super> 
+
+[extra-gestures]
+close_fingers = 20
+move_delay = 200
+move_fingers = 3
+
+[fast-switcher]
+activate = <alt> KEY_ESC
+activate_backward = <alt> <shift> KEY_ESC
+inactive_alpha = 0.700000
+
+[fisheye]
+radius = 450.000000
+toggle = <ctrl> <super> KEY_F
+zoom = 7.000000
+
+[follow-focus]
+change_output = true
+change_view = true
+focus_delay = 50
+raise_on_top = true
+threshold = 10
+
+[force-fullscreen]
+constrain_pointer = false
+constraint_area = output
+key_toggle_fullscreen = <alt> <super> KEY_F
+preserve_aspect = true
+transparent_behind_views = true
+x_skew = 0.000000
+y_skew = 0.000000
+
+[grid]
+duration = 300
+restore = <super> KEY_DOWN | <super> KEY_KP0
+slot_b = <super> KEY_KP2
+slot_bl = <super> KEY_KP1
+slot_br = <super> KEY_KP3
+slot_c = <super> KEY_UP | <super> KEY_KP5
+slot_l = <super> KEY_LEFT | <super> KEY_KP4
+slot_r = <super> KEY_RIGHT | <super> KEY_KP6
+slot_t = <super> KEY_KP8
+slot_tl = <super> KEY_KP7
+slot_tr = <super> KEY_KP9
+type = crossfade
+
+[idle]
+cube_max_zoom = 1.500000
+cube_rotate_speed = 1.000000
+cube_zoom_speed = 1000
+disable_on_fullscreen = true
+dpms_timeout = -1
+screensaver_timeout = 3600
+toggle = none
+
+[input]
+click_method = default
+cursor_size = 24
+cursor_theme = default
+disable_touchpad_while_mouse = false
+disable_touchpad_while_typing = false
+gesture_sensitivity = 1.000000
+kb_capslock_default_state = false
+kb_numlock_default_state = false
+kb_repeat_delay = 400
+kb_repeat_rate = 40
+left_handed_mode = false
+middle_emulation = false
+modifier_binding_timeout = 400
+mouse_accel_profile = default
+mouse_cursor_speed = 0.000000
+mouse_scroll_speed = 1.000000
+natural_scroll = false
+scroll_method = default
+tap_to_click = true
+touchpad_accel_profile = default
+touchpad_cursor_speed = 0.000000
+touchpad_scroll_speed = 1.000000
+xkb_layout = gb
+xkb_model = pc105
+xkb_options = custom:alt_win_ctrl
+xkb_rules = evdev
+xkb_variant = mac
+
+[input-device]
+output = 
+
+[invert]
+preserve_hue = false
+toggle = <super> KEY_I
+
+[join-views]
+
+[keycolor]
+color = \#000000FF
+opacity = 0.250000
+threshold = 0.500000
+
+[mag]
+default_height = 500
+toggle = <alt> <super> KEY_M
+zoom_level = 75
+
+[move]
+activate = <super> BTN_LEFT
+enable_snap = true
+enable_snap_off = true
+join_views = false
+quarter_snap_threshold = 50
+snap_off_threshold = 10
+snap_threshold = 10
+workspace_switch_after = -1
+
+[oswitch]
+next_output = <super> KEY_O
+next_output_with_win = <shift> <super> KEY_O
+
+[output]
+mode = auto
+position = auto
+scale = 1.000000
+transform = normal
+
+[place]
+mode = center
+
+[preserve-output]
+last_output_focus_timeout = 10000
+
+[resize]
+activate = <super> BTN_RIGHT
+
+[scale]
+allow_zoom = false
+bg_color = \#1A1A1AE6
+duration = 750
+inactive_alpha = 0.750000
+interact = false
+middle_click_close = false
+spacing = 50
+text_color = \#CCCCCCFF
+title_font_size = 16
+title_overlay = all
+title_position = center
+toggle = <super> KEY_P
+toggle_all = 
+
+[scale-title-filter]
+bg_color = \#00000080
+case_sensitive = false
+font_size = 30
+overlay = true
+share_filter = false
+text_color = \#CCCCCCCC
+
+[showrepaint]
+reduce_flicker = true
+toggle = <alt> <super> KEY_S
+
+[simple-tile]
+button_move = <super> BTN_LEFT
+button_resize = <super> BTN_RIGHT
+inner_gap_size = 5
+keep_fullscreen_on_adjacent = true
+key_focus_above = <super> KEY_K
+key_focus_below = <super> KEY_J
+key_focus_left = <super> KEY_H
+key_focus_right = <super> KEY_L
+key_toggle = <super> KEY_T
+outer_horiz_gap_size = 0
+outer_vert_gap_size = 0
+tile_by_default = all
+
+[switcher]
+next_view = <alt> KEY_TAB
+prev_view = <alt> <shift> KEY_TAB
+speed = 50
+view_thumbnail_scale = 1.000000
+
+[vswipe]
+background = \#1A1A1AFF
+delta_threshold = 24.000000
+duration = 50
+enable_free_movement = false
+enable_horizontal = true
+enable_smooth_transition = false
+enable_vertical = true
+fingers = 3
+gap = 0.000000
+speed_cap = 0.050000
+speed_factor = 256.000000
+threshold = 0.350000
+
+[vswitch]
+background = \#1A1A1AFF
+binding_down = <alt> <super> KEY_DOWN
+binding_left = <super> KEY_H
+binding_right = <super> KEY_L
+binding_up = <alt> <super> KEY_UP
+binding_win_down = <alt> <shift> <super> KEY_DOWN
+binding_win_left = <shift> <super> KEY_H
+binding_win_right = <shift> <super> KEY_L
+binding_win_up = <alt> <shift> <super> KEY_UP
+duration = 50
+gap = 0
+wraparound = true
+
+[water]
+activate = <ctrl> <super> BTN_LEFT
+
+[windecor]
+active_color = \#222222AA
+border_size = 4
+button_order = close
+close_color = \#CC000077
+font = sans-serif
+ignore_views = none
+inactive_color = \#333333DD
+maximize_color = \#09FF0077
+minimize_color = \#EDD40077
+title_height = 24
+
+[window-rules]
+
+[winzoom]
+dec_x_binding = <ctrl> <super> KEY_LEFT
+dec_y_binding = <ctrl> <super> KEY_UP
+inc_x_binding = <ctrl> <super> KEY_RIGHT
+inc_y_binding = <ctrl> <super> KEY_DOWN
+modifier = <ctrl> <super> 
+nearest_filtering = false
+preserve_aspect = true
+zoom_step = 0.100000
+
+[wm-actions]
+minimize = none
+send_to_back = none
+toggle_always_on_top = none
+toggle_fullscreen = <super> KEY_S
+toggle_maximize = none
+toggle_showdesktop = none
+toggle_sticky = none
+
+[wobbly]
+friction = 3.000000
+grid_resolution = 6
+spring_k = 8.000000
+
+[workarounds]
+all_dialogs_modal = true
+app_id_mode = stock
+dynamic_repaint_delay = false
+
+[workspace-names]
+background_color = \#333333B3
+display_duration = 500
+font = sans-serif
+position = center
+show_option_names = false
+text_color = \#FFFFFFFF
+
+[wrot]
+activate = <ctrl> <super> BTN_RIGHT
+activate-3d = <shift> <super> BTN_RIGHT
+invert = false
+reset = <ctrl> <super> KEY_R
+reset-one = <super> KEY_R
+reset_radius = 25.000000
+sensitivity = 24
+
+[zoom]
+modifier = <super> 
+smoothing_duration = 300
+speed = 0.010000
+
+#+END_SRC
+
+*** wayfire tangle
+
++ home dir
+
+#+NAME: wayfire-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wayfire.ini"
+<<wayfire>>
+#+END_SRC
+
++ current dir
+
+#+NAME: wayfire-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/wayfire.ini"
+<<wayfire>>
+#+END_SRC
+
+** wf-shell
+*** wf-shell config
+
+#+NAME: wf-shell
+#+BEGIN_SRC conf
+[background]
+cycle_timeout = 150
+image = /home/djwilcox/pictures/wallpaper/freebsd-lynchmob.jpg
+preserve_aspect = false
+randomize = false
+
+[dock]
+autohide_duration = 300
+css_path = 
+position = bottom
+
+[panel]
+autohide = false
+autohide_duration = 300
+background_color = gtk_headerbar
+battery_font = default
+battery_icon_invert = true
+battery_icon_size = 24
+battery_status = 1
+clock_font = FiraCode-Bold
+clock_format = %e %A %H:%M
+css_path = 
+launchers_size = 38
+launchers_spacing = 4
+layer = top
+menu_fuzzy_search = true
+menu_icon = /home/djwilcox/pictures/icons/beastie.png
+menu_logout_command = 
+minimal_height = 20
+network_icon_invert_color = false
+network_icon_size = 32
+network_status = 1
+network_status_font = default
+network_status_use_color = false
+position = top
+volume_display_timeout = 2.500000
+widgets_center = 
+widgets_left = 
+widgets_right = clock
+
+#+END_SRC
+
+*** wf-shell tangle
+
++ home dir
+
+#+NAME: wf-shell-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wf-shell.ini"
+<<wf-shell>>
+#+END_SRC
+
++ current dir
+
+#+NAME: wf-shell-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/wf-shell.ini"
+<<wf-shell>>
+#+END_SRC
+
+** tmux
+*** tmux config
+
+#+NAME: tmux
+#+BEGIN_SRC conf
+# .tmux.conf
+
+# vi mode
+#set-option -g default-shell "/usr/local/bin/zsh"
+#set-option -g default-command "/usr/local/bin/zsh"
+#set -g default-command "${SHELL}"
+set-window-option -g mode-keys vi
+
+# Some tweaks to the status line
+set -g status-right "%H:%M"
+set -g status-right-style fg=color245
+
+# If running inside tmux ($TMUX is set), then change the status line to red
+%if #{TMUX}
+set -g status-bg red
+%endif
+
+# Enable RGB colour if running in xterm(1)
+set-option -sa terminal-overrides ",xterm*:Tc"
+
+# Change the default $TERM to screen
+set -g default-terminal "xterm-256color"
+
+# No bells at all
+set -g bell-action none
+
+# close panes after command has finished
+set -g remain-on-exit off
+
+# Change the prefix key to C-a
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
+
+# Turn the mouse on, but without copy mode dragging
+set -g mouse on
+
+# multiple places
+bind F set -w window-size
+
+# Keys to toggle monitoring activity in a window and the synchronize-panes option
+bind m set monitor-activity
+bind y set synchronize-panes\; display 'synchronize-panes #{?synchronize-panes,on,off}'
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# reload ~/.tmux.conf using PREFIX r
+bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+
+# default statusbar colors
+set -g status-style bg=default,fg=yellow #yellow
+
+# default window title colors
+set -g window-status-style fg=brightblue,bg=default
+
+# active window title colors
+set -g window-status-current-style fg=black,bg=blue
+
+# pane border
+set -g pane-border-style fg=black #base02
+set -g pane-active-border-style fg=black #base01
+
+# message text
+set -g message-style bg=black,fg=brightred #orange
+
+# pane number display
+set-option -g display-panes-active-colour blue #blue
+set-option -g display-panes-colour brightred #orange
+
+# clock
+set-window-option -g clock-mode-colour green #green
+
+# vim key bindings
+setw -g mode-keys vi
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+bind-key -r C-h select-window -t :-
+bind-key -r C-l select-window -t :+
+
+# resize panes using PREFIX H, J, K, L
+bind H resize-pane -L 5
+bind J resize-pane -D 5
+bind K resize-pane -U 5
+bind L resize-pane -R 5
+
+# copy and paste
+set-window-option -g automatic-rename on
+
+# toggle statusbar
+bind-key s set -g status
+
+# copying selection vim style
+bind-key Escape copy-mode			# enter copy mode; default [
+bind-key p paste-buffer				# paste; (default hotkey: ] )
+bind-key P choose-buffer 			# tmux clipboard history
+bind-key + delete-buffer \; display-message "Deleted current Tmux Clipboard History"
+
+# Note: rectangle-toggle (aka Visual Block Mode) > hit v then C-v to trigger it
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi V send-keys -X select-line
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T choice-mode-vi h send-keys -X tree-collapse
+bind-key -T choice-mode-vi l send-keys -X tree-expand
+bind-key -T choice-mode-vi H send-keys -X tree-collapse-all
+bind-key -T choice-mode-vi L send-keys -X tree-expand-all
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy && wl-paste -n | wl-copy -p"
+bind-key p run "wl-paste -n | tmux load-buffer - ; tmux paste-buffer"
+
+# urlview as context and url view
+bind-key u capture-pane \; save-buffer /tmp/tmux-buffer \; \
+new-window -n "urlview" '$SHELL -c "urlview < /tmp/tmux-buffer"'
+
+# tmux auto rename pane 
+set-option -g status-interval 1
+set-option -g allow-rename on
+set-option -g automatic-rename on
+set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_title},#{pane_current_command}}"
+#+END_SRC
+
+*** tmux tangle
+
++ home dir
+
+#+NAME: tmux-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tmux/tmux.conf"
+<<tmux>>
+#+END_SRC
+
++ current dir
+
+#+NAME: tmux-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
+<<tmux>>
+#+END_SRC
+
+** yt-dlp
+*** yt-dlp config
+
+#+NAME: yt-dlp
+#+BEGIN_SRC conf
+# download 1080p video in mp4 format
+#-f 'bestvideo[height<=1080][vcodec!=?vp9]+bestaudio[acodec!=?opus]'
+
+# external downloader aria2
+--downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M'
+
+# native downloader for dash and m3u8
+--downloader 'dash,m3u8:native'
+
+# restrict filenames
+--restrict-filenames
+
+# merge output format mkv
+--merge-output-format mkv
+#+END_SRC
+
+*** yt-dlp tangle
+
++ home dir
+
+#+NAME: yt-dlp-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/yt-dlp/config"
+<<yt-dlp>>
+#+END_SRC
+
++ current dir
+
+#+NAME: yt-dlp-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/yt-dlp/config"
+<<yt-dlp>>
+#+END_SRC
+
+** mpd
+
+#+NAME: mpd
+#+BEGIN_SRC conf
+# mpd config
+
+music_directory		"/home/djwilcox/music"
+playlist_directory	"/home/djwilcox/.config/mpd/playlists"
+db_file			"/home/djwilcox/.config/mpd/mpd.db"
+log_file		"/home/djwilcox/.config/mpd/mpd.log"
+pid_file		"/home/djwilcox/.config/mpd/mpd.pid"
+state_file		"/home/djwilcox/.config/mpd/mpdstate"
+sticker_file		"/home/djwilcox/.config/mpd/sticker.sql"
+user			"djwilcox"
+group			"djwilcox"
+bind_to_address		"/home/djwilcox/.config/mpd/socket"
+
+input {
+        plugin "curl"
+}
+
+audio_output {
+	type		"oss"
+	name		"My OSS Device"
+#	device		"/dev/dsp"	# optional
+	mixer_type      "hardware"	# optional
+	mixer_device	"/dev/mixer"	# optional
+#	mixer_control	"PCM"		# optional
+	mixer_control	"vol"		# optional
+}
+#+END_SRC
+
+*** mpd tangle
+
++ home dir
+
+#+NAME: mpd-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpd/mpd.conf"
+<<mpd>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mpd-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpd/mpd.conf"
+<<mpd>>
+#+END_SRC
+
+** ncmpc
+
+#+NAME: ncmpc
+#+BEGIN_SRC conf
+## Configuration file for ncmpc (~/.ncmpc/config)
+
+host = "/home/djwilcox/.config/mpd/socket"
+screen-list = playlist browse
+seek-time = 30
+list-format = "%name%|[%artist% - ]%title%|%file%"
+status-format = "[%artist% - ]%title%|%shortfile%"
+visible-bitrate = yes
+wrap-around = yes
+
+## Enable/disable colors.
+enable-colors = no
+
+## Set the background color.
+color background = none
+
+## Set the text color for the title row.
+color title = none,black
+
+## Set the text color for the title row (the bold part).
+color title-bold = blue,bold
+
+## Set the color of the line on the second row.
+color line = black
+
+## Set the text color used to indicate mpd flags on the second row.
+color line-flags = black,bold
+
+## Set the text color in the main area of ncmpc.
+color list = none
+
+## Set the bold text color in the main area of ncmpc.
+color list-bold = none,bold
+
+## Sets the text color of directories in the browser
+color browser-directory = none
+
+## Sets the text color of playlists in the browser
+color browser-playlist = none
+
+## Set the color of the progress indicator.
+color progressbar = black
+
+## Set the text color used to display mpd status in the status window.
+color status-state = black,bold
+
+## Set the text color used to display song names in the status window.
+color status-song  = black
+
+## Set the text color used to display time the status window.
+color status-time  = black
+
+## Text color used to display alerts in the status window.
+color alert = black,bold
+#+END_SRC
+
+*** ncmpc tangle
+
++ home dir
+
+#+NAME: ncmpc-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/ncmpc/config"
+<<ncmpc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: ncmpc-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/ncmpc/config"
+<<ncmpc>>
+#+END_SRC
+
+** aria2
+
+#+NAME: aria2
+#+BEGIN_SRC conf
+#
+## aria2 config
+#
+# man page  = http://aria2.sourceforge.net/manual/en/html/aria2c.html
+# file path = $HOME/.aria2/aria2.conf
+
+# Download Directory: specify the directory all files will be downloaded to.
+# When this directive is commented out, aria2 will download the files to the
+# current directory where you execute the aria2 binary.
+#dir=/usr/home/djwilcox/downloads
+
+
+# Bit Torrent: If the speed of the incoming data (download) from other peers is
+# greater then the peer-speed-limit, then do not allow any more connections
+# than max-peers. The idea is to limit the amount of clients our system will
+# connect with to reduce our overall load when we are already saturating our
+# incoming bandwidth.  Make sure to set the the peer-speed-limit to your
+# preferred incoming (download) speed. Speeds must be whole numbers so 5.5M is
+# illegal, but 5500K is valid.  For unlimited connections set
+# request-peer-speed-limit something high like 10000M (10gig).
+ bt-max-peers=0
+ bt-request-peer-speed-limit=0
+
+
+# Bit Torrent: the max upload speed for all torrents combined. Again, only
+# whole numbers are valid. We find a global upload limit is more flexible then
+# an upload limit per torrent. Zero(0) is unrestricted upload spreeds.
+ max-overall-upload-limit=128k
+
+
+# Bit Torrent: When downloading a torrent remove ALL trackers from the listing.
+# This is a good way to only use distributed hash table (DHT) and Peer eXchange
+# (PeX) for connections. We find start up of the torrent takes a little longer
+# with all trackers disabled, but helps reduce the load on trackers.
+# bt-exclude-tracker="*"
+ bt-external-ip=127.0.0.1
+
+
+# Bit Torrent: ports and protocols used for bit torrent TCP and UDP
+# connections. Make sure DHT is enabled in order to connect to UDP trackers as
+# well as negotiating with DHT and PEX peers. 
+ dht-listen-port=6882
+ enable-dht=true
+ enable-peer-exchange=true
+ listen-port=6881
+
+
+# When running aria2 on FreeBSD with ZFS, disable disk-cache due to ZFS's use
+# of Adaptive Replacement Cache (ARC). ZFS can also take advantage of the
+# "sparse files" format which is significantly faster then pre allocation of
+# file space. For other file systems like EXT4 and XFS you can test
+# file-allocation with "prealloc" and "falloc" to see which file-allocation
+# allows arai2 to start quicker and use less disk I/O.
+ disk-cache=0
+ file-allocation=none
+
+
+# Bit Torrent: fully encrypt the negotiation as well and the payload of all bit
+# torrent traffic. With this configuration, encryption is required and all old,
+# non-encrypted clients are ignored (dropped). This may help avoid some ISPs
+# rate limiting P2P clients, but will also reduce the amount of clients aria2
+# will talk to.
+ bt-force-encryption=true
+ bt-min-crypto-level=arc4
+ bt-require-crypto=true
+
+
+# Bit Torrent: Download the torrent file into memory (RAM) if there is no need
+# to save the .torrent file itself. This option works with both magnet and
+# torrent URL links.
+ follow-torrent=mem
+
+
+# Bit Torrent: The amount of time and the upload-to-download ratio you wish to
+# seed to. If either the seed time limit ( minutes ) or the seed ratio is
+# reached, torrent seeding will stop. You can set seed-time to zero(0) to
+# disable seeding completely.
+ seed-ratio=100
+ seed-time=0
+
+
+# Bit Torrent: timeout values for servers and clients.
+#bt-tracker-connect-timeout=10
+#bt-tracker-interval=900
+#bt-tracker-timeout=10
+
+
+# Bit Torrent: scripts or commands to execute before, during or after a
+# download finishes.
+# on-bt-download-complete=/path/to/script.sh
+# on-download-complete=/path/to/script.pl
+# on-download-error=/path/to/script
+# on-download-pause=/path/to/script.sh
+# on-download-start=/path/to/script.pl
+# on-download-stop=/path/to/script
+
+
+# Network: maximum socket receive buffer in bytes. 1M can sustain 1Gbit/sec.
+# Default: 0 which is disabled.
+ socket-recv-buffer-size=1M
+
+
+# Event Multiplexing: set polling to the OS type you are using. For FreeBSD,
+# OpenBSD and NetBSD set to "kqueue". For Linux set to "epoll".
+ event-poll=kqueue
+
+
+# Certificate Authority PEM : specify the full path to the OS certificate
+# authority pem file to verify the peers. On FreeBSD with OpenSSL the following
+# file path is valid. Without a valid pem file aria2 will print out the error,
+# "[ERROR] Failed to load trusted CA certificates from no. Cause:
+# error:02001002:system library:fopen:No such file or directory"
+ ca-certificate=/usr/local/openssl/cert.pem
+
+
+# Data Integrity: check the MD5 / SHA256 hash of metalink downloads as well as
+# the hash of bit torrent chunks as our client receives them. CPU time is
+# reasonably low for the high value of real time verified data. Note:
+# check-integrity set as true will show "ERROR - Checksum error detected" for
+# magnet links which can be ignored.
+#check-integrity=true
+ realtime-chunk-checksum=true
+
+
+# File Names: Resume file downloads if we have a partial copy. Do not rename
+# the file or make another copy if the same file is downloaded a second time.
+ allow-overwrite=true
+ always-resume=true
+ auto-file-renaming=false
+ continue=true
+ remote-time=true
+
+
+# User Agent: Disable the identification string of our client. If you connect
+# to a server which requires a certain id string you can always add one here.
+# Trackers should never use client id strings as security authentication or
+# access control.
+ peer-id-prefix=""
+ user-agent=""
+
+
+# Status Summery messages are disabled since the status of the download is
+# updated in real time on the CLI anyways.
+ summary-interval=0
+
+
+# FTP: use passive ftp which is firewall friendly and reuse the ftp data
+# connection when asking for multiple resources from the same server for
+# efficiency.
+ ftp-pasv=true
+ ftp-reuse-connection=true
+
+
+# Metalink: Set the country code to prefer mirrors closest to you. Prefer more
+# secure https mirrors over http and ftp servers.
+ metalink-language=en-US
+ metalink-location=us
+ metalink-preferred-protocol=https
+
+
+# Disconnect from https, http or ftp servers who do not upload data to us
+# faster then the specified value. Aria2 will then find another mirror in the
+# metalink file which might be quicker. If there are no more mirrors left then
+# the current slow mirror is still used. This value is NOT used for bit torrent
+# connections though. NOTE: we hope to convince the developer to add a
+# lower-speed value or even a minimal client U/D ratio to bit torrent some day
+# to kick off leachers too.
+ lowest-speed-limit=50K
+
+
+# Concurrent downloads: Set the number of different servers to download from
+# concurrently; i.e. in parallel. If we are downloading a single file then
+# split that file into the same amount of streams. Make sure to keep in mind
+# that if the amount of parallel downloads times the lowest-speed-limit is
+# greater then your total download bandwidth then you will drop servers
+# incorrectly. For example, we have ten(10) connections at a minimum of
+# 50KiB/sec which equals 500KiB/sec. If our total download bandwidth is not at
+# least 500KiB/sec then arai2 will think the mirrors are too slow and drop
+# connection slowing down the whole download. Do not set the
+# max-connection-per-server greater then three(3) as to avoid abusing a single
+# server.
+ max-concurrent-downloads=10
+ max-connection-per-server=3
+ min-split-size=5M
+ split=10
+
+
+# RPC Interface: To access aria2 through XML-RPC API, like using webui-aria2.
+#enable-rpc
+#rpc-listen-all
+#rpc-user=username
+#rpc-passwd=passwd
+
+
+# Daemon Mode: To run aria2 in the background as a daemon. Use daemon mode to
+# start aria2 on reboot or when using an RPC interface like webui-aria2.
+#daemon
+
+
+#
+#
+# Reference: the following options arethe developers defaults. We kept them
+# here for reference.
+
+# bt-max-open-files=100
+# bt-save-metadata=false
+# bt-stop-timeout=0
+# bt-tracker="udp://tracker.openbittorrent.com:80/announce"
+ check-certificate=true
+ conditional-get=true
+# dht-entry-point="dht.transmissionbt.com:6881"
+# dht-file-path=$HOME/.aria2/dht.dat
+# dht-message-timeout=10
+ disable-ipv6=true
+ http-accept-gzip=true
+# log=$HOME/.aria2/aria2.log
+# log-level=debug
+
+### EOF ###
+#+END_SRC
+
+*** aria2 tangle
+
++ home dir
+  
+#+NAME: aria2-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/aria2/aria2.conf"
+<<aria2>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: aria-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/aria2/aria2.conf"
+<<aria2>>
+#+END_SRC
+
+** desktop files
+*** desktop files config
+**** chromium config
+
+#+NAME: chromium-desktop
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=chrome --ozone-platform=wayland %U
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
+*** desktop files tangle
+**** chromium tangle
+
++ home dir
+  
+#+NAME: chromium-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/chromium-browser.desktop"
+<<chromium-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: chromium-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chromium-browser.desktop"
+<<chromium-desktop>>
+#+END_SRC
+
+** mutt
+
+#+NAME: mutt
+#+BEGIN_SRC conf
+set from = "danieljwilcox@gmail.com"
+set realname = "Daniel J Wilcox"
+
+# mutt colours
+#color normal default default
+#color hdrdefault black green
+#color quoted default default
+#color signature default default
+#color attachment default default
+#color message default default
+#color error default default
+#color indicator black green
+#color status black green
+#color tree default default
+#color normal default default
+#color markers default default
+#color search default default
+#color tilde default default
+#color index default default ~F
+#color index default default "~N|~O"
+
+
+# mutt colours
+color normal default default
+color hdrdefault black cyan
+color quoted default default
+color signature default default
+color attachment default default
+color message default default
+color error default default
+color indicator black cyan
+color status black cyan
+color tree default default
+color normal default default
+color markers default default
+color search default default
+color tilde default default
+color index default default ~F
+color index default default "~N|~O"
+
+set imap_user = "danieljwilcox@gmail.com"
+set smtp_url = "smtps://danieljwilcox@smtp.gmail.com:465/"
+source "gpg -d ~/.config/mutt/mutt-passwords.gpg |"
+
+set folder = "imaps://imap.gmail.com:993"
+set spoolfile = "+Inbox"
+set postponed = "+Drafts"
+#set trash = "imaps://imap.gmail.com/Trash"
+set record = "+Sent Mail"
+
+set header_cache = ~/.config/mutt/cache/headers
+set message_cachedir = ~/.config/mutt/cache/bodies
+set certificate_file = ~/.config/mutt/certificates
+set mailcap_path = ~/.config/mutt/mailcap       
+
+set sort=threads
+set sort_browser=reverse-date
+set sort_aux=reverse-last-date-received
+
+set move = "no" 
+set imap_idle = "yes"
+set mail_check = "60"
+set imap_keepalive = "900"
+set editor = "emacsclient"
+#set pager = "emacsclient"
+set beep_new
+
+# Ctrl-R to mark all as read
+macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
+
+set query_command = "abook --mutt-query '%s'"
+macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
+macro index,pager A "<pipe-message>abook --add-email<return>" "add the sender address to abook"
+bind editor <Tab> complete-query
+
+bind index "^" imap-fetch-mail
+bind compose p pgp-menu
+macro compose Y pfy "send mail without GPG"
+
+bind index gg first-entry
+bind index G  last-entry
+
+bind pager k  previous-line
+bind pager j  next-line
+bind pager gg top
+bind pager G  bottom
+
+# View URLs inside Mutt with urlview
+macro index \cb "|urlview\n"
+macro pager \cb "|urlview\n"
+
+
+# Note that we explicitly set the comment armor header since GnuPG, when used
+# in some localiaztion environments, generates 8bit data in that header, thereby
+# breaking PGP/MIME.
+
+# decode application/pgp
+set pgp_decode_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
+
+# verify a pgp/mime signature
+set pgp_verify_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+
+# decrypt a pgp/mime attachment
+set pgp_decrypt_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
+
+# create a pgp/mime signed attachment
+set pgp_sign_command="gpg --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
+
+# create a application/pgp signed (old-style) message
+set pgp_clearsign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
+
+# create a pgp/mime encrypted attachment
+set pgp_encrypt_only_command="/usr/local/bin/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+
+# create a pgp/mime encrypted and signed attachment
+set pgp_encrypt_sign_command="/usr/local/bin/pgpewrap gpg --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+
+# import a key into the public key ring
+set pgp_import_command="gpg --no-verbose --import %f"
+
+# export a key from the public key ring
+set pgp_export_command="gpg --no-verbose --export --armor %r"
+
+# verify a key
+set pgp_verify_key_command="gpg --verbose --batch --fingerprint --check-sigs %r"
+
+# read in the public key ring
+set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --list-keys %r" 
+
+# read in the secret key ring
+set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
+
+# fetch keys
+# set pgp_getkeys_command="pkspxycwrap %r"
+# This will work when #172960 will be fixed upstream
+# set pgp_getkeys_command="gpg --recv-keys %r"
+
+# pattern for good signature - may need to be adapted to locale!
+
+# set pgp_good_sign="^gpgv?: Good signature from "
+
+# OK, here's a version which uses gnupg's message catalog:
+# set pgp_good_sign="`gettext -d gnupg -s 'Good signature from "' | tr -d '"'`"
+
+# This version uses --status-fd messages
+set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
+
+# daniel j wilcox pgp
+set pgp_use_gpg_agent="yes"
+set my_pgp_id="3B2C8BA1"
+#+END_SRC
+
+*** mutt tangle
+
++ home dir
+
+#+NAME: mutt-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mutt/muttrc"
+<<mutt>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mutt-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mutt/muttrc"
+<<mutt>>
+#+END_SRC
+
+** profile
+
+#+NAME: profile
+#+BEGIN_SRC conf
+# $FreeBSD: releng/11.0/share/skel/dot.profile 278616 2015-02-12 05:35:00Z cperciva $
+#
+# .profile - Bourne Shell startup script for login shells
+#
+# see also sh(1), environ(7).
+#
+
+# These are normally set through /etc/login.conf.  You may override them here
+# if wanted.
+# PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$HOME/bin; export PATH
+# BLOCKSIZE=K;	export BLOCKSIZE
+
+# Setting TERM is normally done through /etc/ttys.  Do only override
+# if you're sure that you'll never log in via telnet or xterm or a
+# serial line.
+# TERM=xterm; 	export TERM
+
+# set emacsclient as editor for ranger
+#EDITOR=/usr/local/bin/emacsclient;   	export EDITOR
+#PAGER=less;  	export PAGER
+
+# set ENV to a file invoked each time sh is started for interactive use.
+ENV=$HOME/.shrc; export ENV
+#+END_SRC
+
+*** profile tangle
+
++ home dir
+
+#+NAME: profile-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.profile"
+<<profile>>
+#+END_SRC
+
++ current dir
+
+#+NAME: profile-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".profile"
+<<profile>>
+#+END_SRC
+
+** login_conf
+
+#+NAME: login_conf
+#+BEGIN_SRC conf
+me:\
+  :charset=UTF-8:\
+  :lang=en_GB.UTF-8:\
+  :setenv=LC_COLLATE=C:\
+  :memorylocked=unlimited:
+
+#+END_SRC
+
+*** login_conf tangle
+
++ home dir
+
+#+NAME: login_conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.login_conf"
+<<login_conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: login_conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".login_conf"
+<<login_conf>>
+#+END_SRC
+
+** gitconfig
+
+#+NAME: gitconfig
+#+BEGIN_SRC conf
+[user]
+name = Daniel J Wilcox
+email = danieljwilcox@gmail.com
+[color]
+ui = true
+#+END_SRC
+
+*** gitconfig tangle
+
++ home dir
+
+#+NAME: gitconfig-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/git/config"
+<<gitconfig>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gitconfig-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/git/config"
+<<gitconfig>>
+#+END_SRC
+
+** gpg-agent
+*** gpg-agent config
+
+#+NAME: gpg-agent
+#+BEGIN_SRC conf
+pinentry-program /usr/local/bin/pinentry-curses
+default-cache-ttl 36000
+max-cache-ttl 36000
+#+END_SRC
+
+*** gpg-agent tangle
+
++ home dir
+
+#+NAME: gpg-agent-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.gnupg/gpg-agent"
+<<gpg-agent>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gpg-agent-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".gnupg/gpg-agent"
+<<gpg-agent>>
+#+END_SRC
+
+** gtk-3.0
+
+#+NAME: gtk
+#+BEGIN_SRC conf
+[Settings]
+gtk-icon-theme-name = Adwaita-dark
+gtk-theme-name = Adwaita-dark
+gtk-application-prefer-dark-theme = true
+#+END_SRC
+
+*** gtk-3.0 tangle
+
++ home dir
+
+#+NAME: gtk-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/gtk-3.0/settings.ini"
+<<gtk>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gtk-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/gtk-3.0/settings.ini"
+<<gtk>>
+#+END_SRC
+
+** xkb
+*** keymap
+**** keymap.xkb config
+
+#+NAME: keymap.xkb
+#+BEGIN_SRC conf
+xkb_keymap {
+xkb_keycodes "xfree86+aliases(qwerty)" {
+    minimum = 8;
+    maximum = 255;
+    <MDSW> = 8;
+     <ESC> = 9;
+    <AE01> = 10;
+    <AE02> = 11;
+    <AE03> = 12;
+    <AE04> = 13;
+    <AE05> = 14;
+    <AE06> = 15;
+    <AE07> = 16;
+    <AE08> = 17;
+    <AE09> = 18;
+    <AE10> = 19;
+    <AE11> = 20;
+    <AE12> = 21;
+    <BKSP> = 22;
+     <TAB> = 23;
+    <AD01> = 24;
+    <AD02> = 25;
+    <AD03> = 26;
+    <AD04> = 27;
+    <AD05> = 28;
+    <AD06> = 29;
+    <AD07> = 30;
+    <AD08> = 31;
+    <AD09> = 32;
+    <AD10> = 33;
+    <AD11> = 34;
+    <AD12> = 35;
+    <RTRN> = 36;
+    <LCTL> = 37;
+    <AC01> = 38;
+    <AC02> = 39;
+    <AC03> = 40;
+    <AC04> = 41;
+    <AC05> = 42;
+    <AC06> = 43;
+    <AC07> = 44;
+    <AC08> = 45;
+    <AC09> = 46;
+    <AC10> = 47;
+    <AC11> = 48;
+    <TLDE> = 49;
+    <LFSH> = 50;
+    <BKSL> = 51;
+    <AB01> = 52;
+    <AB02> = 53;
+    <AB03> = 54;
+    <AB04> = 55;
+    <AB05> = 56;
+    <AB06> = 57;
+    <AB07> = 58;
+    <AB08> = 59;
+    <AB09> = 60;
+    <AB10> = 61;
+    <RTSH> = 62;
+    <KPMU> = 63;
+    <LALT> = 64;
+    <SPCE> = 65;
+    <CAPS> = 66;
+    <FK01> = 67;
+    <FK02> = 68;
+    <FK03> = 69;
+    <FK04> = 70;
+    <FK05> = 71;
+    <FK06> = 72;
+    <FK07> = 73;
+    <FK08> = 74;
+    <FK09> = 75;
+    <FK10> = 76;
+    <NMLK> = 77;
+    <SCLK> = 78;
+     <KP7> = 79;
+     <KP8> = 80;
+     <KP9> = 81;
+    <KPSU> = 82;
+     <KP4> = 83;
+     <KP5> = 84;
+     <KP6> = 85;
+    <KPAD> = 86;
+     <KP1> = 87;
+     <KP2> = 88;
+     <KP3> = 89;
+     <KP0> = 90;
+    <KPDL> = 91;
+    <SYRQ> = 92;
+    <II5D> = 93;
+    <LSGT> = 94;
+    <FK11> = 95;
+    <FK12> = 96;
+    <HOME> = 97;
+      <UP> = 98;
+    <PGUP> = 99;
+    <LEFT> = 100;
+    <II65> = 101;
+    <RGHT> = 102;
+     <END> = 103;
+    <DOWN> = 104;
+    <PGDN> = 105;
+     <INS> = 106;
+    <DELE> = 107;
+    <KPEN> = 108;
+    <RCTL> = 109;
+    <PAUS> = 110;
+    <PRSC> = 111;
+    <KPDV> = 112;
+    <RALT> = 113;
+     <BRK> = 114;
+    <LWIN> = 115;
+    <RWIN> = 116;
+    <MENU> = 117;
+    <FK13> = 118;
+    <FK14> = 119;
+    <FK15> = 120;
+    <FK16> = 121;
+    <FK17> = 122;
+    <KPDC> = 123;
+    <LVL3> = 124;
+     <ALT> = 125;
+    <KPEQ> = 126;
+    <SUPR> = 127;
+    <HYPR> = 128;
+    <XFER> = 129;
+     <I02> = 130;
+    <NFER> = 131;
+     <I04> = 132;
+    <AE13> = 133;
+     <I06> = 134;
+     <I07> = 135;
+     <I08> = 136;
+     <I09> = 137;
+     <I0A> = 138;
+     <I0B> = 139;
+     <I0C> = 140;
+     <I0D> = 141;
+     <I0E> = 142;
+     <I0F> = 143;
+     <I10> = 144;
+     <I11> = 145;
+     <I12> = 146;
+     <I13> = 147;
+     <I14> = 148;
+     <I15> = 149;
+     <I16> = 150;
+     <I17> = 151;
+     <I18> = 152;
+     <I19> = 153;
+     <I1A> = 154;
+     <I1B> = 155;
+    <META> = 156;
+     <K59> = 157;
+     <I1E> = 158;
+     <I1F> = 159;
+     <I20> = 160;
+     <I21> = 161;
+     <I22> = 162;
+     <I23> = 163;
+     <I24> = 164;
+     <I25> = 165;
+     <I26> = 166;
+     <I27> = 167;
+     <I28> = 168;
+     <I29> = 169;
+     <K5A> = 170;
+     <I2B> = 171;
+     <I2C> = 172;
+     <I2D> = 173;
+     <I2E> = 174;
+     <I2F> = 175;
+     <I30> = 176;
+     <I31> = 177;
+     <I32> = 178;
+     <I33> = 179;
+     <I34> = 180;
+     <K5B> = 181;
+     <K5D> = 182;
+     <K5E> = 183;
+     <K5F> = 184;
+     <I39> = 185;
+     <I3A> = 186;
+     <I3B> = 187;
+     <I3C> = 188;
+     <K62> = 189;
+     <K63> = 190;
+     <K64> = 191;
+     <K65> = 192;
+     <K66> = 193;
+     <I42> = 194;
+     <I43> = 195;
+     <I44> = 196;
+     <I45> = 197;
+     <K67> = 198;
+     <K68> = 199;
+     <K69> = 200;
+     <K6A> = 201;
+     <I4A> = 202;
+     <K6B> = 203;
+     <K6C> = 204;
+     <K6D> = 205;
+     <K6E> = 206;
+     <K6F> = 207;
+    <HKTG> = 208;
+    <KANA> = 209;
+    <EISU> = 210;
+    <AB11> = 211;
+     <I54> = 212;
+     <I55> = 213;
+     <I56> = 214;
+     <I57> = 215;
+     <I58> = 216;
+     <I59> = 217;
+     <I5A> = 218;
+     <K74> = 219;
+     <K75> = 220;
+     <K76> = 221;
+     <I5E> = 222;
+     <I5F> = 223;
+     <I60> = 224;
+     <I61> = 225;
+     <I62> = 226;
+     <I63> = 227;
+     <I64> = 228;
+     <I65> = 229;
+     <I66> = 230;
+     <I67> = 231;
+     <I68> = 232;
+     <I69> = 233;
+     <I6A> = 234;
+     <I6B> = 235;
+     <I6C> = 236;
+     <I6D> = 237;
+     <I6E> = 238;
+     <I6F> = 239;
+     <I70> = 240;
+     <I71> = 241;
+     <I72> = 242;
+     <I73> = 243;
+     <I74> = 244;
+     <I75> = 245;
+     <I76> = 246;
+     <I77> = 247;
+     <I78> = 248;
+     <I79> = 249;
+     <I7A> = 250;
+     <I7B> = 251;
+     <I7C> = 252;
+     <I7D> = 253;
+     <I7E> = 254;
+     <I7F> = 255;
+    indicator 1 = "Caps Lock";
+    indicator 2 = "Num Lock";
+    indicator 3 = "Scroll Lock";
+    virtual indicator 4 = "Shift Lock";
+    virtual indicator 5 = "Group 2";
+    virtual indicator 6 = "Mouse Keys";
+    alias <AE00> = <TLDE>;
+    alias <HZTG> = <TLDE>;
+    alias <HNGL> = <FK16>;
+    alias <HJCV> = <FK17>;
+    alias  <I05> = <AE13>;
+    alias <IR7C> =  <I7C>;
+    alias <IR7D> =  <I7D>;
+    alias  <K5C> = <KPEQ>;
+    alias  <K70> = <HKTG>;
+    alias  <K71> = <KANA>;
+    alias  <K72> = <EISU>;
+    alias  <K73> = <AB11>;
+    alias <LMTA> = <LWIN>;
+    alias <RMTA> = <RWIN>;
+    alias <COMP> = <MENU>;
+    alias <POWR> =  <I0C>;
+    alias <MUTE> =  <I0D>;
+    alias <VOL-> =  <I0E>;
+    alias <VOL+> =  <I0F>;
+    alias <HELP> =  <I10>;
+    alias <STOP> =  <I11>;
+    alias <AGAI> =  <I12>;
+    alias <PROP> =  <I13>;
+    alias <UNDO> =  <I14>;
+    alias <FRNT> =  <I15>;
+    alias <COPY> =  <I16>;
+    alias <OPEN> =  <I17>;
+    alias <PAST> =  <I18>;
+    alias <FIND> =  <I19>;
+    alias  <CUT> =  <I1A>;
+    alias <OUTP> =  <I56>;
+    alias <KITG> =  <I57>;
+    alias <KIDN> =  <I58>;
+    alias <KIUP> =  <I59>;
+    alias <ALGR> = <RALT>;
+    alias <KPPT> =  <I06>;
+    alias <AC12> = <BKSL>;
+    alias <LatQ> = <AD01>;
+    alias <LatW> = <AD02>;
+    alias <LatE> = <AD03>;
+    alias <LatR> = <AD04>;
+    alias <LatT> = <AD05>;
+    alias <LatY> = <AD06>;
+    alias <LatU> = <AD07>;
+    alias <LatI> = <AD08>;
+    alias <LatO> = <AD09>;
+    alias <LatP> = <AD10>;
+    alias <LatA> = <AC01>;
+    alias <LatS> = <AC02>;
+    alias <LatD> = <AC03>;
+    alias <LatF> = <AC04>;
+    alias <LatG> = <AC05>;
+    alias <LatH> = <AC06>;
+    alias <LatJ> = <AC07>;
+    alias <LatK> = <AC08>;
+    alias <LatL> = <AC09>;
+    alias <LatZ> = <AB01>;
+    alias <LatX> = <AB02>;
+    alias <LatC> = <AB03>;
+    alias <LatV> = <AB04>;
+    alias <LatB> = <AB05>;
+    alias <LatN> = <AB06>;
+    alias <LatM> = <AB07>;
+};
+
+xkb_types "complete" {
+
+    virtual_modifiers NumLock,Alt,LevelThree,LAlt,RAlt,RControl,LControl,ScrollLock,LevelFive,AltGr,Meta,Super,Hyper;
+
+    type "ONE_LEVEL" {
+        modifiers= none;
+        level_name[Level1]= "Any";
+    };
+    type "TWO_LEVEL" {
+        modifiers= Shift;
+        map[Shift]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+    };
+    type "ALPHABETIC" {
+        modifiers= Shift+Lock;
+        map[Shift]= Level2;
+        map[Lock]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Caps";
+    };
+    type "KEYPAD" {
+        modifiers= Shift+NumLock;
+        map[Shift]= Level2;
+        map[NumLock]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Number";
+    };
+    type "SHIFT+ALT" {
+        modifiers= Shift+Alt;
+        map[Shift+Alt]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift+Alt";
+    };
+    type "PC_SUPER_LEVEL2" {
+        modifiers= Mod4;
+        map[Mod4]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Super";
+    };
+    type "PC_CONTROL_LEVEL2" {
+        modifiers= Control;
+        map[Control]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Control";
+    };
+    type "PC_LCONTROL_LEVEL2" {
+        modifiers= LControl;
+        map[LControl]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "LControl";
+    };
+    type "PC_RCONTROL_LEVEL2" {
+        modifiers= RControl;
+        map[RControl]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "RControl";
+    };
+    type "PC_ALT_LEVEL2" {
+        modifiers= Alt;
+        map[Alt]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Alt";
+    };
+    type "PC_LALT_LEVEL2" {
+        modifiers= LAlt;
+        map[LAlt]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "LAlt";
+    };
+    type "PC_RALT_LEVEL2" {
+        modifiers= RAlt;
+        map[RAlt]= Level2;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "RAlt";
+    };
+    type "CTRL+ALT" {
+        modifiers= Shift+Control+Alt+LevelThree;
+        map[Shift]= Level2;
+        preserve[Shift]= Shift;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        preserve[Shift+LevelThree]= Shift;
+        map[Control+Alt]= Level5;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "Ctrl+Alt";
+    };
+    type "LOCAL_EIGHT_LEVEL" {
+        modifiers= Shift+Lock+Control+LevelThree;
+        map[Shift+Lock]= Level1;
+        map[Shift]= Level2;
+        map[Lock]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+Lock+LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock+LevelThree]= Level4;
+        map[Control]= Level5;
+        map[Shift+Lock+Control]= Level5;
+        map[Shift+Control]= Level6;
+        map[Lock+Control]= Level6;
+        map[Control+LevelThree]= Level7;
+        map[Shift+Lock+Control+LevelThree]= Level7;
+        map[Shift+Control+LevelThree]= Level8;
+        map[Lock+Control+LevelThree]= Level8;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Level3";
+        level_name[Level4]= "Shift Level3";
+        level_name[Level5]= "Ctrl";
+        level_name[Level6]= "Shift Ctrl";
+        level_name[Level7]= "Level3 Ctrl";
+        level_name[Level8]= "Shift Level3 Ctrl";
+    };
+    type "THREE_LEVEL" {
+        modifiers= Shift+LevelThree;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level3;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Level3";
+    };
+    type "EIGHT_LEVEL" {
+        modifiers= Shift+LevelThree+LevelFive;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[LevelFive]= Level5;
+        map[Shift+LevelFive]= Level6;
+        map[LevelThree+LevelFive]= Level7;
+        map[Shift+LevelThree+LevelFive]= Level8;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "X";
+        level_name[Level6]= "X Shift";
+        level_name[Level7]= "X Alt Base";
+        level_name[Level8]= "X Shift Alt";
+    };
+    type "EIGHT_LEVEL_ALPHABETIC" {
+        modifiers= Shift+Lock+LevelThree+LevelFive;
+        map[Shift]= Level2;
+        map[Lock]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock+LevelThree]= Level4;
+        map[Shift+Lock+LevelThree]= Level3;
+        map[LevelFive]= Level5;
+        map[Shift+LevelFive]= Level6;
+        map[Lock+LevelFive]= Level6;
+        map[LevelThree+LevelFive]= Level7;
+        map[Shift+LevelThree+LevelFive]= Level8;
+        map[Lock+LevelThree+LevelFive]= Level8;
+        map[Shift+Lock+LevelThree+LevelFive]= Level7;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "X";
+        level_name[Level6]= "X Shift";
+        level_name[Level7]= "X Alt Base";
+        level_name[Level8]= "X Shift Alt";
+    };
+    type "EIGHT_LEVEL_LEVEL_FIVE_LOCK" {
+        modifiers= Shift+Lock+NumLock+LevelThree+LevelFive;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[LevelFive]= Level5;
+        map[Shift+LevelFive]= Level6;
+        preserve[Shift+LevelFive]= Shift;
+        map[LevelThree+LevelFive]= Level7;
+        map[Shift+LevelThree+LevelFive]= Level8;
+        map[NumLock]= Level5;
+        map[Shift+NumLock]= Level6;
+        preserve[Shift+NumLock]= Shift;
+        map[NumLock+LevelThree]= Level7;
+        map[Shift+NumLock+LevelThree]= Level8;
+        map[Shift+NumLock+LevelFive]= Level2;
+        map[NumLock+LevelThree+LevelFive]= Level3;
+        map[Shift+NumLock+LevelThree+LevelFive]= Level4;
+        map[Shift+Lock]= Level2;
+        map[Lock+LevelThree]= Level3;
+        map[Shift+Lock+LevelThree]= Level4;
+        map[Lock+LevelFive]= Level5;
+        map[Shift+Lock+LevelFive]= Level6;
+        preserve[Shift+Lock+LevelFive]= Shift;
+        map[Lock+LevelThree+LevelFive]= Level7;
+        map[Shift+Lock+LevelThree+LevelFive]= Level8;
+        map[Lock+NumLock]= Level5;
+        map[Shift+Lock+NumLock]= Level6;
+        preserve[Shift+Lock+NumLock]= Shift;
+        map[Lock+NumLock+LevelThree]= Level7;
+        map[Shift+Lock+NumLock+LevelThree]= Level8;
+        map[Shift+Lock+NumLock+LevelFive]= Level2;
+        map[Lock+NumLock+LevelThree+LevelFive]= Level3;
+        map[Shift+Lock+NumLock+LevelThree+LevelFive]= Level4;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "X";
+        level_name[Level6]= "X Shift";
+        level_name[Level7]= "X Alt Base";
+        level_name[Level8]= "X Shift Alt";
+    };
+    type "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK" {
+        modifiers= Shift+Lock+NumLock+LevelThree+LevelFive;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[LevelFive]= Level5;
+        map[Shift+LevelFive]= Level6;
+        preserve[Shift+LevelFive]= Shift;
+        map[LevelThree+LevelFive]= Level7;
+        map[Shift+LevelThree+LevelFive]= Level8;
+        map[NumLock]= Level5;
+        map[Shift+NumLock]= Level6;
+        preserve[Shift+NumLock]= Shift;
+        map[NumLock+LevelThree]= Level7;
+        map[Shift+NumLock+LevelThree]= Level8;
+        map[Shift+NumLock+LevelFive]= Level2;
+        map[NumLock+LevelThree+LevelFive]= Level3;
+        map[Shift+NumLock+LevelThree+LevelFive]= Level4;
+        map[Lock]= Level2;
+        map[Lock+LevelThree]= Level3;
+        map[Shift+Lock+LevelThree]= Level4;
+        map[Lock+LevelFive]= Level5;
+        map[Shift+Lock+LevelFive]= Level6;
+        map[Lock+LevelThree+LevelFive]= Level7;
+        map[Shift+Lock+LevelThree+LevelFive]= Level8;
+        map[Lock+NumLock]= Level5;
+        map[Shift+Lock+NumLock]= Level6;
+        map[Lock+NumLock+LevelThree]= Level7;
+        map[Shift+Lock+NumLock+LevelThree]= Level8;
+        map[Lock+NumLock+LevelFive]= Level2;
+        map[Lock+NumLock+LevelThree+LevelFive]= Level4;
+        map[Shift+Lock+NumLock+LevelThree+LevelFive]= Level3;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "X";
+        level_name[Level6]= "X Shift";
+        level_name[Level7]= "X Alt Base";
+        level_name[Level8]= "X Shift Alt";
+    };
+    type "EIGHT_LEVEL_SEMIALPHABETIC" {
+        modifiers= Shift+Lock+LevelThree+LevelFive;
+        map[Shift]= Level2;
+        map[Lock]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock+LevelThree]= Level3;
+        preserve[Lock+LevelThree]= Lock;
+        map[Shift+Lock+LevelThree]= Level4;
+        preserve[Shift+Lock+LevelThree]= Lock;
+        map[LevelFive]= Level5;
+        map[Shift+LevelFive]= Level6;
+        map[Lock+LevelFive]= Level6;
+        preserve[Lock+LevelFive]= Lock;
+        map[Shift+Lock+LevelFive]= Level6;
+        preserve[Shift+Lock+LevelFive]= Lock;
+        map[LevelThree+LevelFive]= Level7;
+        map[Shift+LevelThree+LevelFive]= Level8;
+        map[Lock+LevelThree+LevelFive]= Level7;
+        preserve[Lock+LevelThree+LevelFive]= Lock;
+        map[Shift+Lock+LevelThree+LevelFive]= Level8;
+        preserve[Shift+Lock+LevelThree+LevelFive]= Lock;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "X";
+        level_name[Level6]= "X Shift";
+        level_name[Level7]= "X Alt Base";
+        level_name[Level8]= "X Shift Alt";
+    };
+    type "FOUR_LEVEL" {
+        modifiers= Shift+LevelThree;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+    };
+    type "FOUR_LEVEL_ALPHABETIC" {
+        modifiers= Shift+Lock+LevelThree;
+        map[Shift]= Level2;
+        map[Lock]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock+LevelThree]= Level4;
+        map[Shift+Lock+LevelThree]= Level3;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+    };
+    type "FOUR_LEVEL_SEMIALPHABETIC" {
+        modifiers= Shift+Lock+LevelThree;
+        map[Shift]= Level2;
+        map[Lock]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock+LevelThree]= Level3;
+        preserve[Lock+LevelThree]= Lock;
+        map[Shift+Lock+LevelThree]= Level4;
+        preserve[Shift+Lock+LevelThree]= Lock;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+    };
+    type "FOUR_LEVEL_MIXED_KEYPAD" {
+        modifiers= Shift+NumLock+LevelThree;
+        map[Shift+NumLock]= Level1;
+        map[NumLock]= Level2;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[NumLock+LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Shift+NumLock+LevelThree]= Level4;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Number";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+    };
+    type "FOUR_LEVEL_X" {
+        modifiers= Shift+Control+Alt+LevelThree;
+        map[LevelThree]= Level2;
+        map[Shift+LevelThree]= Level3;
+        map[Control+Alt]= Level4;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Alt Base";
+        level_name[Level3]= "Shift Alt";
+        level_name[Level4]= "Ctrl+Alt";
+    };
+    type "SEPARATE_CAPS_AND_SHIFT_ALPHABETIC" {
+        modifiers= Shift+Lock+LevelThree;
+        map[Shift]= Level2;
+        map[Lock]= Level4;
+        preserve[Lock]= Lock;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock+LevelThree]= Level3;
+        preserve[Lock+LevelThree]= Lock;
+        map[Shift+Lock+LevelThree]= Level3;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "AltGr Base";
+        level_name[Level4]= "Shift AltGr";
+    };
+    type "FOUR_LEVEL_PLUS_LOCK" {
+        modifiers= Shift+Lock+LevelThree;
+        map[Shift]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[Lock]= Level5;
+        map[Shift+Lock]= Level2;
+        map[Lock+LevelThree]= Level3;
+        map[Shift+Lock+LevelThree]= Level4;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Shift";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Shift Alt";
+        level_name[Level5]= "Lock";
+    };
+    type "FOUR_LEVEL_KEYPAD" {
+        modifiers= Shift+NumLock+LevelThree;
+        map[Shift]= Level2;
+        map[NumLock]= Level2;
+        map[LevelThree]= Level3;
+        map[Shift+LevelThree]= Level4;
+        map[NumLock+LevelThree]= Level4;
+        map[Shift+NumLock+LevelThree]= Level3;
+        level_name[Level1]= "Base";
+        level_name[Level2]= "Number";
+        level_name[Level3]= "Alt Base";
+        level_name[Level4]= "Alt Number";
+    };
+};
+
+xkb_compatibility "complete" {
+
+    virtual_modifiers NumLock,Alt,LevelThree,LAlt,RAlt,RControl,LControl,ScrollLock,LevelFive,AltGr,Meta,Super,Hyper;
+
+    interpret.useModMapMods= AnyLevel;
+    interpret.repeat= False;
+    interpret.locking= False;
+    interpret ISO_Level2_Latch+Exactly(Shift) {
+        useModMapMods=level1;
+        action= LatchMods(modifiers=Shift,clearLocks,latchToLock);
+    };
+    interpret Shift_Lock+AnyOf(Shift+Lock) {
+        action= LockMods(modifiers=Shift);
+    };
+    interpret Num_Lock+AnyOf(all) {
+        virtualModifier= NumLock;
+        action= LockMods(modifiers=NumLock);
+    };
+    interpret ISO_Level3_Shift+AnyOf(all) {
+        virtualModifier= LevelThree;
+        useModMapMods=level1;
+        action= SetMods(modifiers=LevelThree,clearLocks);
+    };
+    interpret ISO_Level3_Latch+AnyOf(all) {
+        virtualModifier= LevelThree;
+        useModMapMods=level1;
+        action= LatchMods(modifiers=LevelThree,clearLocks,latchToLock);
+    };
+    interpret ISO_Level3_Lock+AnyOf(all) {
+        virtualModifier= LevelThree;
+        useModMapMods=level1;
+        action= LockMods(modifiers=LevelThree);
+    };
+    interpret Alt_L+AnyOf(all) {
+        virtualModifier= Alt;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Alt_R+AnyOf(all) {
+        virtualModifier= Alt;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Meta_L+AnyOf(all) {
+        virtualModifier= Meta;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Meta_R+AnyOf(all) {
+        virtualModifier= Meta;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Super_L+AnyOf(all) {
+        virtualModifier= Super;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Super_R+AnyOf(all) {
+        virtualModifier= Super;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Hyper_L+AnyOf(all) {
+        virtualModifier= Hyper;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Hyper_R+AnyOf(all) {
+        virtualModifier= Hyper;
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    interpret Scroll_Lock+AnyOf(all) {
+        virtualModifier= ScrollLock;
+        action= LockMods(modifiers=modMapMods);
+    };
+    interpret ISO_Level5_Shift+AnyOf(all) {
+        virtualModifier= LevelFive;
+        useModMapMods=level1;
+        action= SetMods(modifiers=LevelFive,clearLocks);
+    };
+    interpret ISO_Level5_Latch+AnyOf(all) {
+        virtualModifier= LevelFive;
+        useModMapMods=level1;
+        action= LatchMods(modifiers=LevelFive,clearLocks,latchToLock);
+    };
+    interpret ISO_Level5_Lock+AnyOf(all) {
+        virtualModifier= LevelFive;
+        useModMapMods=level1;
+        action= LockMods(modifiers=LevelFive);
+    };
+    interpret Mode_switch+AnyOfOrNone(all) {
+        virtualModifier= AltGr;
+        useModMapMods=level1;
+        action= SetGroup(group=+1);
+    };
+    interpret ISO_Level3_Shift+AnyOfOrNone(all) {
+        action= SetMods(modifiers=LevelThree,clearLocks);
+    };
+    interpret ISO_Level3_Latch+AnyOfOrNone(all) {
+        action= LatchMods(modifiers=LevelThree,clearLocks,latchToLock);
+    };
+    interpret ISO_Level3_Lock+AnyOfOrNone(all) {
+        action= LockMods(modifiers=LevelThree);
+    };
+    interpret ISO_Group_Latch+AnyOfOrNone(all) {
+        virtualModifier= AltGr;
+        useModMapMods=level1;
+        action= LatchGroup(group=2);
+    };
+    interpret ISO_Next_Group+AnyOfOrNone(all) {
+        virtualModifier= AltGr;
+        useModMapMods=level1;
+        action= LockGroup(group=+1);
+    };
+    interpret ISO_Prev_Group+AnyOfOrNone(all) {
+        virtualModifier= AltGr;
+        useModMapMods=level1;
+        action= LockGroup(group=-1);
+    };
+    interpret ISO_First_Group+AnyOfOrNone(all) {
+        action= LockGroup(group=1);
+    };
+    interpret ISO_Last_Group+AnyOfOrNone(all) {
+        action= LockGroup(group=2);
+    };
+    interpret KP_1+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=+1);
+    };
+    interpret KP_End+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=+1);
+    };
+    interpret KP_2+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+0,y=+1);
+    };
+    interpret KP_Down+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+0,y=+1);
+    };
+    interpret KP_3+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=+1);
+    };
+    interpret KP_Next+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=+1);
+    };
+    interpret KP_4+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=+0);
+    };
+    interpret KP_Left+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=+0);
+    };
+    interpret KP_6+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=+0);
+    };
+    interpret KP_Right+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=+0);
+    };
+    interpret KP_7+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=-1);
+    };
+    interpret KP_Home+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=-1);
+    };
+    interpret KP_8+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+0,y=-1);
+    };
+    interpret KP_Up+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+0,y=-1);
+    };
+    interpret KP_9+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=-1);
+    };
+    interpret KP_Prior+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=-1);
+    };
+    interpret KP_5+AnyOfOrNone(all) {
+        repeat= True;
+        action= PtrBtn(button=default);
+    };
+    interpret KP_Begin+AnyOfOrNone(all) {
+        repeat= True;
+        action= PtrBtn(button=default);
+    };
+    interpret KP_F2+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=1);
+    };
+    interpret KP_Divide+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=1);
+    };
+    interpret KP_F3+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=2);
+    };
+    interpret KP_Multiply+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=2);
+    };
+    interpret KP_F4+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=3);
+    };
+    interpret KP_Subtract+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=3);
+    };
+    interpret KP_Separator+AnyOfOrNone(all) {
+        repeat= True;
+        action= PtrBtn(button=default,count=2);
+    };
+    interpret KP_Add+AnyOfOrNone(all) {
+        repeat= True;
+        action= PtrBtn(button=default,count=2);
+    };
+    interpret KP_0+AnyOfOrNone(all) {
+        repeat= True;
+        action= LockPtrBtn(button=default,affect=lock);
+    };
+    interpret KP_Insert+AnyOfOrNone(all) {
+        repeat= True;
+        action= LockPtrBtn(button=default,affect=lock);
+    };
+    interpret KP_Decimal+AnyOfOrNone(all) {
+        repeat= True;
+        action= LockPtrBtn(button=default,affect=unlock);
+    };
+    interpret KP_Delete+AnyOfOrNone(all) {
+        repeat= True;
+        action= LockPtrBtn(button=default,affect=unlock);
+    };
+    interpret F25+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=1);
+    };
+    interpret F26+AnyOfOrNone(all) {
+        repeat= True;
+        action= SetPtrDflt(affect=button,button=2);
+    };
+    interpret F27+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=-1);
+    };
+    interpret F29+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=-1);
+    };
+    interpret F31+AnyOfOrNone(all) {
+        repeat= True;
+        action= PtrBtn(button=default);
+    };
+    interpret F33+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=-1,y=+1);
+    };
+    interpret F35+AnyOfOrNone(all) {
+        repeat= True;
+        action= MovePtr(x=+1,y=+1);
+    };
+    interpret Pointer_Button_Dflt+AnyOfOrNone(all) {
+        action= PtrBtn(button=default);
+    };
+    interpret Pointer_Button1+AnyOfOrNone(all) {
+        action= PtrBtn(button=1);
+    };
+    interpret Pointer_Button2+AnyOfOrNone(all) {
+        action= PtrBtn(button=2);
+    };
+    interpret Pointer_Button3+AnyOfOrNone(all) {
+        action= PtrBtn(button=3);
+    };
+    interpret Pointer_DblClick_Dflt+AnyOfOrNone(all) {
+        action= PtrBtn(button=default,count=2);
+    };
+    interpret Pointer_DblClick1+AnyOfOrNone(all) {
+        action= PtrBtn(button=1,count=2);
+    };
+    interpret Pointer_DblClick2+AnyOfOrNone(all) {
+        action= PtrBtn(button=2,count=2);
+    };
+    interpret Pointer_DblClick3+AnyOfOrNone(all) {
+        action= PtrBtn(button=3,count=2);
+    };
+    interpret Pointer_Drag_Dflt+AnyOfOrNone(all) {
+        action= LockPtrBtn(button=default,affect=both);
+    };
+    interpret Pointer_Drag1+AnyOfOrNone(all) {
+        action= LockPtrBtn(button=1,affect=both);
+    };
+    interpret Pointer_Drag2+AnyOfOrNone(all) {
+        action= LockPtrBtn(button=2,affect=both);
+    };
+    interpret Pointer_Drag3+AnyOfOrNone(all) {
+        action= LockPtrBtn(button=3,affect=both);
+    };
+    interpret Pointer_EnableKeys+AnyOfOrNone(all) {
+        action= LockControls(controls=MouseKeys);
+    };
+    interpret Pointer_Accelerate+AnyOfOrNone(all) {
+        action= LockControls(controls=MouseKeysAccel);
+    };
+    interpret Pointer_DfltBtnNext+AnyOfOrNone(all) {
+        action= SetPtrDflt(affect=button,button=+1);
+    };
+    interpret Pointer_DfltBtnPrev+AnyOfOrNone(all) {
+        action= SetPtrDflt(affect=button,button=-1);
+    };
+    interpret AccessX_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=AccessXKeys);
+    };
+    interpret AccessX_Feedback_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=AccessXFeedback);
+    };
+    interpret RepeatKeys_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=RepeatKeys);
+    };
+    interpret SlowKeys_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=SlowKeys);
+    };
+    interpret BounceKeys_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=BounceKeys);
+    };
+    interpret StickyKeys_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=StickyKeys);
+    };
+    interpret MouseKeys_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=MouseKeys);
+    };
+    interpret MouseKeys_Accel_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=MouseKeysAccel);
+    };
+    interpret Overlay1_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=Overlay1);
+    };
+    interpret Overlay2_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=Overlay2);
+    };
+    interpret AudibleBell_Enable+AnyOfOrNone(all) {
+        action= LockControls(controls=AudibleBell);
+    };
+    interpret Terminate_Server+AnyOfOrNone(all) {
+        action= Terminate();
+    };
+    interpret Alt_L+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Alt,clearLocks);
+    };
+    interpret Alt_R+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Alt,clearLocks);
+    };
+    interpret Meta_L+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Meta,clearLocks);
+    };
+    interpret Meta_R+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Meta,clearLocks);
+    };
+    interpret Super_L+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Super,clearLocks);
+    };
+    interpret Super_R+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Super,clearLocks);
+    };
+    interpret Hyper_L+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Hyper,clearLocks);
+    };
+    interpret Hyper_R+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Hyper,clearLocks);
+    };
+    interpret Shift_L+AnyOfOrNone(all) {
+        action= SetMods(modifiers=Shift,clearLocks);
+    };
+    interpret XF86Switch_VT_1+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=1,!same);
+    };
+    interpret XF86Switch_VT_2+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=2,!same);
+    };
+    interpret XF86Switch_VT_3+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=3,!same);
+    };
+    interpret XF86Switch_VT_4+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=4,!same);
+    };
+    interpret XF86Switch_VT_5+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=5,!same);
+    };
+    interpret XF86Switch_VT_6+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=6,!same);
+    };
+    interpret XF86Switch_VT_7+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=7,!same);
+    };
+    interpret XF86Switch_VT_8+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=8,!same);
+    };
+    interpret XF86Switch_VT_9+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=9,!same);
+    };
+    interpret XF86Switch_VT_10+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=10,!same);
+    };
+    interpret XF86Switch_VT_11+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=11,!same);
+    };
+    interpret XF86Switch_VT_12+AnyOfOrNone(all) {
+        repeat= True;
+        action= SwitchScreen(screen=12,!same);
+    };
+    interpret XF86LogGrabInfo+AnyOfOrNone(all) {
+        repeat= True;
+        action= Private(type=0x86,data[0]=0x50,data[1]=0x72,data[2]=0x47,data[3]=0x72,data[4]=0x62,data[5]=0x73,data[6]=0x00);
+    };
+    interpret XF86LogWindowTree+AnyOfOrNone(all) {
+        repeat= True;
+        action= Private(type=0x86,data[0]=0x50,data[1]=0x72,data[2]=0x57,data[3]=0x69,data[4]=0x6e,data[5]=0x73,data[6]=0x00);
+    };
+    interpret XF86Next_VMode+AnyOfOrNone(all) {
+        repeat= True;
+        action= Private(type=0x86,data[0]=0x2b,data[1]=0x56,data[2]=0x4d,data[3]=0x6f,data[4]=0x64,data[5]=0x65,data[6]=0x00);
+    };
+    interpret XF86Prev_VMode+AnyOfOrNone(all) {
+        repeat= True;
+        action= Private(type=0x86,data[0]=0x2d,data[1]=0x56,data[2]=0x4d,data[3]=0x6f,data[4]=0x64,data[5]=0x65,data[6]=0x00);
+    };
+    interpret ISO_Level5_Shift+AnyOfOrNone(all) {
+        action= SetMods(modifiers=LevelFive,clearLocks);
+    };
+    interpret ISO_Level5_Latch+AnyOfOrNone(all) {
+        action= LatchMods(modifiers=LevelFive,clearLocks,latchToLock);
+    };
+    interpret ISO_Level5_Lock+AnyOfOrNone(all) {
+        action= LockMods(modifiers=LevelFive);
+    };
+    interpret Caps_Lock+AnyOfOrNone(all) {
+        action= LockMods(modifiers=Lock);
+    };
+    interpret Any+Exactly(Lock) {
+        action= LockMods(modifiers=Lock);
+    };
+    interpret Any+AnyOf(all) {
+        action= SetMods(modifiers=modMapMods,clearLocks);
+    };
+    group 2 = AltGr;
+    group 3 = AltGr;
+    group 4 = AltGr;
+    indicator "Caps Lock" {
+        !allowExplicit;
+        whichModState= locked;
+        modifiers= Lock;
+    };
+    indicator "Num Lock" {
+        !allowExplicit;
+        whichModState= locked;
+        modifiers= NumLock;
+    };
+    indicator "Scroll Lock" {
+        whichModState= locked;
+        modifiers= ScrollLock;
+    };
+    indicator "Shift Lock" {
+        !allowExplicit;
+        whichModState= locked;
+        modifiers= Shift;
+    };
+    indicator "Group 2" {
+        !allowExplicit;
+        groups= 0xfe;
+    };
+    indicator "Mouse Keys" {
+        indicatorDrivesKeyboard;
+        controls= mouseKeys;
+    };
+};
+
+xkb_symbols "pc+gb(mac)" {
+
+    name[group1]="English (UK, Macintosh)";
+
+    key <MDSW> {         [     Mode_switch ] };
+    key  <ESC> {         [          Escape ] };
+    key <AE01> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               1,          exclam,     onesuperior,      exclamdown ]
+    };
+    key <AE02> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               2,              at,        EuroSign,       oneeighth ]
+    };
+    key <AE03> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               3,        sterling,      numbersign,        sterling ]
+    };
+    key <AE04> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               4,          dollar,      onequarter,          dollar ]
+    };
+    key <AE05> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               5,         percent,         onehalf,    threeeighths ]
+    };
+    key <AE06> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               6,     asciicircum,   threequarters,     fiveeighths ]
+    };
+    key <AE07> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               7,       ampersand,       braceleft,    seveneighths ]
+    };
+    key <AE08> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               8,        asterisk,     bracketleft,       trademark ]
+    };
+    key <AE09> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               9,       parenleft,    bracketright,       plusminus ]
+    };
+    key <AE10> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [               0,      parenright,      braceright,          degree ]
+    };
+    key <AE11> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [           minus,      underscore,       backslash,    questiondown ]
+    };
+    key <AE12> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [           equal,            plus,    dead_cedilla,     dead_ogonek ]
+    };
+    key <BKSP> {         [       BackSpace,       BackSpace ] };
+    key  <TAB> {         [             Tab,    ISO_Left_Tab ] };
+    key <AD01> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               q,               Q,              at,     Greek_OMEGA ]
+    };
+    key <AD02> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               w,               W,         lstroke,         Lstroke ]
+    };
+    key <AD03> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               e,               E,               e,               E ]
+    };
+    key <AD04> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               r,               R,       paragraph,      registered ]
+    };
+    key <AD05> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               t,               T,          tslash,          Tslash ]
+    };
+    key <AD06> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               y,               Y,       leftarrow,             yen ]
+    };
+    key <AD07> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               u,               U,       downarrow,         uparrow ]
+    };
+    key <AD08> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               i,               I,      rightarrow,        idotless ]
+    };
+    key <AD09> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               o,               O,          oslash,          Oslash ]
+    };
+    key <AD10> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               p,               P,           thorn,           THORN ]
+    };
+    key <AD11> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [     bracketleft,       braceleft,  dead_diaeresis,  dead_abovering ]
+    };
+    key <AD12> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [    bracketright,      braceright,      dead_tilde,     dead_macron ]
+    };
+    key <RTRN> {         [          Return ] };
+    key <LCTL> {         [           Alt_L,          Meta_L ] };
+    key <AC01> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               a,               A,              ae,              AE ]
+    };
+    key <AC02> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               s,               S,          ssharp,         section ]
+    };
+    key <AC03> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               d,               D,             eth,             ETH ]
+    };
+    key <AC04> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               f,               F,         dstroke,     ordfeminine ]
+    };
+    key <AC05> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               g,               G,             eng,             ENG ]
+    };
+    key <AC06> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               h,               H,         hstroke,         Hstroke ]
+    };
+    key <AC07> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               j,               J,       dead_hook,       dead_horn ]
+    };
+    key <AC08> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               k,               K,             kra,       ampersand ]
+    };
+    key <AC09> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               l,               L,         lstroke,         Lstroke ]
+    };
+    key <AC10> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [       semicolon,           colon,      dead_acute, dead_doubleacute ]
+    };
+    key <AC11> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [      apostrophe,        quotedbl, dead_circumflex,      dead_caron ]
+    };
+    key <TLDE> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [         section,       plusminus,         notsign,         notsign ]
+    };
+    key <LFSH> {         [         Shift_L ] };
+    key <BKSL> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [       backslash,             bar,      dead_grave,      dead_breve ]
+    };
+    key <AB01> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               z,               Z,   guillemotleft,            less ]
+    };
+    key <AB02> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               x,               X,  guillemotright,         greater ]
+    };
+    key <AB03> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               c,               C,            cent,       copyright ]
+    };
+    key <AB04> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               v,               V, leftdoublequotemark, leftsinglequotemark ]
+    };
+    key <AB05> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               b,               B, rightdoublequotemark, rightsinglequotemark ]
+    };
+    key <AB06> {
+        type= "FOUR_LEVEL_ALPHABETIC",
+        symbols[Group1]= [               n,               N,               n,               N ]
+    };
+    key <AB07> {
+        type= "FOUR_LEVEL_SEMIALPHABETIC",
+        symbols[Group1]= [               m,               M,              mu,       masculine ]
+    };
+    key <AB08> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [           comma,            less,  horizconnector,        multiply ]
+    };
+    key <AB09> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [          period,         greater,  periodcentered,        division ]
+    };
+    key <AB10> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [           slash,        question,   dead_belowdot,   dead_abovedot ]
+    };
+    key <RTSH> {         [         Shift_R ] };
+    key <KPMU> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [     KP_Multiply,     KP_Multiply,     KP_Multiply,     KP_Multiply,   XF86ClearGrab ]
+    };
+    key <LALT> {         [         Super_L ] };
+    key <SPCE> {         [           space ] };
+    key <CAPS> {         [       Caps_Lock ] };
+    key <FK01> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F1,              F1,              F1,              F1, XF86Switch_VT_1 ]
+    };
+    key <FK02> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F2,              F2,              F2,              F2, XF86Switch_VT_2 ]
+    };
+    key <FK03> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F3,              F3,              F3,              F3, XF86Switch_VT_3 ]
+    };
+    key <FK04> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F4,              F4,              F4,              F4, XF86Switch_VT_4 ]
+    };
+    key <FK05> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F5,              F5,              F5,              F5, XF86Switch_VT_5 ]
+    };
+    key <FK06> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F6,              F6,              F6,              F6, XF86Switch_VT_6 ]
+    };
+    key <FK07> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F7,              F7,              F7,              F7, XF86Switch_VT_7 ]
+    };
+    key <FK08> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F8,              F8,              F8,              F8, XF86Switch_VT_8 ]
+    };
+    key <FK09> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [              F9,              F9,              F9,              F9, XF86Switch_VT_9 ]
+    };
+    key <FK10> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [             F10,             F10,             F10,             F10, XF86Switch_VT_10 ]
+    };
+    key <NMLK> {         [        Num_Lock ] };
+    key <SCLK> {         [     Scroll_Lock ] };
+    key  <KP7> {         [         KP_Home,            KP_7 ] };
+    key  <KP8> {         [           KP_Up,            KP_8 ] };
+    key  <KP9> {         [        KP_Prior,            KP_9 ] };
+    key <KPSU> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [     KP_Subtract,     KP_Subtract,     KP_Subtract,     KP_Subtract,  XF86Prev_VMode ]
+    };
+    key  <KP4> {         [         KP_Left,            KP_4 ] };
+    key  <KP5> {         [        KP_Begin,            KP_5 ] };
+    key  <KP6> {         [        KP_Right,            KP_6 ] };
+    key <KPAD> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [          KP_Add,          KP_Add,          KP_Add,          KP_Add,  XF86Next_VMode ]
+    };
+    key  <KP1> {         [          KP_End,            KP_1 ] };
+    key  <KP2> {         [         KP_Down,            KP_2 ] };
+    key  <KP3> {         [         KP_Next,            KP_3 ] };
+    key  <KP0> {         [       KP_Insert,            KP_0 ] };
+    key <KPDL> {         [       KP_Delete,      KP_Decimal ] };
+    key <LSGT> {
+        type= "FOUR_LEVEL",
+        symbols[Group1]= [           grave,      asciitilde,             bar,       brokenbar ]
+    };
+    key <FK11> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [             F11,             F11,             F11,             F11, XF86Switch_VT_11 ]
+    };
+    key <FK12> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [             F12,             F12,             F12,             F12, XF86Switch_VT_12 ]
+    };
+    key <HOME> {         [            Home ] };
+    key   <UP> {         [              Up ] };
+    key <PGUP> {         [           Prior ] };
+    key <LEFT> {         [            Left ] };
+    key <RGHT> {         [           Right ] };
+    key  <END> {         [             End ] };
+    key <DOWN> {         [            Down ] };
+    key <PGDN> {         [            Next ] };
+    key  <INS> {         [          Insert ] };
+    key <DELE> {         [          Delete ] };
+    key <KPEN> {
+        type= "ONE_LEVEL",
+        symbols[Group1]= [ ISO_Level3_Shift ]
+    };
+    key <RCTL> {         [       Control_R ] };
+    key <PAUS> {
+        type= "PC_CONTROL_LEVEL2",
+        symbols[Group1]= [           Pause,           Break ]
+    };
+    key <PRSC> {
+        type= "PC_ALT_LEVEL2",
+        symbols[Group1]= [           Print,         Sys_Req ]
+    };
+    key <KPDV> {
+        type= "CTRL+ALT",
+        symbols[Group1]= [       KP_Divide,       KP_Divide,       KP_Divide,       KP_Divide,      XF86Ungrab ]
+    };
+    key <RALT> {
+        type= "ONE_LEVEL",
+        symbols[Group1]= [ ISO_Level3_Shift ]
+    };
+    key <LWIN> {         [       Control_L ] };
+    key <RWIN> {         [         Super_R ] };
+    key <MENU> {         [            Menu ] };
+    key <LVL3> {
+        type= "ONE_LEVEL",
+        symbols[Group1]= [ ISO_Level3_Shift ]
+    };
+    key  <ALT> {         [        NoSymbol,           Alt_L ] };
+    key <KPEQ> {         [        KP_Equal ] };
+    key <SUPR> {         [        NoSymbol,         Super_L ] };
+    key <HYPR> {         [        NoSymbol,         Hyper_L ] };
+    key  <I06> {         [      KP_Decimal,      KP_Decimal ] };
+    key <META> {         [        NoSymbol,          Meta_L ] };
+    key  <I56> {         [     XF86Display ] };
+    key  <I57> {         [ XF86KbdLightOnOff ] };
+    key  <I58> {         [ XF86KbdBrightnessDown ] };
+    key  <I59> {         [ XF86KbdBrightnessUp ] };
+    modifier_map Mod5 { <MDSW> };
+    modifier_map Control { <LWIN> };
+    modifier_map Shift { <LFSH> };
+    modifier_map Shift { <RTSH> };
+    modifier_map Mod4 { <LALT> };
+    modifier_map Lock { <CAPS> };
+    modifier_map Mod2 { <NMLK> };
+    modifier_map Control { <RCTL> };
+    modifier_map Mod4 { <LALT> };
+    modifier_map Mod4 { <RWIN> };
+    modifier_map Mod5 { <LVL3> };
+    modifier_map Mod4 { <SUPR> };
+    modifier_map Mod4 { <HYPR> };
+    modifier_map Mod1 { <ALT> };
+    modifier_map Mod1 { <META> };
+};
+
+xkb_geometry "pc(pc104)" {
+
+    width=       470;
+    height=      180;
+
+    alias <AC00> = <CAPS>;
+    alias <AA00> = <LCTL>;
+
+    baseColor=   "white";
+    labelColor=  "black";
+    xfont=       "-*-helvetica-medium-r-normal--*-120-*-*-*-*-iso8859-1";
+    description= "Generic 104";
+
+    shape "NORM" {
+        corner= 1,
+        { [  18,  18 ] },
+        { [   2,   1 ], [  16,  16 ] }
+    };
+    shape "BKSP" {
+        corner= 1,
+        { [  38,  18 ] },
+        { [   2,   1 ], [  36,  16 ] }
+    };
+    shape "TABK" {
+        corner= 1,
+        { [  28,  18 ] },
+        { [   2,   1 ], [  26,  16 ] }
+    };
+    shape "BKSL" {
+        corner= 1,
+        { [  28,  18 ] },
+        { [   2,   1 ], [  26,  16 ] }
+    };
+    shape "RTRN" {
+        corner= 1,
+        { [  42,  18 ] },
+        { [   2,   1 ], [  40,  16 ] }
+    };
+    shape "CAPS" {
+        corner= 1,
+        { [  33,  18 ] },
+        { [   2,   1 ], [  31,  16 ] }
+    };
+    shape "LFSH" {
+        corner= 1,
+        { [  42,  18 ] },
+        { [   2,   1 ], [  40,  16 ] }
+    };
+    shape "RTSH" {
+        corner= 1,
+        { [  52,  18 ] },
+        { [   2,   1 ], [  50,  16 ] }
+    };
+    shape "MODK" {
+        corner= 1,
+        { [  27,  18 ] },
+        { [   2,   1 ], [  25,  16 ] }
+    };
+    shape "SMOD" {
+        corner= 1,
+        { [  23,  18 ] },
+        { [   2,   1 ], [  21,  16 ] }
+    };
+    shape "SPCE" {
+        corner= 1,
+        { [ 113,  18 ] },
+        { [   2,   1 ], [ 111,  16 ] }
+    };
+    shape "KP0" {
+        corner= 1,
+        { [  37,  18 ] },
+        { [   2,   1 ], [  35,  16 ] }
+    };
+    shape "KPAD" {
+        corner= 1,
+        { [  18,  37 ] },
+        { [   2,   1 ], [  16,  35 ] }
+    };
+    shape "LEDS" { { [  75,  20 ] } };
+    shape "LED" { { [   5,   1 ] } };
+    section "Function" {
+        key.color= "grey20";
+        priority=  7;
+        top=       22;
+        left=      19;
+        width=     351;
+        height=    19;
+        row {
+            top=  1;
+            left= 1;
+            keys {
+                {  <ESC>, "NORM",   1 },
+                { <FK01>, "NORM",  20, color="white" },
+                { <FK02>, "NORM",   1, color="white" },
+                { <FK03>, "NORM",   1, color="white" },
+                { <FK04>, "NORM",   1, color="white" },
+                { <FK05>, "NORM",  11, color="white" },
+                { <FK06>, "NORM",   1, color="white" },
+                { <FK07>, "NORM",   1, color="white" },
+                { <FK08>, "NORM",   1, color="white" },
+                { <FK09>, "NORM",  11, color="white" },
+                { <FK10>, "NORM",   1, color="white" },
+                { <FK11>, "NORM",   1, color="white" },
+                { <FK12>, "NORM",   1, color="white" },
+                { <PRSC>, "NORM",   8, color="white" },
+                { <SCLK>, "NORM",   1, color="white" },
+                { <PAUS>, "NORM",   1, color="white" }
+            };
+        };
+    }; // End of "Function" section
+
+    section "Alpha" {
+        key.color= "white";
+        priority=  8;
+        top=       61;
+        left=      19;
+        width=     287;
+        height=    95;
+        row {
+            top=  1;
+            left= 1;
+            keys {
+                { <TLDE>, "NORM",   1 }, { <AE01>, "NORM",   1 },
+                { <AE02>, "NORM",   1 }, { <AE03>, "NORM",   1 },
+                { <AE04>, "NORM",   1 }, { <AE05>, "NORM",   1 },
+                { <AE06>, "NORM",   1 }, { <AE07>, "NORM",   1 },
+                { <AE08>, "NORM",   1 }, { <AE09>, "NORM",   1 },
+                { <AE10>, "NORM",   1 }, { <AE11>, "NORM",   1 },
+                { <AE12>, "NORM",   1 },
+                { <BKSP>, "BKSP",   1, color="grey20" }
+            };
+        };
+        row {
+            top=  20;
+            left= 1;
+            keys {
+                {  <TAB>, "TABK",   1, color="grey20" },
+                { <AD01>, "NORM",   1 }, { <AD02>, "NORM",   1 },
+                { <AD03>, "NORM",   1 }, { <AD04>, "NORM",   1 },
+                { <AD05>, "NORM",   1 }, { <AD06>, "NORM",   1 },
+                { <AD07>, "NORM",   1 }, { <AD08>, "NORM",   1 },
+                { <AD09>, "NORM",   1 }, { <AD10>, "NORM",   1 },
+                { <AD11>, "NORM",   1 }, { <AD12>, "NORM",   1 },
+                { <BKSL>, "BKSL",   1 }
+            };
+        };
+        row {
+            top=  39;
+            left= 1;
+            keys {
+                { <CAPS>, "CAPS",   1, color="grey20" },
+                { <AC01>, "NORM",   1 }, { <AC02>, "NORM",   1 },
+                { <AC03>, "NORM",   1 }, { <AC04>, "NORM",   1 },
+                { <AC05>, "NORM",   1 }, { <AC06>, "NORM",   1 },
+                { <AC07>, "NORM",   1 }, { <AC08>, "NORM",   1 },
+                { <AC09>, "NORM",   1 }, { <AC10>, "NORM",   1 },
+                { <AC11>, "NORM",   1 },
+                { <RTRN>, "RTRN",   1, color="grey20" }
+            };
+        };
+        row {
+            top=  58;
+            left= 1;
+            keys {
+                { <LFSH>, "LFSH",   1, color="grey20" },
+                { <AB01>, "NORM",   1 }, { <AB02>, "NORM",   1 },
+                { <AB03>, "NORM",   1 }, { <AB04>, "NORM",   1 },
+                { <AB05>, "NORM",   1 }, { <AB06>, "NORM",   1 },
+                { <AB07>, "NORM",   1 }, { <AB08>, "NORM",   1 },
+                { <AB09>, "NORM",   1 }, { <AB10>, "NORM",   1 },
+                { <RTSH>, "RTSH",   1, color="grey20" }
+            };
+        };
+        row {
+            top=  77;
+            left= 1;
+            keys {
+                { <LCTL>, "MODK",   1, color="grey20" },
+                { <LWIN>, "SMOD",   1, color="grey20" },
+                { <LALT>, "SMOD",   1, color="grey20" },
+                { <SPCE>, "SPCE",   1 },
+                { <RALT>, "SMOD",   1, color="grey20" },
+                { <RWIN>, "SMOD",   1, color="grey20" },
+                { <MENU>, "SMOD",   1, color="grey20" },
+                { <RCTL>, "SMOD",   1, color="grey20" }
+            };
+        };
+    }; // End of "Alpha" section
+
+    section "Editing" {
+        key.color= "grey20";
+        priority=  9;
+        top=       61;
+        left=      312;
+        width=     58;
+        height=    95;
+        row {
+            top=  1;
+            left= 1;
+            keys {
+                {  <INS>, "NORM",   1 }, { <HOME>, "NORM",   1 },
+                { <PGUP>, "NORM",   1 }
+            };
+        };
+        row {
+            top=  20;
+            left= 1;
+            keys {
+                { <DELE>, "NORM",   1 }, {  <END>, "NORM",   1 },
+                { <PGDN>, "NORM",   1 }
+            };
+        };
+        row {
+            top=  58;
+            left= 20;
+            keys {
+                {   <UP>, "NORM",   1 }
+            };
+        };
+        row {
+            top=  77;
+            left= 1;
+            keys {
+                { <LEFT>, "NORM",   1 }, { <DOWN>, "NORM",   1 },
+                { <RGHT>, "NORM",   1 }
+            };
+        };
+    }; // End of "Editing" section
+
+    section "Keypad" {
+        key.color= "grey20";
+        priority=  10;
+        top=       61;
+        left=      376;
+        width=     77;
+        height=    95;
+        row {
+            top=  1;
+            left= 1;
+            keys {
+                { <NMLK>, "NORM",   1 }, { <KPDV>, "NORM",   1 },
+                { <KPMU>, "NORM",   1 }, { <KPSU>, "NORM",   1 }
+            };
+        };
+        row {
+            top=  20;
+            left= 1;
+            keys {
+                {  <KP7>, "NORM",   1, color="white" },
+                {  <KP8>, "NORM",   1, color="white" },
+                {  <KP9>, "NORM",   1, color="white" },
+                { <KPAD>, "KPAD",   1 }
+            };
+        };
+        row {
+            top=  39;
+            left= 1;
+            keys {
+                {  <KP4>, "NORM",   1, color="white" },
+                {  <KP5>, "NORM",   1, color="white" },
+                {  <KP6>, "NORM",   1, color="white" }
+            };
+        };
+        row {
+            top=  58;
+            left= 1;
+            keys {
+                {  <KP1>, "NORM",   1, color="white" },
+                {  <KP2>, "NORM",   1, color="white" },
+                {  <KP3>, "NORM",   1, color="white" },
+                { <KPEN>, "KPAD",   1 }
+            };
+        };
+        row {
+            top=  77;
+            left= 1;
+            keys {
+                {  <KP0>, "KP0",   1, color="white" },
+                { <KPDL>, "NORM",   1, color="white" }
+            };
+        };
+    }; // End of "Keypad" section
+
+    solid "LedPanel" {
+        top=      22;
+        left=     377;
+        priority= 0;
+        color= "grey10";
+        shape= "LEDS";
+    };
+    indicator "Num Lock" {
+        top=      37;
+        left=     382;
+        priority= 1;
+        onColor= "green";
+        offColor= "green30";
+        shape= "LED";
+    };
+    indicator "Caps Lock" {
+        top=      37;
+        left=     407;
+        priority= 2;
+        onColor= "green";
+        offColor= "green30";
+        shape= "LED";
+    };
+    indicator "Scroll Lock" {
+        top=      37;
+        left=     433;
+        priority= 3;
+        onColor= "green";
+        offColor= "green30";
+        shape= "LED";
+    };
+    text "NumLockLabel" {
+        top=      25;
+        left=     378;
+        priority= 4;
+        width=  19.8;
+        height=  10;
+        XFont= "-*-helvetica-medium-r-normal--*-120-*-*-*-*-iso8859-1";
+        text=  "Num\nLock";
+    };
+    text "CapsLockLabel" {
+        top=      25;
+        left=     403;
+        priority= 5;
+        width=  26.4;
+        height=  10;
+        XFont= "-*-helvetica-medium-r-normal--*-120-*-*-*-*-iso8859-1";
+        text=  "Caps\nLock";
+    };
+    text "ScrollLockLabel" {
+        top=      25;
+        left=     428;
+        priority= 6;
+        width=  39.6;
+        height=  10;
+        XFont= "-*-helvetica-medium-r-normal--*-120-*-*-*-*-iso8859-1";
+        text=  "Scroll\nLock";
+    };
+};
+
+};
+#+END_SRC
+
+**** keymap.xkb tangle
+
++ home dir
+
+#+NAME: keymap.xkb-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/keymap/keymap.xkb"
+<<keymap.xkb>>
+#+END_SRC
+
++ current dir
+
+#+NAME: keymap.xkb-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/keymap/keymap.xkb"
+<<keymap.xkb>>
+#+END_SRC
+
+*** rules
+**** evdev
+***** evdev config
+
+#+NAME: evdev
+#+BEGIN_SRC conf
+! option = symbols
+  custom:alt_win_ctrl = +custom(alt_win_ctrl)
+
+! include %S/evdev
+#+END_SRC
+
+***** evdev tangle
+
++ home dir
+
+#+NAME: evdev-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/rules/evdev"
+<<evdev>>
+#+END_SRC
+
++ current dir
+
+#+NAME: evdev-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/rules/evdev"
+<<evdev>>
+#+END_SRC
+
+**** evdev.xml
+***** evdev.xml config
+
+#+NAME: evdev.xml
+#+BEGIN_SRC conf
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>gb</name>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>alt_win_ctrl</name>
+            <shortDescription>alt_win_ctrl</shortDescription>
+            <description>GB(alt_win_ctrl)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>custom</name>
+        <description>custom options</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>custom:alt_win_ctrl</name>
+          <description>Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>
+
+#+END_SRC
+
+***** evdev.xml tangle
+
++ home dir
+
+#+NAME: evdev.xml-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/rules/evdev.xml"
+<<evdev.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: evdev.xml-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/rules/evdev.xml"
+<<evdev.xml>>
+#+END_SRC
+
+*** symbols
+**** custom
+***** custom config
+
+#+NAME: custom
+#+BEGIN_SRC conf
+// Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
+partial modifier_keys
+xkb_symbols "alt_win_ctrl" {
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+};
+#+END_SRC
+
+***** custom tangle
+
++ home dir
+
+#+NAME: custom-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/symbols/custom"
+<<custom>>
+#+END_SRC
+
++ current dir
+
+#+NAME: custom-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/symbols/custom"
+<<custom>>
+#+END_SRC
+
+**** gb
+***** gb config
+
+#+NAME: gb
+#+BEGIN_SRC conf
+default partial alphanumeric_keys 
+xkb_symbols "alt_win_ctrl" {
+
+    // mac swap alt_win_ctrl
+
+    // include "macintosh_vndr/gb"
+
+    name[Group1]= "alt_win_ctrl - Mac";
+
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+};
+
+#+END_SRC
+
+***** gb tangle
+
++ home dir
+
+#+NAME: gb-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/symbols/gb"
+<<gb>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gb-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/symbols/gb"
+<<gb>>
+#+END_SRC
+
+
