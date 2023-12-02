@@ -1300,11 +1300,6 @@ minibuffer with something like `exit-minibuffer'."
  (rear-context-string . "TARTUP: content\n")
  (position . 20)
  (last-modified 25692 54791 894815 365000))
-("dotfiles"
- (filename . "~/git/fedora/fedora-dotfiles/fedora-dotfiles.org")
- (front-context-string . "* fedora dotfile")
- (rear-context-string . "g\")'\n#+end_src\n\n")
- (position . 374))
 ("org-refile-last-stored"
  (filename . "~/git/personal/org/web.org")
  (front-context-string . "** [[https://its")
