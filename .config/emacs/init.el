@@ -1074,7 +1074,7 @@
 
 ;; mpv play fullscreen on second display
 (setq elfeed-tube-mpv-options
-  '("--force-window=yes" "--fs" "--fs-screen=1"))
+  '("--force-window=yes" "--fs" "--fs-screen-name=DP-3"))
 
 ; elfeed evil
 (add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
