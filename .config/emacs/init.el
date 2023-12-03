@@ -708,7 +708,7 @@
 ;; ----------------------------------------------------------------------------------
 
 ;; mpv-default-options play fullscreen on second display
-(setq mpv-default-options '("--fs" "--fs-screen=1"))
+(setq mpv-default-options '("--fs" "--fs-screen-name=DP-3"))
 
 ;; org-link-set-parameters
 ;;(org-link-set-parameters "mpv" :follow #'mpv-play)

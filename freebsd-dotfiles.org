@@ -737,7 +737,7 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 ;; ----------------------------------------------------------------------------------
 
 ;; mpv-default-options play fullscreen on second display
-(setq mpv-default-options '("--fs" "--fs-screen=1"))
+(setq mpv-default-options '("--fs" "--fs-screen-name=DP-3"))
 
 ;; org-link-set-parameters
 ;;(org-link-set-parameters "mpv" :follow #'mpv-play)
@@ -2095,7 +2095,7 @@ profile=hwdec
 cache=no
 # fullscreen 2nd display
 fs
-#fs-screen=1
+fs-screen-name=DP-3
 
 
 # invidious conditional auto profile match any youtube url
@@ -2108,7 +2108,7 @@ profile=hwdec
 cache=no
 # fullscreen 2nd display
 fs
-#fs-screen=1
+fs-screen-name=DP-3
 
 
 # archive.org conditional auto profile match any archive.org url
@@ -2121,7 +2121,7 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-#fs-screen=1
+fs-screen-name=DP-3
 
 
 # bbc iplayer conditional auto profile match any bbc iplayer url
@@ -2134,7 +2134,7 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-#fs-screen=1
+fs-screen-name=DP-3
 #+END_SRC
 
 **** mpv tangle
