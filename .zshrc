@@ -110,12 +110,3 @@ ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
 ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
-
-# aliases
-#========
-
-# keyboard backlight on
-alias backlight-on='sysctl dev.asmc.0.light.control:255'
-
-# keyboard backlight off
-alias backlight-off='sysctl dev.asmc.0.light.control:0'
