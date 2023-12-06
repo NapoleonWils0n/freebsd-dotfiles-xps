@@ -1,4 +1,4 @@
-#+TITLE: Freebsd Dotfiles
+#+TITLE: Freebsd Dotfiles xps
 #+STARTUP: overview hideblocks
 #+OPTIONS: num:nil author:nil
 #+PROPERTY: header-args :mkdirp yes
@@ -1288,14 +1288,14 @@ minibuffer with something like `exit-minibuffer'."
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("desktop" (filename . "~/desktop/") (front-context-string)
+(("dotfiles"
+ (filename .
+           "~/git/freebsd/freebsd-dotfiles-xps/freebsd-dotfiles-xps.org")
+ (front-context-string . "#+TITLE: Freebsd") (rear-context-string)
+ (position . 1) (last-modified 25968 29887 933690 452000))
+("desktop" (filename . "~/desktop/") (front-context-string)
  (rear-context-string . "94 Dec  3 21:10 ") (position . 77)
  (last-modified 25965 4683 297826 423000))
-("dotfiles"
- (filename . "~/git/freebsd/freebsd-dotfiles-xps/freebsd-dotfiles.org")
- (front-context-string . "* freebsd dotfil")
- (rear-context-string . "g\")'\n#+END_SRC\n\n") (position . 378)
- (last-modified 25963 40241 516919 243000))
 ("bookmarks" (filename . "~/git/personal/bookmarks/bookmarks.org")
  (front-context-string . "#+STARTUP: overv") (rear-context-string)
  (position . 1) (last-modified 25703 35089 410375 479000))
