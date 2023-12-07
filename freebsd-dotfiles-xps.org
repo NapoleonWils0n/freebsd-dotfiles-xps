@@ -2274,6 +2274,12 @@ saturation = 1.000000
 toggle = none
 
 [command]
+binding_mute = KEY_MUTE
+command_mute = mixer vol.mute="^"
+repeatable_binding_volume_up = KEY_VOLUMEUP
+command_volume_up = mixer vol="+.02"
+repeatable_binding_volume_down = KEY_VOLUMEDOWN
+command_volume_down = mixer vol="-.02"
 binding_tofi = <super> KEY_A
 binding_playerctl = <alt> <super> KEY_SPACE
 binding_emacs = <ctrl> <super> KEY_ENTER
