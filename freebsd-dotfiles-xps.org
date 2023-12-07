@@ -2419,8 +2419,8 @@ touchpad_accel_profile = default
 touchpad_cursor_speed = 0.000000
 touchpad_scroll_speed = 1.000000
 xkb_layout = gb
-xkb_model = pc105
-xkb_options = ctrl:swap_lalt_lctl
+xkb_model = pc104
+xkb_options = ctrl:swap_lalt_lctl,caps:none
 xkb_rules = evdev
 xkb_variant = mac
 
