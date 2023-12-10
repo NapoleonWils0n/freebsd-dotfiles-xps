@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=NVIDIA
+Comment=Configure NVIDIA X Server Settings
+Exec=nvidia-settings
+Icon=nvidia-settings.png
+Categories=Settings;HardwareSettings;
