@@ -2037,7 +2037,7 @@ profile=hwdec
 [hwdec]
 profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
 vo=gpu
-#hwdec=vaapi
+hwdec=vaapi
 
 # hide: GNOME's wayland compositor lacks support for the idle inhibit protocol. 
 #msg-level=ffmpeg=fatal,vo/gpu/wayland=no
@@ -3297,7 +3297,7 @@ Version=1.0
 Name=OBS
 GenericName=Streaming/Recording Software
 Comment=Free and Open Source Streaming/Recording Software
-Exec=obs
+Exec=sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" obs'
 Icon=com.obsproject.Studio
 Terminal=false
 Type=Application

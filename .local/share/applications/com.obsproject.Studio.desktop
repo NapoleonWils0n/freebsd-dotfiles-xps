@@ -3,7 +3,7 @@ Version=1.0
 Name=OBS
 GenericName=Streaming/Recording Software
 Comment=Free and Open Source Streaming/Recording Software
-Exec=obs
+Exec=sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" obs'
 Icon=com.obsproject.Studio
 Terminal=false
 Type=Application
