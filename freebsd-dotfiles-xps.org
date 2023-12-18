@@ -1917,7 +1917,7 @@ ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
 
 # Path
 typeset -U PATH path
-path=("$HOME/bin" "$path[@]")
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
 export PATH
 
 # xdg directories
@@ -2041,6 +2041,7 @@ hwdec=vaapi
 
 # hide: GNOME's wayland compositor lacks support for the idle inhibit protocol. 
 #msg-level=ffmpeg=fatal,vo/gpu/wayland=no
+msg-level=ffmpeg=fatal
 
 # cache no for internet streams
 cache=no
