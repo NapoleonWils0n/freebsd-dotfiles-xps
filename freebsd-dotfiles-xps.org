@@ -3501,6 +3501,23 @@ MimeType=x-scheme-handler/irc;x-scheme-handler/ircs;
 Hidden=true
 #+end_src
 
+**** vpn chromium config
+
+#+NAME: vpn-chromium-desktop
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=vpn-Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
 *** desktop files tangle
 **** chromium tangle
 
@@ -3692,6 +3709,22 @@ Hidden=true
 #+NAME: weechat-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/weechat.desktop"
 <<weechat-desktop>>
+#+END_SRC
+
+**** vpn-chromium tangle
+
++ home dir
+  
+#+NAME: vpn-chromium-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-chromium.desktop"
+<<vpn-chromium-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: vpn-chromium-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-chromium.desktop"
+<<vpn-chromium-desktop>>
 #+END_SRC
 
 ** mutt
