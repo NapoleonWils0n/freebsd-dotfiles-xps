@@ -3512,7 +3512,7 @@ Encoding=UTF-8
 Name=vpn-Chromium
 Comment=Google web browser based on WebKit
 Icon=chrome
-Exec=setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U
+Exec=sh -c 'setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U'
 Categories=Application;Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
 StartupNotify=true
@@ -3528,7 +3528,7 @@ Name=vpn-Firefox
 Comment=Browse the World Wide Web
 GenericName=Web Browser
 Keywords=Internet;WWW;Browser;Web;Explorer
-Exec=setfib 1 firefox %U
+Exec=sh -c 'setfib 1 firefox %U'
 Terminal=false
 Type=Application
 Icon=firefox
@@ -3555,7 +3555,7 @@ Name=vpn-Transmission
 GenericName=BitTorrent Client
 Comment=Download and share files over BitTorrent
 Keywords=torrents;downloading;uploading;share;sharing;
-Exec=setfib 1 transmission-gtk %U
+Exec=sh -c 'setfib 1 transmission-gtk %U'
 Icon=transmission
 Terminal=false
 TryExec=transmission-gtk
