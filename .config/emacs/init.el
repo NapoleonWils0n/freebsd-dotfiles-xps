@@ -53,9 +53,6 @@
 (async-bytecomp-package-mode 1)
 (setq async-bytecomp-allowed-packages '(all))
 
-;;(setq native-comp-deferred-compilation nil
-;;comp-enable-subr-trampolines nil)
-
 
 ;; ----------------------------------------------------------------------------------
 ;; general settings
@@ -213,21 +210,6 @@
 (setq undo-tree-visualizer-timestamps t)
 (setq undo-tree-visualizer-diff t)
 
-;;(require 'openwith)
-;;(setq openwith-associations
-;;      (list
-;;;;       (list (openwith-make-extension-regexp
-;;;;              '("mpg" "mpeg" "mp3" "mp4" "m4v"
-;;;;                "avi" "wmv" "wav" "mov" "flv"
-;;;;                "ogm" "ogg" "mkv" "webm"))
-;;;;          "mpv --fs --fs-screen=1"
-;;;;          '(file))
-;;       (list (openwith-make-extension-regexp
-;;              '("pdf"))
-;;             "evince"
-;;             '(file))))
-;;
-;;(openwith-mode 1)
 
 ;; ----------------------------------------------------------------------------------
 ;; tree-sitter
@@ -502,6 +484,10 @@
 (defun no-hide-overlays (orig-fun &rest args)
 (setq org-babel-hide-result-overlays nil))
 (advice-add 'ob-async-org-babel-execute-src-block :before #'no-hide-overlays)
+
+;; & open pdf's with zatuhra
+(setq dired-guess-shell-alist-user
+      '(("\\.pdf$" "zathura")))
 
 ;; ----------------------------------------------------------------------------------
 ;; dired-fd
