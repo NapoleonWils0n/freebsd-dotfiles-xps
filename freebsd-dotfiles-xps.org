@@ -3497,8 +3497,7 @@ Encoding=UTF-8
 Name=vpn-Chromium
 Comment=Google web browser based on WebKit
 Icon=chrome
-#Exec=sh -c 'setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U'
-Exec=sh -c 'setfib 1 LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" chrome --ozone-platform=wayland --ignore-gpu-blocklist --disable-gpu-driver-bug-workarounds --enable-gpu-rasterization --enable-unsafe-webgpu --enable-zero-copy --enable-drdc --no-sandbox --skia-graphite --enable-webgl-draft-extensions --enable-features=Vulkan,UseSkiaRendererer --use-vulkan --enable-features=VaapiVideoDecoder --canvas-oop-rasterization --enable-webgpu-developer-features --origin-trial-enabled-features=WebGPU --test-type --v=0 %U'
+Exec=sh -c 'setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U'
 Categories=Application;Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
 StartupNotify=true
