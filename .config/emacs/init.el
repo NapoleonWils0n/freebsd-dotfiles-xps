@@ -700,7 +700,7 @@
 ;; mpv-default-options play fullscreen on second display
 (setq mpv-default-options '("--fs" "--fs-screen-name=DP-3"))
 
-;; create a video: link type that opens a url using mpv-play-url
+;; create a video: link type that opens a url using mpv-play-remote-video
 (org-link-set-parameters "video"
                          :follow #'mpv-play-remote-video
                          :store #'org-video-store-link)
