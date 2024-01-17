@@ -2,7 +2,11 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("dotfiles"
+(("video" (filename . "~/git/personal/bookmarks/video.org")
+ (front-context-string . "* links\n** [[vid")
+ (rear-context-string . "ARTUP: overview\n") (position . 42)
+ (last-modified 26024 3044 81012 2000))
+("dotfiles"
  (filename .
            "~/git/freebsd/freebsd-dotfiles-xps/freebsd-dotfiles-xps.org")
  (front-context-string . "#+TITLE: Freebsd") (rear-context-string)
