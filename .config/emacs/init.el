@@ -574,6 +574,7 @@
 ;; asynchronous tangle
 (setq org-export-async-debug t)
 
+
 (setq org-capture-templates
     '(("w" "web site" entry
       (file+olp "~/git/personal/bookmarks/bookmarks.org" "sites")
@@ -714,6 +715,22 @@
        :link link
        :description description))
 
+
+;; get the youtube title from url on the clipboard
+(defun yt-get-title ()
+  "get the youtube title from a url on the clipboard"
+  (interactive)
+  (let ((yt-url (current-kill 0 t)))
+    (async-shell-command (concat
+                   "yt-dlp --skip-download --print \"%(title)s\" " (shell-quote-argument yt-url)))))
+
+
+;; yank the async buffer
+(defun yank-async ()
+  "yank async buffer"
+  (interactive)
+    (yank (kill-new (with-current-buffer "*Async Shell Command*"
+    (buffer-substring-no-properties (point-min) (point-max))))))
 
 ;; mpv-play-remote-video
 (defun mpv-play-remote-video (url &rest args)
