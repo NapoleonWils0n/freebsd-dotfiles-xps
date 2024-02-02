@@ -1,0 +1,31 @@
+# Theming
+font: Fira Code 18
+background: "#282828d0"
+color: "#fbf1c7"
+border: "#005577"
+separator: " ➜ "
+border_width: 2
+corner_r: 10
+padding: 15 # Defaults to corner_r
+
+# Anchor and margin
+anchor: center # One of center, left, right, top, bottom, bottom-left, top-left, etc.
+# Only relevant when anchor is not center
+margin_right: 0
+margin_bottom: 0
+margin_left: 0
+margin_top: 0
+
+menu: 
+  "w":
+    desc: general
+    submenu:
+      "m": { desc: mpv play, cmd: mpv "$(wl-paste)" 1>/dev/null }
+  "o":
+    desc: obs
+    submenu:
+      "h": { desc: laptop, cmd: obs-cmd scene switch laptop }
+      "j": { desc: monitor, cmd: obs-cmd scene switch monitor }
+      "k": { desc: both, cmd: obs-cmd scene switch both }
+      "l": { desc: ffmpeg, cmd: obs-cmd scene switch ffmpeg }
+      "r": { desc: record, cmd: obs-cmd recording toggle }

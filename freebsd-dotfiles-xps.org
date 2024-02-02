@@ -2236,66 +2236,58 @@ width = 100%
 <<tofi>>
 #+END_SRC
 
-** wf-shell
-*** wf-shell config
+** wlr-which-key
+*** wlr-which-key config
 
-#+NAME: wf-shell
-#+BEGIN_SRC conf
-[background]
-cycle_timeout = 150
-image = /home/djwilcox/pictures/wallpaper/freebsd-lynchmob.jpg
-preserve_aspect = false
-randomize = false
+#+NAME: wlr-which-key
+#+BEGIN_SRC yaml
+# Theming
+font: Fira Code 18
+background: "#282828d0"
+color: "#fbf1c7"
+border: "#005577"
+separator: " ➜ "
+border_width: 2
+corner_r: 10
+padding: 15 # Defaults to corner_r
 
-[dock]
-autohide_duration = 300
-css_path = 
-position = bottom
+# Anchor and margin
+anchor: center # One of center, left, right, top, bottom, bottom-left, top-left, etc.
+# Only relevant when anchor is not center
+margin_right: 0
+margin_bottom: 0
+margin_left: 0
+margin_top: 0
 
-[panel]
-autohide = false
-autohide_duration = 300
-background_color = gtk_headerbar
-battery_font = default
-battery_icon_invert = true
-battery_icon_size = 24
-battery_status = 1
-clock_font = FiraCode-Bold
-clock_format = %e %A %H:%M
-css_path = 
-launchers_size = 38
-launchers_spacing = 4
-layer = top
-menu_fuzzy_search = true
-menu_icon = /home/djwilcox/pictures/icons/beastie.png
-menu_logout_command = 
-minimal_height = 20
-network_icon_invert_color = false
-network_icon_size = 32
-network_status = 1
-network_status_font = default
-network_status_use_color = false
-position = top
-volume_display_timeout = 2.500000
-widgets_center = 
-widgets_left = 
-widgets_right = clock
+menu: 
+  "w":
+    desc: general
+    submenu:
+      "m": { desc: mpv play, cmd: mpv "$(wl-paste)" 1>/dev/null }
+  "o":
+    desc: obs
+    submenu:
+      "h": { desc: laptop, cmd: obs-cmd scene switch laptop }
+      "j": { desc: monitor, cmd: obs-cmd scene switch monitor }
+      "k": { desc: both, cmd: obs-cmd scene switch both }
+      "l": { desc: ffmpeg, cmd: obs-cmd scene switch ffmpeg }
+      "r": { desc: record, cmd: obs-cmd recording toggle }
 #+END_SRC
 
-*** wf-shell tangle
+*** wlr-which-key tangle
 
 + home dir
 
-#+NAME: wf-shell-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wf-shell.ini"
-<<wf-shell>>
+#+NAME: wlr-which-key-home-dir
+#+BEGIN_SRC yaml :noweb yes :tangle "~/.config/wlr-which-key/config.yaml"
+<<wlr-which-key>>
 #+END_SRC
 
 + current dir
 
-#+NAME: wf-shell-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/wf-shell.ini"
-<<wf-shell>>
+#+NAME: wlr-which-key-current-dir
+#+BEGIN_SRC yaml :noweb yes :tangle ".config/wlr-which-key/config.yaml"
+<<wlr-which-key>>
 #+END_SRC
 
 ** tmux
@@ -3743,6 +3735,68 @@ gtk-application-prefer-dark-theme = true
 #+NAME: gtk-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/gtk-3.0/settings.ini"
 <<gtk>>
+#+END_SRC
+
+** wf-shell
+*** wf-shell config
+
+#+NAME: wf-shell
+#+BEGIN_SRC conf
+[background]
+cycle_timeout = 150
+image = /home/djwilcox/pictures/wallpaper/freebsd-lynchmob.jpg
+preserve_aspect = false
+randomize = false
+
+[dock]
+autohide_duration = 300
+css_path = 
+position = bottom
+
+[panel]
+autohide = false
+autohide_duration = 300
+background_color = gtk_headerbar
+battery_font = default
+battery_icon_invert = true
+battery_icon_size = 24
+battery_status = 1
+clock_font = FiraCode-Bold
+clock_format = %e %A %H:%M
+css_path = 
+launchers_size = 38
+launchers_spacing = 4
+layer = top
+menu_fuzzy_search = true
+menu_icon = /home/djwilcox/pictures/icons/beastie.png
+menu_logout_command = 
+minimal_height = 20
+network_icon_invert_color = false
+network_icon_size = 32
+network_status = 1
+network_status_font = default
+network_status_use_color = false
+position = top
+volume_display_timeout = 2.500000
+widgets_center = 
+widgets_left = 
+widgets_right = clock
+#+END_SRC
+
+*** wf-shell tangle
+
++ home dir
+
+#+NAME: wf-shell-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wf-shell.ini"
+<<wf-shell>>
+#+END_SRC
+
++ current dir
+
+#+NAME: wf-shell-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/wf-shell.ini"
+<<wf-shell>>
 #+END_SRC
 
 ** wayfire
