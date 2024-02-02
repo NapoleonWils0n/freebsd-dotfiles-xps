@@ -20,7 +20,7 @@ menu:
   "w":
     desc: general
     submenu:
-      "m": { desc: mpv, cmd: mpv "$(wl-paste)" 1>/dev/null }
+      "m": { desc: mpv, cmd: ts mpv "$(wl-paste)" 1>/dev/null }
       "y": { desc: yt-dlp, cmd: ts yt-dlp "$(wl-paste)" -o "$HOME/downloads/%(title)s.%(ext)s" }
   "o":
     desc: obs
