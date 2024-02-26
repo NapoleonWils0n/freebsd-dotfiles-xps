@@ -2561,6 +2561,38 @@ audio_output {
 <<mpd>>
 #+END_SRC
 
+** pulseaudio
+
+#+NAME: pulseaudio
+#+BEGIN_SRC conf
+#!/usr/local/bin/pulseaudio -nF
+
+# include default.pa and override
+.include /usr/local/etc/pulse/default.pa
+
+# chroot
+.ifexists module-esound-protocol-unix.so
+load-module module-esound-protocol-unix
+.endif
+load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
+#+END_SRC
+
+*** pulseaudio tangle
+
++ home dir
+
+#+NAME: pulseaudio-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/pulse/default.pa"
+<<pulseaudio>>
+#+END_SRC
+
++ current dir
+
+#+NAME: pulseaudio-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/pulse/default.pa"
+<<pulseaudio>>
+#+END_SRC
+
 ** ncmpc
 
 #+NAME: ncmpc
@@ -2927,6 +2959,23 @@ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme
 StartupNotify=true
 #+end_src
 
+**** davinci resolve config
+
+#+NAME: davinci-resolve-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=resolve
+Exec=/home/djwilcox/bin/resolve
+Icon=/compat/ubuntu/opt/resolve/graphics/DV_Resolve.png
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
 **** obs config
 
 #+NAME: obs-desktop
@@ -3229,6 +3278,22 @@ Exec=setfib 1 transmission-gtk --minimized
 #+NAME: chromium-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chromium-browser.desktop"
 <<chromium-desktop>>
+#+END_SRC
+
+**** davinci resolve tangle
+
++ home dir
+  
+#+NAME: davinci-resolve-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/davinci-resolve.desktop"
+<<davinci-resolve-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: davinci-resolve-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/davinci-resolve.desktop"
+<<davinci-resolve-desktop>>
 #+END_SRC
 
 **** obs tangle
