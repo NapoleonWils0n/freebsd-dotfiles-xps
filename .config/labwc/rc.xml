@@ -113,6 +113,14 @@
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
+  <!-- firefox pip -->
+      <windowRule identifier="firefox" title="Picture-in-Picture" matchOnce="false">
+        <skipTaskbar>yes</skipTaskbar>
+        <skipWindowSwitcher>yes</skipWindowSwitcher>
+        <desktop>all</desktop>
+        <action name="ToggleOmnipresent"/>
+      </windowRule>
+
   <!-- mpv -->
       <windowRule identifier="mpv" matchOnce="true">
         <skipTaskbar>yes</skipTaskbar>
