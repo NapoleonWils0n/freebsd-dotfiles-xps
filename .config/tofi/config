@@ -1,4 +1,5 @@
 anchor = top
+output = ""
 background-color = #000008
 border-width = 0
 drun-launch = true

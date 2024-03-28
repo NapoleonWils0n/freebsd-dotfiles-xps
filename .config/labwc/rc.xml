@@ -74,10 +74,6 @@
     <keybind key="W-BackSpace">
       <action name="GoToDesktop"><to>last</to></action>
     </keybind>
-    <keybind key="W-A">
-      <action name="GoToDesktop"><to>next</to><wrap>no</wrap></action>
-    </keybind>
-
   </keyboard>
 
   <!-- mouse -->
@@ -107,22 +103,22 @@
 
   <!-- chromium -->
       <windowRule identifier="chromium-browser" matchOnce="true">
-        <skipTaskbar>yes</skipTaskbar>
-        <skipWindowSwitcher>yes</skipWindowSwitcher>
+        <skipTaskbar>no</skipTaskbar>
+        <skipWindowSwitcher>no</skipWindowSwitcher>
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
   <!-- firefox pip -->
       <windowRule identifier="firefox" title="Picture-in-Picture" matchOnce="false">
-        <skipTaskbar>yes</skipTaskbar>
-        <skipWindowSwitcher>yes</skipWindowSwitcher>
+        <skipTaskbar>no</skipTaskbar>
+        <skipWindowSwitcher>no</skipWindowSwitcher>
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
   <!-- mpv -->
       <windowRule identifier="mpv" matchOnce="true">
-        <skipTaskbar>yes</skipTaskbar>
-        <skipWindowSwitcher>yes</skipWindowSwitcher>
+        <skipTaskbar>no</skipTaskbar>
+        <skipWindowSwitcher>no</skipWindowSwitcher>
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
