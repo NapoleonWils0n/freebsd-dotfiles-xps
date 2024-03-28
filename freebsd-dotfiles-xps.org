@@ -2037,7 +2037,6 @@ XDG_CURRENT_DESKTOP=wlroots
       <windowRule identifier="chromium-browser" matchOnce="true">
         <skipTaskbar>yes</skipTaskbar>
         <skipWindowSwitcher>yes</skipWindowSwitcher>
-        <desktop>all</desktop>
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
@@ -2045,7 +2044,6 @@ XDG_CURRENT_DESKTOP=wlroots
       <windowRule identifier="firefox" title="Picture-in-Picture" matchOnce="false">
         <skipTaskbar>yes</skipTaskbar>
         <skipWindowSwitcher>yes</skipWindowSwitcher>
-        <desktop>all</desktop>
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
@@ -2053,7 +2051,6 @@ XDG_CURRENT_DESKTOP=wlroots
       <windowRule identifier="mpv" matchOnce="true">
         <skipTaskbar>yes</skipTaskbar>
         <skipWindowSwitcher>yes</skipWindowSwitcher>
-        <desktop>all</desktop>
         <action name="ToggleOmnipresent"/>
       </windowRule>
 
