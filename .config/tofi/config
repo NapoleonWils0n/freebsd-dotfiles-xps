@@ -1,5 +1,5 @@
 anchor = top
-output = ""
+output = "eDP-1"
 background-color = #000008
 border-width = 0
 drun-launch = true

@@ -2504,7 +2504,7 @@ fs-screen-name=DP-3
 #+NAME: tofi
 #+BEGIN_SRC conf
 anchor = top
-output = ""
+output = "eDP-1"
 background-color = #000008
 border-width = 0
 drun-launch = true
