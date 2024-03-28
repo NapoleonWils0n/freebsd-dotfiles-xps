@@ -1946,6 +1946,9 @@ XDG_CURRENT_DESKTOP=wlroots
     <keybind key="W-a">
       <action name="Execute" command="tofi-drun" />
     </keybind>
+    <keybind key="W-s">
+      <action name="Execute" command="window-switcher" />
+    </keybind>
     <keybind key="W-z">
       <action name="Execute" command="wlr-which-key" />
     </keybind>
@@ -1956,6 +1959,9 @@ XDG_CURRENT_DESKTOP=wlroots
     </keybind>
     <keybind key="W-m">
       <action name="ToggleMaximize" />
+    </keybind>
+    <keybind key="W-n">
+      <action name="ToggleFullscreen" />
     </keybind>
 
     <!-- warp cursor left-->
