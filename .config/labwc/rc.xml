@@ -39,6 +39,18 @@
       <action name="ToggleFullscreen" />
     </keybind>
 
+    <!-- move window to left monitor -->
+    <keybind key="W-i">
+    <action name="MoveToOutput" direction="left">
+    </action>
+    </keybind>
+
+    <!-- move window to right monitor -->
+    <keybind key="W-o">
+    <action name="MoveToOutput" direction="right">
+    </action>
+    </keybind>
+
     <!-- warp cursor left-->
     <keybind key="W-,">
       <action name="Execute" command="wlrctl pointer move -1920" />
