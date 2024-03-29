@@ -1960,6 +1960,37 @@ XDG_CURRENT_DESKTOP=wlroots
       <action name="ToggleFullscreen" />
     </keybind>
 
+    <!-- GoToDesktop -->
+    <keybind key="W-1">
+      <action name="GoToDesktop"><to>1</to></action>
+    </keybind>
+    <keybind key="W-2">
+      <action name="GoToDesktop"><to>2</to></action>
+    </keybind>
+    <keybind key="W-3">
+      <action name="GoToDesktop"><to>3</to></action>
+    </keybind>
+    <keybind key="W-4">
+      <action name="GoToDesktop"><to>4</to></action>
+    </keybind>
+    <keybind key="W-BackSpace">
+      <action name="GoToDesktop"><to>last</to></action>
+    </keybind>
+
+    <!-- SendToDesktop -->
+    <keybind key="S-W-1">
+      <action name="SendToDesktop"><to>1</to></action>
+    </keybind>
+    <keybind key="S-W-2">
+      <action name="SendToDesktop"><to>2</to></action>
+    </keybind>
+    <keybind key="S-W-3">
+      <action name="SendToDesktop"><to>3</to></action>
+    </keybind>
+    <keybind key="S-W-4">
+      <action name="SendToDesktop"><to>4</to></action>
+    </keybind>
+
     <!-- move window to left monitor -->
     <keybind key="W-i">
     <action name="MoveToOutput" direction="left">
@@ -1996,23 +2027,6 @@ XDG_CURRENT_DESKTOP=wlroots
       <action name="Execute" command="playerctl play-pause" />
     </keybind>
 
-
-    <!-- desktop -->
-    <keybind key="W-1">
-      <action name="GoToDesktop"><to>1</to></action>
-    </keybind>
-    <keybind key="W-2">
-      <action name="GoToDesktop"><to>2</to></action>
-    </keybind>
-    <keybind key="W-3">
-      <action name="GoToDesktop"><to>3</to></action>
-    </keybind>
-    <keybind key="W-4">
-      <action name="GoToDesktop"><to>4</to></action>
-    </keybind>
-    <keybind key="W-BackSpace">
-      <action name="GoToDesktop"><to>last</to></action>
-    </keybind>
   </keyboard>
 
   <!-- mouse -->
