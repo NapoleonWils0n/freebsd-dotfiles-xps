@@ -1978,9 +1978,6 @@ XDG_CURRENT_DESKTOP=wlroots
     <keybind key="W-4">
       <action name="GoToDesktop"><to>4</to></action>
     </keybind>
-    <keybind key="W-BackSpace">
-      <action name="GoToDesktop"><to>last</to></action>
-    </keybind>
 
     <!-- GoToDesktop with h and l -->
     <keybind key="W-h">
@@ -2005,24 +2002,24 @@ XDG_CURRENT_DESKTOP=wlroots
     </keybind>
 
     <!-- move window to left monitor -->
-    <keybind key="W-i">
+    <keybind key="S-W-i">
     <action name="MoveToOutput" direction="left">
     </action>
     </keybind>
 
     <!-- move window to right monitor -->
-    <keybind key="W-o">
+    <keybind key="S-W-o">
     <action name="MoveToOutput" direction="right">
     </action>
     </keybind>
 
     <!-- warp cursor left-->
-    <keybind key="W-,">
+    <keybind key="W-i">
        <action name="FocusOutput" output="eDP-1" />
     </keybind>
 
     <!-- warp cursor right-->
-    <keybind key="W-.">
+    <keybind key="W-o">
        <action name="FocusOutput" output="DP-3" />
     </keybind>
 
