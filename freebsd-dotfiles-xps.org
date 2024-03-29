@@ -2018,12 +2018,12 @@ XDG_CURRENT_DESKTOP=wlroots
 
     <!-- warp cursor left-->
     <keybind key="W-,">
-      <action name="Execute" command="wlrctl pointer move -1920" />
+       <action name="FocusOutput" output="eDP-1" />
     </keybind>
 
     <!-- warp cursor right-->
     <keybind key="W-.">
-      <action name="Execute" command="wlrctl pointer move 1920" />
+       <action name="FocusOutput" output="DP-3" />
     </keybind>
 
     <!-- audio -->
