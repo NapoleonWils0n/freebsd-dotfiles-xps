@@ -2543,7 +2543,7 @@ fs-screen-name=DP-3
 #+BEGIN_SRC conf
 anchor = top
 output = "eDP-1"
-background-color = #002b36
+background-color = #353535
 border-width = 0
 drun-launch = true
 font = "/usr/local/share/fonts/firacode/FiraCode-Bold.ttf"
@@ -2557,7 +2557,7 @@ outline-width = 0
 padding-bottom = 0
 padding-left = 0
 padding-right = 0
-padding-top = 4
+padding-top = 0
 prompt-color = #FFFFFF
 prompt-text = "$ "
 input-color = #268bd2
@@ -2569,7 +2569,9 @@ width = 100%
 default-result-background = #586e75
 selection-background = #eee8d5
 selection-background-padding = 4
+selection-background-corner-radius = 4
 default-result-background-padding = 4
+default-result-background-corner-radius = 8
 #+END_SRC
 
 *** tofi tangle
