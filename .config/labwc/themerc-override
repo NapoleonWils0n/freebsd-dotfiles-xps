@@ -1,4 +1,4 @@
-border.width: 0
+border.width: 1
 padding.height: 4
 osd.border.width: 1
 osd.window-switcher.width: 500
@@ -8,3 +8,4 @@ osd.window-switcher.item.padding.y: 1
 osd.window-switcher.item.active.border.width: 1
 osd.workspace-switcher.boxes.width: 20
 osd.workspace-switcher.boxes.height: 20
+window.active.title.bg.color: #073642
