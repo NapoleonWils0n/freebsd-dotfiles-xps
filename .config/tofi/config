@@ -1,5 +1,5 @@
 anchor = top
-output = "eDP-1"
+#output = "eDP-1"
 border-width = 0
 drun-launch = true
 font = "/usr/local/share/fonts/firacode/FiraCode-Bold.ttf"
@@ -28,6 +28,6 @@ background-color = #073642
 #background-color = #2b2b2b
 prompt-background=#002b36
 selection-background-padding = 4
-selection-background-corner-radius = 6
+#selection-background-corner-radius = 6
 default-result-background-padding = 4
-default-result-background-corner-radius = 6
+#default-result-background-corner-radius = 6
