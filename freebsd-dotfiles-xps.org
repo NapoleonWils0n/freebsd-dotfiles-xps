@@ -57,12 +57,12 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
      "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561"
      "" default))
  '(package-selected-packages
-   '(ednc async evil-collection google-translate elfeed-org elfeed-tube
-          elfeed-tube-mpv embark-consult emmet-mode evil-leader
-          fd-dired git-auto-commit-mode hydra iedit mpv ob-async rg s
-          shrink-path undo-tree marginalia orderless embark vertico
-          wgrep which-key yaml-mode doom-themes doom-modeline
-          nerd-icons))
+   '(async doom-modeline doom-themes consult ednc elfeed elfeed-org elfeed-tube
+           elfeed-tube-mpv embark embark-consult emmet-mode
+           evil evil-collection evil-leader fd-dired git-auto-commit-mode
+           google-translate hydra iedit marginalia mpv nerd-icons
+           nix-mode ob-async orderless rg s shrink-path undo-tree
+           vertico wgrep which-key yaml-mode))
  '(warning-suppress-types '((comp))))
 
 ;; require package
@@ -2358,11 +2358,6 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
-# firefox
-export MOZ_ENABLE_WAYLAND=1
-# need for firefox 123.01,2
-export MOZ_DISABLE_WAYLAND_PROXY=1
-
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
 
@@ -2372,15 +2367,6 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # less
 export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
 export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
-
-# set emacsclient as editor
-#export ALTERNATE_EDITOR=""
-#export EDITOR="emacsclient -a emacs"
-#export VISUAL="emacsclient -a emacs"
-
-# tell ls to be colourfull
-#export LSCOLORS=ExFxCxDxBxegedabagacad
-#export CLICOLOR=1
 
 # vi mode
 export KEYTIMEOUT=1

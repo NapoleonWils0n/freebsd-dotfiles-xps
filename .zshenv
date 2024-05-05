@@ -11,11 +11,6 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
-# firefox
-export MOZ_ENABLE_WAYLAND=1
-# need for firefox 123.01,2
-export MOZ_DISABLE_WAYLAND_PROXY=1
-
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
 
@@ -25,15 +20,6 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # less
 export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
 export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
-
-# set emacsclient as editor
-#export ALTERNATE_EDITOR=""
-#export EDITOR="emacsclient -a emacs"
-#export VISUAL="emacsclient -a emacs"
-
-# tell ls to be colourfull
-#export LSCOLORS=ExFxCxDxBxegedabagacad
-#export CLICOLOR=1
 
 # vi mode
 export KEYTIMEOUT=1
