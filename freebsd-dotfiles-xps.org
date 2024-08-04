@@ -4512,3 +4512,146 @@ gtk-application-prefer-dark-theme = true
 <<gtk>>
 #+END_SRC
 
+** xkb
+*** rules
+**** evdev
+***** evdev config
+
+#+NAME: evdev
+#+BEGIN_SRC conf
+! option = symbols
+  custom:swap_sterling_numbersign = +custom(swap_sterling_numbersign)
+
+! include %S/evdev
+#+END_SRC
+
+***** evdev tangle
+
++ home dir
+
+#+NAME: evdev-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/rules/evdev"
+<<evdev>>
+#+END_SRC
+
++ current dir
+
+#+NAME: evdev-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/rules/evdev"
+<<evdev>>
+#+END_SRC
+
+**** evdev.xml
+***** evdev.xml config
+
+#+NAME: evdev.xml
+#+BEGIN_SRC conf
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>gb</name>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>swap_sterling_numbersign</name>
+            <shortDescription>swap_sterling_numbersign</shortDescription>
+            <description>GB(swap_sterling_numbersign)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>custom</name>
+        <description>custom options</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>custom:swap_sterling_numbersign</name>
+          <description>swap sterling and numbersign</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>
+#+END_SRC
+
+***** evdev.xml tangle
+
++ home dir
+
+#+NAME: evdev.xml-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/rules/evdev.xml"
+<<evdev.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: evdev.xml-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/rules/evdev.xml"
+<<evdev.xml>>
+#+END_SRC
+
+*** symbols
+**** custom
+***** custom config
+
+#+NAME: custom
+#+BEGIN_SRC conf
+// swap sterling and numbersign
+partial modifier_keys
+xkb_symbols "swap_sterling_numbersign" {
+    key <AE03> { [ 3, numbersign, sterling ] };
+};
+#+END_SRC
+
+***** custom tangle
+
++ home dir
+
+#+NAME: custom-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/symbols/custom"
+<<custom>>
+#+END_SRC
+
++ current dir
+
+#+NAME: custom-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/symbols/custom"
+<<custom>>
+#+END_SRC
+
+**** gb
+***** gb config
+
+#+NAME: gb
+#+BEGIN_SRC conf
+// swap sterling and numbersign
+default partial alphanumeric_keys 
+xkb_symbols "swap_sterling_numbersign" {
+    name[Group1]= "swap_sterling_numbersign - Mac";
+    key <AE03> { [ 3, numbersign, sterling ] };
+};
+#+END_SRC
+
+***** gb tangle
+
++ home dir
+
+#+NAME: gb-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/symbols/gb"
+<<gb>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gb-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/symbols/gb"
+<<gb>>
+#+END_SRC
