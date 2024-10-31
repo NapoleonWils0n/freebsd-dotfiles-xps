@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=Google Earth
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'google-earth-pro'
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo

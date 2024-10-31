@@ -3636,9 +3636,9 @@ StartupNotify=true
 Version=1.0
 Encoding=UTF-8
 Type=Application
-Name=resolve
-Exec=/home/djwilcox/bin/resolve
-Icon=/compat/ubuntu/opt/resolve/graphics/DV_Resolve.png
+Name=DaVinci Resolve
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'resolve' -p 'on'
+Icon=/usr/local/jails/linux/ubuntu/opt/resolve/graphics/DV_Resolve.png
 Terminal=false
 MimeType=application/x-resolveproj;
 StartupNotify=true
@@ -3738,6 +3738,22 @@ Name=Open a New Private Window
 Exec=firefox -private-window
 #+end_src
 
+**** google-earth config
+
+#+NAME: google-earth-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=Google Earth
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'google-earth-pro'
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
 **** jailfox config
 
 #+NAME: jailfox-desktop
@@ -3748,7 +3764,7 @@ Name=Jailfox
 Comment=Browse the World Wide Web
 GenericName=Web Browser
 Keywords=Internet;WWW;Browser;Web;Explorer
-Exec=sh -c 'wrapper-freebsd -a firefox %U'
+Exec=sh -c 'wrapper-freebsd -j classic -a firefox %U'
 Terminal=false
 Type=Application
 Icon=firefox
@@ -3964,6 +3980,22 @@ Exec=setfib 1 transmission-gtk --minimized
 <<chromium-desktop>>
 #+END_SRC
 
+**** davinci resolve tangle
+
++ home dir
+  
+#+NAME: davinci-resolve-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/davinci-resolve.desktop"
+<<davinci-resolve-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: davinci-resolve-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/davinci-resolve.desktop"
+<<davinci-resolve-desktop>>
+#+END_SRC
+
 **** obs tangle
 
 + home dir
@@ -4026,6 +4058,22 @@ Exec=setfib 1 transmission-gtk --minimized
 #+NAME: firefox-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/firefox.desktop"
 <<firefox-desktop>>
+#+END_SRC
+
+**** google-earth tangle
+
++ home dir
+  
+#+NAME: google-earth-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/google-earth.desktop"
+<<google-earth-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: google-earth-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/google-earth.desktop"
+<<google-earth-desktop>>
 #+END_SRC
 
 **** jailfox tangle
