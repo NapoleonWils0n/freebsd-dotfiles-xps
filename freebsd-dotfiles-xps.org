@@ -3637,7 +3637,7 @@ Version=1.0
 Encoding=UTF-8
 Type=Application
 Name=DaVinci Resolve
-Exec=/home/djwilcox/bin/wrapper-freebsd -j 'rocky' -a 'export __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia; resolve' -p 'on'
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'rocky' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia; resolve' -p 'on'
 Icon=/usr/local/jails/linux/rocky/opt/resolve/graphics/DV_Resolve.png
 Terminal=false
 MimeType=application/x-resolveproj;
@@ -3738,6 +3738,25 @@ Name=Open a New Private Window
 Exec=firefox -private-window
 #+end_src
 
+**** google-chrome config
+
+#+NAME: google-chrome-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=Google Chrome
+# wayland
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -p 'on' -a 'export WAYLAND_DISPLAY=wayland-0 QT_QPA_PLATFORM=wayland GDK_BACKEND=wayland; google-chrome --in-process-gpu --no-sandbox --no-zygote --test-type --enable-features=UseOzonePlatform --ozone-platform=wayland --v=0 "$@" || true'
+# x11
+#Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -p 'on' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11; google-chrome --in-process-gpu --no-sandbox --no-zygote --test-type --enable-features=UseOzonePlatform --ozone-platform=x11 --v=0 "$@" || true'
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
 **** google-earth config
 
 #+NAME: google-earth-desktop
@@ -3747,7 +3766,7 @@ Version=1.0
 Encoding=UTF-8
 Type=Application
 Name=Google Earth
-Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'google-earth-pro'
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11; google-earth-pro'
 Terminal=false
 MimeType=application/x-resolveproj;
 StartupNotify=true
@@ -4058,6 +4077,22 @@ Exec=setfib 1 transmission-gtk --minimized
 #+NAME: firefox-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/firefox.desktop"
 <<firefox-desktop>>
+#+END_SRC
+
+**** google-chrome tangle
+
++ home dir
+  
+#+NAME: google-chrome-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/google-chrome.desktop"
+<<google-chrome-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: google-chrome-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/google-chrome.desktop"
+<<google-chrome-desktop>>
 #+END_SRC
 
 **** google-earth tangle

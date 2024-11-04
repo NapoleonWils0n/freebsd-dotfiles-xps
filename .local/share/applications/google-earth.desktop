@@ -3,7 +3,7 @@ Version=1.0
 Encoding=UTF-8
 Type=Application
 Name=Google Earth
-Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'google-earth-pro'
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11; google-earth-pro'
 Terminal=false
 MimeType=application/x-resolveproj;
 StartupNotify=true
