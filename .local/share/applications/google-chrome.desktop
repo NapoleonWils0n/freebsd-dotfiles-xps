@@ -4,9 +4,9 @@ Encoding=UTF-8
 Type=Application
 Name=Google Chrome
 # wayland
-Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -p 'on' -a 'export WAYLAND_DISPLAY=wayland-0 QT_QPA_PLATFORM=wayland GDK_BACKEND=wayland; google-chrome --in-process-gpu --no-sandbox --no-zygote --test-type --enable-features=UseOzonePlatform --ozone-platform=wayland --v=0 "$@" || true'
+Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -p 'on' -a 'export WAYLAND_DISPLAY=wayland-0 QT_QPA_PLATFORM=wayland GDK_BACKEND=wayland; google-chrome --no-sandbox --no-zygote --test-type --enable-features=UseOzonePlatform --ozone-platform=wayland --v=0 "$@" || true'
 # x11
-#Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -p 'on' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11; google-chrome --in-process-gpu --no-sandbox --no-zygote --test-type --enable-features=UseOzonePlatform --ozone-platform=x11 --v=0 "$@" || true'
+#Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -p 'on' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11; google-chrome --no-sandbox --no-zygote --test-type --enable-features=UseOzonePlatform --ozone-platform=x11 --v=0 "$@" || true'
 Terminal=false
 MimeType=application/x-resolveproj;
 StartupNotify=true
