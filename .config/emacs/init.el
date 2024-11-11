@@ -32,8 +32,9 @@
            ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark
            embark-consult emmet-mode evil evil-collection evil-leader
            fd-dired git-auto-commit-mode google-translate hydra iedit
-           marginalia mpv nerd-icons nix-mode ob-async orderless rg s
-           shrink-path undo-tree vertico wgrep which-key yaml-mode))
+           marginalia mpv nerd-icons nix-mode ob-async orderless
+           org-tree-slide rg s shrink-path undo-tree vertico wgrep
+           which-key yaml-mode))
  '(warning-suppress-types '((comp))))
 
 ;; require package
@@ -730,6 +731,19 @@ variables for update interval, output format, etc."
       (insert image)
       (write-region (point-min) (point-max) file))
     (insert (format "[[file:%s]]\n" (file-relative-name file)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; org tree slide
+;; ----------------------------------------------------------------------------------
+
+(setq org-tree-slide-header nil)
+(setq org-tree-slide-activate-message "Presentation started")
+(setq org-tree-slide-deactivate-message "Presentation finished")
+(setq org-tree-slide-slide-in-effect t)
+(setq org-tree-slide-breakcrumbs " // ")
+(setq org-tree-slide-heading-emphasis t)
+(setq org-tree-slide-slide-in-blank-lines 2)
 
 
 ;; ----------------------------------------------------------------------------------
