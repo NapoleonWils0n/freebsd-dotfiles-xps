@@ -751,6 +751,7 @@ variables for update interval, output format, etc."
 ;; ----------------------------------------------------------------------------------
 ;; presentation start
 (defun my/presentation-setup ()
+(setq-local mode-line-format nil) 
 (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
                                    (header-line (:height 4.0) variable-pitch)
                                    (org-document-title (:height 1.75) org-document-title)
@@ -761,6 +762,7 @@ variables for update interval, output format, etc."
 
 ;; presentation end
 (defun my/presentation-end ()
+(doom-modeline-set-modeline 'main)
   (setq-local face-remapping-alist '((default fixed-pitch default)))
   (setq-local face-remapping-alist '((default variable-pitch default))))
 
