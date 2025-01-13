@@ -23,16 +23,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
- '(custom-safe-themes
-   '("" default))
+ '(custom-safe-themes '("" default))
  '(package-selected-packages
    '(async consult doom-modeline doom-modeline-now-playing doom-themes
-           ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark
-           embark-consult emmet-mode evil evil-collection evil-leader
-           fd-dired git-auto-commit-mode google-translate hydra iedit
-           marginalia mpv nerd-icons nix-mode ob-async orderless
-           org-tree-slide rg s shrink-path undo-tree vertico wgrep
-           which-key yaml-mode))
+           ednc elfeed elfeed-org elfeed-tube
+           elfeed-tube-mpv embark embark-consult emmet-mode evil
+           evil-collection evil-leader fd-dired git-auto-commit-mode
+           google-translate hydra iedit marginalia mpv nerd-icons
+           nix-mode ob-async orderless org-tree-slide rg s shrink-path
+           undo-tree vertico wgrep which-key yaml-mode))
  '(warning-suppress-types '((comp))))
 
 ;; require package
@@ -52,8 +51,9 @@
 (async-bytecomp-package-mode 1)
 (setq async-bytecomp-allowed-packages '(all))
 
+
 ;; ----------------------------------------------------------------------------------
-;; load-theme
+;; theme
 ;; ----------------------------------------------------------------------------------
 
 (load-theme 'modus-vivendi-tinted t)
