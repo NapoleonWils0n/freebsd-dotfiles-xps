@@ -1367,7 +1367,7 @@ targets."
   ("i" my/mpv-insert-playback-position)
   ("m" end-of-line-and-indented-new-line)
   ("s" mpv-screenshot)
-  ("h" mpv-osd)
+  ("o" mpv-osd)
   ("n" mpv-playlist-next)
   ("p" mpv-playlist-prev)
   ("e" mpv-jump-to-playlist-entry)
