@@ -563,7 +563,7 @@ targets."
 ;; keymap-set
 ;; ----------------------------------------------------------------------------------
 
-(keymap-set global-map "C-c o" 'iedit-mode)
+(keymap-set global-map "C-c h" 'iedit-mode)
 (keymap-set global-map "C-c l" 'org-store-link)
 (keymap-set global-map "C-c a" 'org-agenda)
 
@@ -1338,13 +1338,11 @@ targets."
   ("i" my/mpv-insert-playback-position)
   ("m" end-of-line-and-indented-new-line)
   ("s" mpv-screenshot)
-  ("o" mpv-osd)
+  ("h" mpv-osd)
   ("n" mpv-playlist-next)
   ("p" mpv-playlist-prev)
   ("e" mpv-jump-to-playlist-entry)
   ("r" mpv-remove-playlist-entry))
-
-(global-set-key (kbd "C-c m") 'hydra-mpv/body)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -1370,7 +1368,18 @@ targets."
   ("f" kodi-forward)
   ("r" kodi-rewind))
 
-(global-set-key (kbd "C-c k") 'hydra-kodi/body)
+
+;; ----------------------------------------------------------------------------------
+;; hydra-nested
+;; ----------------------------------------------------------------------------------
+
+(defvar hydra-stack nil)
+
+(defhydra hydra-nested (:exit t)
+  ("m" hydra-mpv/body "mpv" :column "hydra")
+  ("k" hydra-kodi/body "kodi" :column "hydra"))
+
+(global-set-key (kbd "<f2>") 'hydra-nested/body)
 
 
 ;; ----------------------------------------------------------------------------------
