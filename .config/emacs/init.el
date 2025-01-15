@@ -30,7 +30,7 @@
            elfeed-tube-mpv embark embark-consult emmet-mode evil
            evil-collection evil-leader fd-dired git-auto-commit-mode
            google-translate hydra iedit marginalia mpv nerd-icons
-           nix-mode ob-async orderless org-tree-slide rg s shrink-path
+           ob-async orderless org-tree-slide rg s shrink-path
            undo-tree vertico wgrep which-key yaml-mode))
  '(warning-suppress-types '((comp))))
 
@@ -387,6 +387,7 @@ variables for update interval, output format, etc."
 (setq switch-to-buffer-obey-display-actions t)
 
 ;; hippie expand
+(setq save-abbrevs 'silently)
 (setq hippie-expand-try-functions-list
       '(try-expand-all-abbrevs
         try-complete-file-name-partially
