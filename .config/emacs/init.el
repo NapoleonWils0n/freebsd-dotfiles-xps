@@ -400,6 +400,7 @@ variables for update interval, output format, etc."
         try-complete-lisp-symbol-partially
         try-complete-lisp-symbol))
 
+
 ;; ----------------------------------------------------------------------------------
 ;; emacs 28 - dictionary server
 ;; ----------------------------------------------------------------------------------
@@ -1587,38 +1588,73 @@ minibuffer with something like `exit-minibuffer'."
 ;; mpd host
 (setq mpc-host "/home/djwilcox/.config/mpd/socket")
 
+
 ;; ----------------------------------------------------------------------------------
-;; gptel
+;; auth-source
 ;; ----------------------------------------------------------------------------------
 
-;; auth-source
 (require 'auth-source)
 (add-to-list 'auth-sources (expand-file-name ".authinfo" user-emacs-directory))
 
+
+;; ----------------------------------------------------------------------------------
 ;; gptel
+;; ----------------------------------------------------------------------------------
+
 (require 'gptel)
 (require 'gptel-curl)
+(require 'gptel-transient)
 
 ;; gptel config
 (setq gptel-default-mode 'org-mode
               gptel-post-response-functions #'gptel-end-of-response
-              gptel-model 'gemini-1.5-flash
-              gptel-backend (gptel-make-gemini "Gemini"
+              gptel-expert-commands t)
+
+
+;; ----------------------------------------------------------------------------------
+;; gemini
+;; ----------------------------------------------------------------------------------
+
+(setq gptel-model 'gemini-1.5-flash
+      gptel-backend (gptel-make-gemini "Gemini"
                               :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
                               :stream t))
 
-;; set org source blocks to use sh and not bash
-(defun gptel-fix-src-header (beg end)
+;; display the Gemini buffer in same window
+(add-to-list 'display-buffer-alist
+   '("^*Gemini*" display-buffer-same-window))
+
+
+;; ----------------------------------------------------------------------------------
+;; olama
+;; ----------------------------------------------------------------------------------
+
+(setq gptel-model 'mistral:latest)
+(setq gptel-model 'zephyr:latest)
+(setq gptel-model 'deepseek-coder)
+(setq gptel-backend (gptel-make-ollama "Ollama"
+                      :host "localhost:11434"
+                      :stream t
+                      :models '(mistral:latest
+                                zephyr:latest
+                                deepseek-coder)))
+
+;; display the Ollama buffer in same window
+(add-to-list 'display-buffer-alist
+   '("^*Ollama*" display-buffer-same-window))
+
+
+;; ----------------------------------------------------------------------------------
+;; gptel set org source blocks to use sh and not bash
+;; ----------------------------------------------------------------------------------
+
+(defun my/gptel-fix-src-header (beg end)
   (save-excursion
     (goto-char beg)
     (while (re-search-forward "^#\\+begin_src bash" end t)
       (replace-match "#+begin_src sh"))))
 
-(add-hook 'gptel-post-response-functions #'gptel-fix-src-header)
-
-;; display the Gemini buffer in same window
-(add-to-list 'display-buffer-alist
-   '("^*Gemini*" display-buffer-same-window))
+(add-hook 'gptel-post-response-functions #'my/gptel-fix-src-header)
 
 
 ;; ----------------------------------------------------------------------------------
