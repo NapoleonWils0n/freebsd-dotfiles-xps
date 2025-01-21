@@ -1687,6 +1687,13 @@ minibuffer with something like `exit-minibuffer'."
 
 (add-hook 'gptel-post-response-functions #'my/gptel-fix-src-header)
 
+;; ----------------------------------------------------------------------------------
+;; magit
+;; ----------------------------------------------------------------------------------
+
+;; ssh
+(setenv "SSH_AUTH_SOCK" (getenv "SSH_AUTH_SOCK"))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection
