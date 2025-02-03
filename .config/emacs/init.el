@@ -1637,6 +1637,7 @@ minibuffer with something like `exit-minibuffer'."
 (setq gptel-model 'deepseek-r1:7b)
 (setq gptel-model 'llama3.2:latest)
 (setq gptel-model 'mistral:latest)
+(setq gptel-model 'qwen2.5:7b)
 (setq gptel-model 'zephyr:latest)
 (setq gptel-backend (gptel-make-ollama "Ollama"
                       :host "localhost:11434"
@@ -1645,6 +1646,7 @@ minibuffer with something like `exit-minibuffer'."
                                 deepseek-r1:7b
                                 llama3.2:latest
                                 mistral:latest
+                                qwen2.5:7b
                                 zephyr:latest)))
 
 ;; display the Ollama buffer in same window
