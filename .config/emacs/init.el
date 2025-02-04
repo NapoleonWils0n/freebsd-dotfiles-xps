@@ -372,10 +372,6 @@ variables for update interval, output format, etc."
 ;; eww browser text width
 (setq shr-width 80)
 
-;; company auto complete
-(setq company-idle-delay 0)
-(setq company-minimum-prefix-length 3)
-
 ;; ediff
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq ediff-split-window-function 'split-window-horizontally)
