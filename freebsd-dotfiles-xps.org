@@ -927,9 +927,6 @@ targets."
 ;; Make shebang (#!) file executable when saved
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
-;; global company mode
-;;(add-hook 'after-init-hook 'global-company-mode)
-
 ;; visual line mode
 (add-hook 'text-mode-hook 'visual-line-mode)
 
@@ -958,7 +955,7 @@ targets."
 (defun wl-paste ()
   (if (and wl-copy-process (process-live-p wl-copy-process))
       nil ; should return nil if we're the current paste owner
-      (shell-command-to-string "wl-paste -n | tr -d \r")))
+      (shell-command-to-string "wl-paste")))
 (setq interprogram-cut-function 'wl-copy)
 (setq interprogram-paste-function 'wl-paste)
 
