@@ -1677,6 +1677,55 @@ minibuffer with something like `exit-minibuffer'."
              ssh-auth-sock-old (getenv "SSH_AUTH_SOCK")))))
 (my-ssh-refresh)
 
+;; ----------------------------------------------------------------------------------
+;; nohup-shell-command
+;; ----------------------------------------------------------------------------------
+
+(defun nohup-shell-command (input)
+  (interactive "P")
+  (async-shell-command
+   (concat "nohup " "1>/dev/null " "2>/dev/null " input)))
+ 
+
+;; ----------------------------------------------------------------------------------
+;; app launcher
+;; ----------------------------------------------------------------------------------
+
+(require 'app-launcher)
+
+;; app-launcher use nohup-shell-command
+(with-eval-after-load 'app-launcher
+(defun app-launcher--action-function-default (selected)
+  "Default function used to run the selected application."
+  (let* ((exec (cdr (assq 'exec (gethash selected app-launcher--cache))))
+	 (command (let (result)
+		    (dolist (chunk (split-string exec " ") result)
+		      (unless (or (equal chunk "%U")
+				  (equal chunk "%F")
+				  (equal chunk "%u")
+				  (equal chunk "%f"))
+			(setq result (concat result chunk " ")))))))
+    (nohup-shell-command command))))
+
+
+;; app-launcher frame
+(defun emacs-run-launcher ()
+"Create and select a frame called emacs-run-launcher which consists only of a minibuffer and has specific dimensions. Run app-launcher-run-app on that frame, which is an emacs command that prompts you to select an app and open it in a dmenu like behaviour. Delete the frame after that command has exited"
+(interactive)
+(with-selected-frame (make-frame '((name . "emacs-run-launcher")
+(minibuffer . only)
+(auto-raise . t) ; focus on this frame
+(fullscreen . 0) ; no fullscreen
+(undecorated . t) ; remove title bar
+(tool-bar-lines . 0)
+(menu-bar-lines . 0)
+(width . 60)
+(alpha . 98)
+(height . 11)))
+(unwind-protect
+(app-launcher-run-app)
+(delete-frame))))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection
