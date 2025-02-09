@@ -1255,7 +1255,7 @@ targets."
   "Send the url under the point to taskspooler and yt-dlp"
   (interactive)
   (let ((url (shr-url-at-point current-prefix-arg)))
-    (start-process "eww-yt-dlp" nil "ts" "yt-dlp" "-o" "'%(title)s.%(ext)s'" "-P" "/home/djwilcox/downloads" url)))
+    (start-process "eww-yt-dlp" nil "ts" "yt-dlp" "-o" "'%(title)s.%(ext)s'" "-P" (expand-file-name "~/downloads") url)))
 
 (evil-collection-define-key 'normal 'eww-mode-map
     "x" 'eww-yt-dlp)
@@ -1269,7 +1269,7 @@ targets."
   "Send the url under the point to taskspooler and aria2c"
   (interactive)
   (let ((url (shr-url-at-point current-prefix-arg)))
-    (start-process "eww-aria2c" nil "ts" "aria2c" "-d" "/home/djwilcox/downloads" url)))
+    (start-process "eww-aria2c" nil "ts" "aria2c" "-d" (expand-file-name "~/downloads") url)))
 
 (evil-collection-define-key 'normal 'eww-mode-map
     "b" 'eww-aria2c)
