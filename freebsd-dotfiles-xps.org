@@ -1276,6 +1276,38 @@ targets."
 
 
 ;; ----------------------------------------------------------------------------------
+;; hydra-mpv
+;; ----------------------------------------------------------------------------------
+
+(defhydra hydra-mpv (:hint nil)
+  "
+  ^Seek^                    ^Actions^                ^General^                       ^Playlists^
+  ^^^^^^^^-----------------------------------------------------------------------------------------------------------
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position   _n_: next item in playlist
+  _j_: seek back -60        _._: forward frame       _m_: insert a newline           _p_: previous item in playlist
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot          _e_: jump to playlist entry
+  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd               _r_: remove playlist entry
+  ^
+  "
+  ("h" mpv-seek-backward "-5")
+  ("j" mpv-seek-backward "-60")
+  ("k" mpv-seek-forward "60")
+  ("l" mpv-seek-forward "5")
+  ("," mpv-frame-back-step)
+  ("." mpv-frame-step)
+  ("SPC" mpv-pause)
+  ("q" mpv-kill)
+  ("i" my/mpv-insert-playback-position)
+  ("m" end-of-line-and-indented-new-line)
+  ("s" mpv-screenshot)
+  ("o" mpv-osd)
+  ("n" mpv-playlist-next)
+  ("p" mpv-playlist-prev)
+  ("e" mpv-jump-to-playlist-entry)
+  ("r" mpv-remove-playlist-entry))
+
+
+;; ----------------------------------------------------------------------------------
 ;; kocontrol - kodi
 ;; ----------------------------------------------------------------------------------
 
@@ -1329,38 +1361,6 @@ targets."
 
 
 ;; ----------------------------------------------------------------------------------
-;; hydra-mpv
-;; ----------------------------------------------------------------------------------
-
-(defhydra hydra-mpv (:hint nil)
-  "
-  ^Seek^                    ^Actions^                ^General^                       ^Playlists^
-  ^^^^^^^^-----------------------------------------------------------------------------------------------------------
-  _h_: seek back -5         _,_: back frame          _i_: insert playback position   _n_: next item in playlist
-  _j_: seek back -60        _._: forward frame       _m_: insert a newline           _p_: previous item in playlist
-  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot          _e_: jump to playlist entry
-  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd               _r_: remove playlist entry
-  ^
-  "
-  ("h" kodi-seek-backward "-5")
-  ("j" mpv-seek-backward "-60")
-  ("k" mpv-seek-forward "60")
-  ("l" mpv-seek-forward "5")
-  ("," mpv-frame-back-step)
-  ("." mpv-frame-step)
-  ("SPC" mpv-pause)
-  ("q" mpv-kill)
-  ("i" my/mpv-insert-playback-position)
-  ("m" end-of-line-and-indented-new-line)
-  ("s" mpv-screenshot)
-  ("o" mpv-osd)
-  ("n" mpv-playlist-next)
-  ("p" mpv-playlist-prev)
-  ("e" mpv-jump-to-playlist-entry)
-  ("r" mpv-remove-playlist-entry))
-
-
-;; ----------------------------------------------------------------------------------
 ;; hydra-kodi
 ;; ----------------------------------------------------------------------------------
 
@@ -1383,6 +1383,22 @@ targets."
   ("f" kodi-forward)
   ("r" kodi-rewind))
 
+;; ----------------------------------------------------------------------------------
+;; hydra-emacs
+;; ----------------------------------------------------------------------------------
+
+;; auto exit
+(defhydra hydra-emacs (:hint nil :exit t)
+  "
+  ^Actions^             
+  ^^^^^^^^--------------
+  _m_: mpv clipboard
+  _p_: pinch url
+  ^
+  "
+  ("m" mpv-play-clipboard)
+  ("p" pinch-clipboard))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; hydra-nested
@@ -1391,7 +1407,8 @@ targets."
 (defvar hydra-stack nil)
 
 (defhydra hydra-nested (:exit t)
-  ("m" hydra-mpv/body "mpv" :column "hydra")
+  ("e" hydra-emacs/body "emacs" :column "hydra")
+  ("k" hydra-kodi/body "kodi" :column "hydra")
   ("k" hydra-kodi/body "kodi" :column "hydra")
   ("q" nil "quit"))
 
