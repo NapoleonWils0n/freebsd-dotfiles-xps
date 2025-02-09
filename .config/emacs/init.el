@@ -1379,7 +1379,7 @@ targets."
 
 (defhydra hydra-nested (:exit t)
   ("e" hydra-emacs/body "emacs" :column "hydra")
-  ("k" hydra-kodi/body "kodi" :column "hydra")
+  ("m" hydra-mpv/body "mpv" :column "hydra")
   ("k" hydra-kodi/body "kodi" :column "hydra")
   ("q" nil "quit"))
 
