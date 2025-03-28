@@ -2,7 +2,7 @@
 
 # Path
 typeset -U PATH path
-path=("$HOME/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
 export PATH
 
 # xdg directories
@@ -29,6 +29,3 @@ export MPD_HOST="/home/djwilcox/.config/mpd/socket"
 
 # dark theme needed for handbrake
 export GTK_THEME=Adwaita-dark:dark
-
-# rust
-. "$HOME/.cargo/env"
