@@ -763,7 +763,10 @@ targets."
      ("\\.mov\\'" . "mpv %s")
      ("\\.pdf\\'" . default))))
 
-  
+;; open browser links with jailfox
+(setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program "firefox")
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
