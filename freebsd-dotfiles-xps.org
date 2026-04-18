@@ -3228,8 +3228,13 @@ yesmaster='Yes Master ? '
 # source git-prompt.sh
 #===============================================================================
 
-source /usr/local/share/git-prompt.zsh/git-prompt.zsh
+# Load bash compatibility so we can use the git-prompt function
+autoload -Uz bashcompinit && bashcompinit
 
+# Point to the actual function script provided by the git package
+if [ -f /usr/local/share/git-core/contrib/completion/git-prompt.sh ]; then
+    source /usr/local/share/git-core/contrib/completion/git-prompt.sh
+fi
 
 #===============================================================================
 # export git status options
