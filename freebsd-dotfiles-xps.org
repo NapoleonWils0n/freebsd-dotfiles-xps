@@ -5287,6 +5287,13 @@ gtk-application-prefer-dark-theme = true
 #+END_SRC
 
 ** xkb
+
+create the needed directories
+
+#+begin_src sh
+mkdir -p ~/.config/xkb/{compat,keycodes,rules,symbols,types}
+#+end_src
+
 *** rules
 **** evdev
 ***** evdev config
