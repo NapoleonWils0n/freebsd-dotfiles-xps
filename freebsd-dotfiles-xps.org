@@ -3801,206 +3801,6 @@ fs-screen-name=DP-3
 <<mpv.conf>>
 #+END_SRC
 
-** kodi
-*** kodi config
-**** playercorefactory.xml
-
-#+NAME: playercorefactory.xml
-#+BEGIN_SRC xml
-<playercorefactory>
- <players>
-   <player name="save url" type="ExternalPlayer" audio="true" video="true">
-	<filename>printf</filename>
-     <args>"%s\n" "{0}" > "$HOME/desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt"</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="play" type="ExternalPlayer" audio="false" video="true">
-	<filename>"$HOME/.venv/pilfer/bin/pilferplay"</filename>
-     <args>-i "{0}"</args>
-     <hidexbmc>true</hidexbmc>
-   </player>  
-   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
-	<filename>mpv</filename>
-     <args>"{0}"</args>
-     <hidexbmc>true</hidexbmc>
-   </player>  
-   <player name="emacs" type="ExternalPlayer" audio="false" video="true">
-	<filename>emacsclient</filename>
-     <args>-u -e "(mpv-play-remote-video \"{0}\")"</args>
-     <hidexbmc>true</hidexbmc>
-   </player>  
-   <player name="record video" type="ExternalPlayer" audio="false" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-i "{0}" &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>  
-   <player name="record video - 30 minutes" type="ExternalPlayer" audio="false" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-i "{0}" -t 00:30:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record video - 1 hour" type="ExternalPlayer" audio="false" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-i "{0}" -t 01:00:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record video - 2 hours" type="ExternalPlayer" audio="false" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-i "{0}" -t 02:00:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record video - 3 hours" type="ExternalPlayer" audio="false" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-i "{0}" -t 03:00:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record audio" type="ExternalPlayer" audio="true" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-a "{0}" &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>  
-   <player name="record audio - 30 minutes" type="ExternalPlayer" audio="true" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-a "{0}" -t 00:30:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record audio - 1 hour" type="ExternalPlayer" audio="true" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-a "{0}" -t 01:00:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record audio - 2 hours" type="ExternalPlayer" audio="true" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-a "{0}" -t 02:00:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
-   <player name="record audio - 3 hours" type="ExternalPlayer" audio="true" video="true">
-	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
-     <args>-a "{0}" -t 03:00:00 &</args>
-     <hidexbmc>false</hidexbmc>
-   </player> 
- </players>
- <rules action="overwrite">
-   <rule internetstream="true" player="play"></rule>
-   <rule video="true" player="mpv"></rule>
-   <!-- <rule internetstream="true" player="play"></rule> -->
-
-   <!-- change the default player below -->
-
-   <!-- <rule protocols="nfs|smb" player="dvdplayer"></rule> -->
-   <!-- uncomment to make play the default player
-    <rule video="true" player="play"></rule>
-   -->
-   
-   <!-- uncomment to make record the default player
-    <rule video="true" player="record"></rule>
-   -->
-   
- </rules>
-</playercorefactory>
-#+END_SRC
-
-**** favourites.xml
-
-#+NAME: favourites.xml
-#+BEGIN_SRC xml
-<favourites>
-    <favourite name="The Haunted Manor" thumb="https://yt3.ggpht.com/FTZm2JIjRFbv883G-ykPXykZG7ggj2PuWl0xL2fdsmx7jV88f71P11rrdghr8XhMZXxgV9v3fVU=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCRlKarGoPgHU-DbSxOzRDPQ/?category_label=The%20Haunted%20Manor&quot;,return)</favourite>
-    <favourite name="New Castle After Dark" thumb="https://yt3.ggpht.com/rn-wcv90NG-7hJVhf01wjLYrU9x8Pb3SbvyBHUqm-LC-AgGK9GUnLBTvMpqVBBh3FqoWspwPuo8=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UC951AqujycbBI083GmKRY3A/?category_label=New%20Castle%20After%20Dark&quot;,return)</favourite>
-    <favourite name="The Bill">ActivateWindow(10025,&quot;https://archive.org/download/the-bill_202211/&quot;,return)</favourite>
-    <favourite name="The Magpie Channel TV" thumb="https://yt3.ggpht.com/ytc/AIdro_l7guMug0Qnial-Y2kEyFndznIi7_YiFlBxU2YONG7NdA=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCzbwOixfdDkOEl4c2Gy1Xow/?category_label=The%20Magpie%20Channel%20TV&quot;,return)</favourite>
-    <favourite name="Roobenstein" thumb="https://yt3.ggpht.com/FdztOigwufG5iEIpsPregv9dzbdoAiJuPEKqY9B-En6Zv2GaXHatZAs58fE54xl6ee3k5c1nsQ=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UC2WTz3aJZ65nN3p5_LMJAzg/?category_label=Roobenstein&quot;,return)</favourite>
-    <favourite name="Adam Pearson" thumb="https://yt3.ggpht.com/ytc/AIdro_lMR8RCVSH3F8XJGwe5FVDDxdmohRQFZuIUdqZV31ZfeDs=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCbXlSJHSuY1nNHoxSElKiIA/?category_label=Adam%20Pearson&quot;,return)</favourite>
-    <favourite name="Newcastle United" thumb="https://yt3.ggpht.com/BWvcV6nWayFXr8E9pNuDl_yuW47k4QhOG-VBx5P88cHg6nd3J5W-_JXc08dpo8raeNPud7BXYg=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCywGl_BPp9QhD0uAcP2HsJw/?category_label=Newcastle%20United&quot;,return)</favourite>
-    <favourite name="Farron Balanced" thumb="https://yt3.ggpht.com/ytc/AIdro_m_zmnVM0g_KtmR0w3Cmc_hmY8g-CHPi6Batrw_mygZ1n0=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UC5dUUCs748wCYQl682LX6bg/?category_label=Farron%20Balanced&quot;,return)</favourite>
-    <favourite name="The Ring of Fire" thumb="https://yt3.ggpht.com/jJwLtO9uiqKO2yQZ1q1M1556ACegIF9Wy-ocssYVuK3_q4JPMG-86y_-YTlat7_3Xmp-k9oyDw=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCYWIEbibRcZav6xMLo9qWWw/?category_label=The%20Ring%20of%20Fire&quot;,return)</favourite>
-    <favourite name="Mike Zamansky" thumb="https://yt3.ggpht.com/ytc/AIdro_knGduEqLuRvb8SbuOe75ERGX3H4wP0gD9Pmr7NIsrHaOe6=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCxkMDXQ5qzYOgXPRnOBrp1w/?category_label=Mike%20Zamansky&quot;,return)</favourite>
-    <favourite name="OrgMode tutorial" thumb="https://i.ytimg.com/vi/sQS06Qjnkcc/hqdefault.jpg">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCfbGTpcJyEOMwKP-eYz3_fg/playlist/PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE/?category_label=OrgMode%20tutorial&quot;,return)</favourite>
-    <favourite name="System Crafters" thumb="https://yt3.ggpht.com/ytc/AIdro_lyKTyQXxB_3HJ08fFXcD3EAJUzMll3LWVs9g5bpYmt=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UCAiiOTio8Yu69c3XnR7nQBQ/?category_label=System%20Crafters&quot;,return)</favourite>
-    <favourite name="Protesilaos Stavrou" thumb="https://yt3.ggpht.com/ytc/AIdro_nyYP0GEb2Jm2rNtdKdj823s7lajF5VfI2AY6tbHHBcFkB7=s240-c-k-c0x00ffffff-no-rj">ActivateWindow(10025,&quot;plugin://plugin.video.youtube/channel/UC0uTPqBCFIpZxlz_Lv1tk_g/?category_label=Protesilaos%20Stavrou&quot;,return)</favourite>
-</favourites>
-#+END_SRC
-
-**** sources.xml
-
-#+NAME: sources.xml
-#+BEGIN_SRC xml
-<sources>
-    <programs>
-        <default pathversion="1"></default>
-    </programs>
-    <video>
-        <default pathversion="1"></default>
-        <source>
-            <name>The Bill</name>
-            <path pathversion="1">https://archive.org/download/the-bill_202211/</path>
-            <allowsharing>true</allowsharing>
-        </source>
-    </video>
-    <music>
-        <default pathversion="1"></default>
-    </music>
-    <pictures>
-        <default pathversion="1"></default>
-    </pictures>
-    <files>
-        <default pathversion="1"></default>
-    </files>
-    <games>
-        <default pathversion="1"></default>
-    </games>
-</sources>
-#+END_SRC
-
-*** kodi tangle
-**** playercorefactory.xml tangle
-
-+ home dir
-
-#+NAME: playercorefactory.xml-home-dir
-#+BEGIN_SRC xml :noweb yes :tangle "~/.kodi/userdata/playercorefactory.xml"
-<<playercorefactory.xml>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: playercorefactory.xml-current-dir
-#+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/playercorefactory.xml"
-<<playercorefactory.xml>>
-#+END_SRC
-
-**** favourites.xml tangle
-
-+ home dir
-
-#+NAME: favourites.xml-home-dir
-#+BEGIN_SRC xml :noweb yes :tangle "~/.kodi/userdata/favourites.xml"
-<<favourites.xml>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: favourites.xml-current-dir
-#+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/favourites.xml"
-<<favourites.xml>>
-#+END_SRC
-
-**** sources.xml tangle
-
-+ home dir
-
-#+NAME: sources.xml-home-dir
-#+BEGIN_SRC xml :noweb yes :tangle "~/.kodi/userdata/sources.xml"
-<<sources.xml>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: sources.xml-current-dir
-#+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/sources.xml"
-<<sources.xml>>
-#+END_SRC
-
 ** tofi
 *** tofi config
 
@@ -4894,23 +4694,6 @@ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme
 StartupNotify=true
 #+end_src
 
-**** davinci resolve config
-
-#+NAME: davinci-resolve-desktop
-#+begin_src conf
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Type=Application
-Name=DaVinci Resolve
-Exec=/home/djwilcox/bin/wrapper-freebsd -j 'rocky' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia; resolve' -p 'on'
-Icon=/usr/local/jails/linux/rocky/opt/resolve/graphics/DV_Resolve.png
-Terminal=false
-MimeType=application/x-resolveproj;
-StartupNotify=true
-Categories=AudioVideo
-#+end_src
-
 **** obs config
 
 #+NAME: obs-desktop
@@ -5023,22 +4806,6 @@ StartupNotify=true
 Categories=AudioVideo
 #+end_src
 
-**** google-earth config
-
-#+NAME: google-earth-desktop
-#+begin_src conf
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Type=Application
-Name=Google Earth
-Exec=/home/djwilcox/bin/wrapper-freebsd -j 'ubuntu' -a 'export DISPLAY=:0 QT_QPA_PLATFORM=xcb GDK_BACKEND=x11; google-earth-pro'
-Terminal=false
-MimeType=application/x-resolveproj;
-StartupNotify=true
-Categories=AudioVideo
-#+end_src
-
 **** jailfox config
 
 #+NAME: jailfox-desktop
@@ -5101,23 +4868,6 @@ Icon=nvidia-settings.png
 Categories=Settings;HardwareSettings;
 #+end_src
 
-**** pavucontrol config
-
-#+NAME: pavucontrol-desktop
-#+begin_src conf
-[Desktop Entry]
-Version=1.0
-Name=Volume
-GenericName=Volume Control
-Comment=Adjust the volume level
-Exec=pavucontrol
-Icon=multimedia-volume-control
-StartupNotify=true
-Type=Application
-Categories=AudioVideo;Audio;Mixer;GTK;Settings;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;
-Keywords=pavucontrol;Microphone;Volume;Fade;Balance;Headset;Speakers;Headphones;Audio;Mixer;Output;Input;Devices;Playback;Recording;System Sounds;Sound Card;Settings;Preferences;
-#+end_src
-
 **** qt5ct config
 
 #+NAME: qt5ct-desktop
@@ -5153,24 +4903,6 @@ Categories=AudioVideo;Player;Recorder;
 MimeType=application/ogg;application/x-ogg;audio/ogg;audio/vorbis;audio/x-vorbis;audio/x-vorbis+ogg;video/ogg;video/x-ogm;video/x-ogm+ogg;video/x-theora+ogg;video/x-theora;audio/x-speex;audio/opus;application/x-flac;audio/flac;audio/x-flac;audio/x-ms-asf;audio/x-ms-asx;audio/x-ms-wax;audio/x-ms-wma;video/x-ms-asf;video/x-ms-asf-plugin;video/x-ms-asx;video/x-ms-wm;video/x-ms-wmv;video/x-ms-wmx;video/x-ms-wvx;video/x-msvideo;audio/x-pn-windows-acm;video/divx;video/msvideo;video/vnd.divx;video/avi;video/x-avi;application/vnd.rn-realmedia;application/vnd.rn-realmedia-vbr;audio/vnd.rn-realaudio;audio/x-pn-realaudio;audio/x-pn-realaudio-plugin;audio/x-real-audio;audio/x-realaudio;video/vnd.rn-realvideo;audio/mpeg;audio/mpg;audio/mp1;audio/mp2;audio/mp3;audio/x-mp1;audio/x-mp2;audio/x-mp3;audio/x-mpeg;audio/x-mpg;video/mp2t;video/mpeg;video/mpeg-system;video/x-mpeg;video/x-mpeg2;video/x-mpeg-system;application/mpeg4-iod;application/mpeg4-muxcodetable;application/x-extension-m4a;application/x-extension-mp4;audio/aac;audio/m4a;audio/mp4;audio/x-m4a;audio/x-aac;video/mp4;video/mp4v-es;video/x-m4v;application/x-quicktime-media-link;application/x-quicktimeplayer;video/quicktime;application/x-matroska;audio/x-matroska;video/x-matroska;video/webm;audio/webm;audio/3gpp;audio/3gpp2;audio/AMR;audio/AMR-WB;video/3gp;video/3gpp;video/3gpp2;x-scheme-handler/mms;x-scheme-handler/mmsh;x-scheme-handler/rtsp;x-scheme-handler/rtp;x-scheme-handler/rtmp;x-scheme-handler/icy;x-scheme-handler/icyx;application/x-cd-image;x-content/video-vcd;x-content/video-svcd;x-content/video-dvd;x-content/audio-cdda;x-content/audio-player;application/ram;application/xspf+xml;audio/mpegurl;audio/x-mpegurl;audio/scpls;audio/x-scpls;text/google-video-pointer;text/x-google-video-pointer;video/vnd.mpegurl;application/vnd.apple.mpegurl;application/vnd.ms-asf;application/vnd.ms-wpl;application/sdp;audio/dv;video/dv;audio/x-aiff;audio/x-pn-aiff;video/x-anim;video/x-nsv;video/fli;video/flv;video/x-flc;video/x-fli;video/x-flv;audio/wav;audio/x-pn-au;audio/x-pn-wav;audio/x-wav;audio/x-adpcm;audio/ac3;audio/eac3;audio/vnd.dts;audio/vnd.dts.hd;audio/vnd.dolby.heaac.1;audio/vnd.dolby.heaac.2;audio/vnd.dolby.mlp;audio/basic;audio/midi;audio/x-ape;audio/x-gsm;audio/x-musepack;audio/x-tta;audio/x-wavpack;audio/x-shorten;application/x-shockwave-flash;application/x-flash-video;misc/ultravox;image/vnd.rn-realpix;audio/x-it;audio/x-mod;audio/x-s3m;audio/x-xm;application/mxf;
 X-KDE-Protocols=ftp,http,https,mms,rtmp,rtsp,sftp,smb
 Keywords=Player;Capture;DVD;Audio;Video;Server;Broadcast;
-#+end_src
-
-**** weechat config
-
-#+NAME: weechat-desktop
-#+begin_src conf
-[Desktop Entry]
-Name=WeeChat
-GenericName=Chat client
-Comment=Extensible chat client
-Keywords=WeeChat;extensible;chat;IRC;client;console;terminal;
-Exec=weechat %u
-Terminal=true
-Icon=weechat
-Type=Application
-Categories=Network;Chat;IRCClient;ConsoleOnly;
-MimeType=x-scheme-handler/irc;x-scheme-handler/ircs;
-Hidden=true
 #+end_src
 
 **** vpn-chromium config
@@ -5218,36 +4950,6 @@ Name=Open a New Private Window
 Exec=setfib 1 firefox -private-window
 #+end_src
 
-**** vpn-transmission config
-
-#+NAME: vpn-transmission-desktop
-#+begin_src conf
-[Desktop Entry]
-Name=vpn-Transmission
-GenericName=BitTorrent Client
-Comment=Download and share files over BitTorrent
-Keywords=torrents;downloading;uploading;share;sharing;
-Exec=sh -c 'setfib 1 transmission-gtk %U'
-Icon=transmission
-Terminal=false
-TryExec=transmission-gtk
-Type=Application
-StartupNotify=true
-MimeType=application/x-bittorrent;x-scheme-handler/magnet;
-Categories=Network;FileTransfer;P2P;GTK;
-X-Ubuntu-Gettext-Domain=transmission
-X-AppInstall-Keywords=torrent
-Actions=Pause;Minimize;
-
-[Desktop Action Pause]
-Name=Start Transmission with All Torrents Paused
-Exec=setfib 1 transmission-gtk --paused
-
-[Desktop Action Minimize]
-Name=Start Transmission Minimized
-Exec=setfib 1 transmission-gtk --minimized
-#+end_src
-
 *** desktop files tangle
 **** chromium tangle
 
@@ -5263,22 +4965,6 @@ Exec=setfib 1 transmission-gtk --minimized
 #+NAME: chromium-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chromium-browser.desktop"
 <<chromium-desktop>>
-#+END_SRC
-
-**** davinci resolve tangle
-
-+ home dir
-  
-#+NAME: davinci-resolve-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/davinci-resolve.desktop"
-<<davinci-resolve-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: davinci-resolve-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/davinci-resolve.desktop"
-<<davinci-resolve-desktop>>
 #+END_SRC
 
 **** obs tangle
@@ -5361,22 +5047,6 @@ Exec=setfib 1 transmission-gtk --minimized
 <<google-chrome-desktop>>
 #+END_SRC
 
-**** google-earth tangle
-
-+ home dir
-  
-#+NAME: google-earth-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/google-earth.desktop"
-<<google-earth-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: google-earth-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/google-earth.desktop"
-<<google-earth-desktop>>
-#+END_SRC
-
 **** jailfox tangle
 
 + home dir
@@ -5425,22 +5095,6 @@ Exec=setfib 1 transmission-gtk --minimized
 <<nvidia-settings-desktop>>
 #+END_SRC
 
-**** pavucontrol tangle
-
-+ home dir
-  
-#+NAME: pavucontrol-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/pavucontrol.desktop"
-<<pavucontrol-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: pavucontrol-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/pavucontrol.desktop"
-<<pavucontrol-desktop>>
-#+END_SRC
-
 **** qt5ct tangle
 
 + home dir
@@ -5473,22 +5127,6 @@ Exec=setfib 1 transmission-gtk --minimized
 <<vlc-desktop>>
 #+END_SRC
 
-**** weechat tangle
-
-+ home dir
-  
-#+NAME: weechat-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/weechat.desktop"
-<<weechat-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: weechat-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/weechat.desktop"
-<<weechat-desktop>>
-#+END_SRC
-
 **** vpn-chromium tangle
 
 + home dir
@@ -5519,22 +5157,6 @@ Exec=setfib 1 transmission-gtk --minimized
 #+NAME: vpn-firefox-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-firefox.desktop"
 <<vpn-firefox-desktop>>
-#+END_SRC
-
-**** vpn-transmission tangle
-
-+ home dir
-  
-#+NAME: vpn-transmission-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-transmission.desktop"
-<<vpn-transmission-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: vpn-transmission-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-transmission.desktop"
-<<vpn-transmission-desktop>>
 #+END_SRC
 
 ** profile
