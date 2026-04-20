@@ -12,6 +12,19 @@
                      gcs-done)))
 
 ;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+;; Set the archives directly instead of using unless/assoc-default
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa"  . "https://elpa.gnu.org/packages/")
+                         ("gnu"   . "https://elpa.gnu.org/packages/")))
+
+;; package initialize (use-package will handle installation and requiring)
+(package-initialize)
+
+
+;; ----------------------------------------------------------------------------------
 ;; Bootstrap use-package
 ;; ----------------------------------------------------------------------------------
 
@@ -23,19 +36,6 @@
   (require 'use-package))
 
 (setq use-package-always-ensure t) ;; Automatically install packages if not present
-
-
-;; ----------------------------------------------------------------------------------
-;; melpa packages
-;; ----------------------------------------------------------------------------------
-
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-(unless (assoc-default "elpa" package-archives)
-  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
-
-;; package initialize (use-package will handle installation and requiring)
-(package-initialize)
 
 ;; ----------------------------------------------------------------------------------
 ;; doom-theme : use-package

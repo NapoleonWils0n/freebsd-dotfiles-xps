@@ -55,6 +55,19 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 #+NAME: emacs-bootstrap-use-package
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+;; Set the archives directly instead of using unless/assoc-default
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa"  . "https://elpa.gnu.org/packages/")
+                         ("gnu"   . "https://elpa.gnu.org/packages/")))
+
+;; package initialize (use-package will handle installation and requiring)
+(package-initialize)
+
+
+;; ----------------------------------------------------------------------------------
 ;; Bootstrap use-package
 ;; ----------------------------------------------------------------------------------
 
@@ -66,19 +79,6 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
   (require 'use-package))
 
 (setq use-package-always-ensure t) ;; Automatically install packages if not present
-
-
-;; ----------------------------------------------------------------------------------
-;; melpa packages
-;; ----------------------------------------------------------------------------------
-
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-(unless (assoc-default "elpa" package-archives)
-  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
-
-;; package initialize (use-package will handle installation and requiring)
-(package-initialize)
 #+end_src
 
 ***** themes
