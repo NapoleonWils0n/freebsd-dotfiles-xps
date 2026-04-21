@@ -1,7 +1,7 @@
 #+TITLE: Freebsd Dotfiles xps
 #+STARTUP: overview hideblocks
 #+OPTIONS: num:nil author:nil
-#+PROPERTY: header-args :mkdirp yes
+#+PROPERTY: header-args :mkdirp yes :noweb yes 
 * tangle dotfiles
 ** tangle document
 
