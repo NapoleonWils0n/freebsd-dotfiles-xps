@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; ----------------------------------------------------------------------------------
 ;; emacs init.el - also using early-init.el
 ;; ----------------------------------------------------------------------------------
@@ -166,7 +167,7 @@
 (setq dictionary-server "localhost")
 
 ;; mpd host
-(setq mpc-host "/run/user/1000/mpd/socket")
+(setq mpc-host "~/.config/mpd/socket")
 
 ;; kill ring
 (setq save-interprogram-paste-before-kill t)
@@ -282,7 +283,8 @@
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
 ;; exec-path add local bin directory
-(add-to-list 'exec-path "~/bin")
+(dolist (path '("~/bin" "/usr/local/bin"))
+  (add-to-list 'exec-path path))
 
 ;; ----------------------------------------------------------------------------------
 ;; add-hook
