@@ -3683,6 +3683,7 @@ profile=hwdec
 [hwdec]
 profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
 vo=gpu
+gpu-context=wayland
 hwdec=vaapi
 
 
