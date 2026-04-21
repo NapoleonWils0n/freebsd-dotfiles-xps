@@ -141,3 +141,5 @@ user_pref("browser.urlbar.trimURLs", false);
 user_pref("browser.tabs.groups.smart.userEnabled", false);
 // Enable link previews
 user_pref("browser.ml.linkPreview.enabled", false);
+// Block AI enhancements
+user_pref("browser.preferences.aiControls", false);
