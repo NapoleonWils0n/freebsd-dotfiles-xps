@@ -141,9 +141,3 @@ user_pref("browser.urlbar.trimURLs", false);
 user_pref("browser.tabs.groups.smart.userEnabled", false);
 // Enable link previews
 user_pref("browser.ml.linkPreview.enabled", false);
-// widevine enabled
-user_pref("gmp-widevinecdm.enabled", true);
-// widevine visible
-user_pref("gmp-widevinecdm.visible", true);
-// widevine version
-user_pref("gmp-widevinecdm.version", openwv);
