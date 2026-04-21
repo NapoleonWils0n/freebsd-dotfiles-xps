@@ -3052,14 +3052,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 + home dir
 
 #+NAME: emacs-init.el-home-dir
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/init.el"
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/init.el"
 <<init.el>>
 #+END_SRC
 
 + current dir
 
 #+NAME: emacs-init.el-current-dir
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/init.el"
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/init.el"
 <<init.el>>
 #+END_SRC
 
@@ -3068,14 +3068,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 + home dir
 
 #+NAME: emacs-early-init.el-home-dir
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/early-init.el"
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/early-init.el"
 <<early-init.el>>
 #+END_SRC
 
 + current dir
 
 #+NAME: emacs-early-init.el-current-dir
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/early-init.el"
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/early-init.el"
 <<early-init.el>>
 #+END_SRC
 
@@ -3100,14 +3100,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 + home dir
 
 #+NAME: emacs-bookmarks-home-dir
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/bookmarks"
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/bookmarks"
 <<emacs-bookmarks>>
 #+END_SRC
 
 + current dir
 
 #+NAME: emacs-bookmarks-current-dir
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/bookmarks"
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/bookmarks"
 <<emacs-bookmarks>>
 #+END_SRC
 
@@ -3181,14 +3181,14 @@ y = 4
 + home dir
 
 #+NAME: alacritty-home-dir
-#+BEGIN_SRC yaml :noweb yes :tangle "~/.config/alacritty/alacritty.toml"
+#+BEGIN_SRC yaml :tangle "~/.config/alacritty/alacritty.toml"
 <<alacritty>>
 #+END_SRC
 
 + current dir
 
 #+NAME: alacritty-current-dir
-#+BEGIN_SRC yaml :noweb yes :tangle ".config/alacritty/alacritty.toml"
+#+BEGIN_SRC yaml :tangle ".config/alacritty/alacritty.toml"
 <<alacritty>>
 #+END_SRC
 
@@ -3513,14 +3513,14 @@ export GTK_THEME=Adwaita-dark:dark
 + home dir
 
 #+NAME: zshrc-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.zshrc"
+#+BEGIN_SRC conf :tangle "~/.zshrc"
 <<zshrc>>
 #+END_SRC
 
 + current dir
 
 #+NAME: zshrc-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".zshrc"
+#+BEGIN_SRC conf :tangle ".zshrc"
 <<zshrc>>
 #+END_SRC
 
@@ -3529,14 +3529,14 @@ export GTK_THEME=Adwaita-dark:dark
 + home dir
 
 #+NAME: zshenv-home-dir
-#+BEGIN_SRC sh :noweb yes :tangle "~/.zshenv"
+#+BEGIN_SRC sh :tangle "~/.zshenv"
 <<zshenv>>
 #+END_SRC
 
 + current dir
 
 #+NAME: zshenv-current-dir
-#+BEGIN_SRC sh :noweb yes :tangle ".zshenv"
+#+BEGIN_SRC sh :tangle ".zshenv"
 <<zshenv>>
 #+END_SRC
 
@@ -3779,14 +3779,14 @@ fs-screen-name=DP-3
 + home dir
 
 #+NAME: input.conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/input.conf"
+#+BEGIN_SRC conf :tangle "~/.config/mpv/input.conf"
 <<input.conf>>
 #+END_SRC
 
 + current dir
 
 #+NAME: input.conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/input.conf"
+#+BEGIN_SRC conf :tangle ".config/mpv/input.conf"
 <<input.conf>>
 #+END_SRC
 
@@ -3795,14 +3795,14 @@ fs-screen-name=DP-3
 + home dir
 
 #+NAME: mpv.conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/mpv.conf"
+#+BEGIN_SRC conf :tangle "~/.config/mpv/mpv.conf"
 <<mpv.conf>>
 #+END_SRC
 
 + current dir
 
 #+NAME: mpv.conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/mpv.conf"
+#+BEGIN_SRC conf :tangle ".config/mpv/mpv.conf"
 <<mpv.conf>>
 #+END_SRC
 
@@ -3851,14 +3851,14 @@ default-result-background-padding = 4
 + home dir
 
 #+NAME: tofi-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tofi/config"
+#+BEGIN_SRC conf :tangle "~/.config/tofi/config"
 <<tofi>>
 #+END_SRC
 
 + current dir
 
 #+NAME: tofi-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/tofi/config"
+#+BEGIN_SRC conf :tangle ".config/tofi/config"
 <<tofi>>
 #+END_SRC
 
@@ -3911,14 +3911,14 @@ menu:
 + home dir
 
 #+NAME: wlr-which-key-home-dir
-#+BEGIN_SRC yaml :noweb yes :tangle "~/.config/wlr-which-key/config.yaml"
+#+BEGIN_SRC yaml :tangle "~/.config/wlr-which-key/config.yaml"
 <<wlr-which-key>>
 #+END_SRC
 
 + current dir
 
 #+NAME: wlr-which-key-current-dir
-#+BEGIN_SRC yaml :noweb yes :tangle ".config/wlr-which-key/config.yaml"
+#+BEGIN_SRC yaml :tangle ".config/wlr-which-key/config.yaml"
 <<wlr-which-key>>
 #+END_SRC
 
@@ -4173,14 +4173,14 @@ set -g focus-events on
 + home dir
 
 #+NAME: tmux-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tmux/tmux.conf"
+#+BEGIN_SRC conf :tangle "~/.config/tmux/tmux.conf"
 <<tmux>>
 #+END_SRC
 
 + current dir
 
 #+NAME: tmux-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
+#+BEGIN_SRC conf :tangle ".config/tmux/tmux.conf"
 <<tmux>>
 #+END_SRC
 
@@ -4233,14 +4233,14 @@ set -g focus-events on
 + home dir
 
 #+NAME: yt-dlp-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/yt-dlp/config"
+#+BEGIN_SRC conf :tangle "~/.config/yt-dlp/config"
 <<yt-dlp>>
 #+END_SRC
 
 + current dir
 
 #+NAME: yt-dlp-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/yt-dlp/config"
+#+BEGIN_SRC conf :tangle ".config/yt-dlp/config"
 <<yt-dlp>>
 #+END_SRC
 
@@ -4284,14 +4284,14 @@ audio_output {
 + home dir
 
 #+NAME: mpd-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpd/mpd.conf"
+#+BEGIN_SRC conf :tangle "~/.config/mpd/mpd.conf"
 <<mpd>>
 #+END_SRC
 
 + current dir
 
 #+NAME: mpd-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mpd/mpd.conf"
+#+BEGIN_SRC conf :tangle ".config/mpd/mpd.conf"
 <<mpd>>
 #+END_SRC
 
@@ -4363,14 +4363,14 @@ color alert = black,bold
 + home dir
 
 #+NAME: ncmpc-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/ncmpc/config"
+#+BEGIN_SRC conf :tangle "~/.config/ncmpc/config"
 <<ncmpc>>
 #+END_SRC
 
 + current dir
 
 #+NAME: ncmpc-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/ncmpc/config"
+#+BEGIN_SRC conf :tangle ".config/ncmpc/config"
 <<ncmpc>>
 #+END_SRC
 
@@ -4605,14 +4605,14 @@ color alert = black,bold
 + home dir
   
 #+NAME: aria2-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/aria2/aria2.conf"
+#+BEGIN_SRC conf :tangle "~/.config/aria2/aria2.conf"
 <<aria2>>
 #+END_SRC
   
 + current dir
 
 #+NAME: aria-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/aria2/aria2.conf"
+#+BEGIN_SRC conf :tangle ".config/aria2/aria2.conf"
 <<aria2>>
 #+END_SRC
 
@@ -4635,14 +4635,14 @@ XDG_VIDEOS_DIR="$HOME/video"
 + home dir
   
 #+NAME: user-dirs.dirs-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/user-dirs.dirs"
+#+BEGIN_SRC conf :tangle "~/.config/user-dirs.dirs"
 <<user-dirs.dirs>>
 #+END_SRC
   
 + current dir
 
 #+NAME: user-dirs.dirs-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/user-dirs.dirs"
+#+BEGIN_SRC conf :tangle ".config/user-dirs.dirs"
 <<user-dirs.dirs>>
 #+END_SRC
 
@@ -4928,14 +4928,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: chromium-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/chromium-browser.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/chromium-browser.desktop"
 <<chromium-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: chromium-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chromium-browser.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/chromium-browser.desktop"
 <<chromium-desktop>>
 #+END_SRC
 
@@ -4944,14 +4944,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: obs-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/com.obsproject.Studio.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/com.obsproject.Studio.desktop"
 <<obs-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: obs-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/com.obsproject.Studio.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/com.obsproject.Studio.desktop"
 <<obs-desktop>>
 #+END_SRC
 
@@ -4960,14 +4960,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: emacs-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/emacs.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/emacs.desktop"
 <<emacs-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: emacs-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/emacs.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/emacs.desktop"
 <<emacs-desktop>>
 #+END_SRC
 
@@ -4976,14 +4976,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: emacsclient-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/emacsclient.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/emacsclient.desktop"
 <<emacsclient-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: emacsclient-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/emacsclient.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/emacsclient.desktop"
 <<emacsclient-desktop>>
 #+END_SRC
 
@@ -4992,47 +4992,15 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: firefox-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/firefox.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/firefox.desktop"
 <<firefox-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: firefox-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/firefox.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/firefox.desktop"
 <<firefox-desktop>>
-#+END_SRC
-
-**** google-chrome tangle
-
-+ home dir
-  
-#+NAME: google-chrome-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/google-chrome.desktop"
-<<google-chrome-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: google-chrome-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/google-chrome.desktop"
-<<google-chrome-desktop>>
-#+END_SRC
-
-**** jailfox tangle
-
-+ home dir
-  
-#+NAME: jailfox-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/jailfox.desktop"
-<<jailfox-desktop>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: jailfox-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/jailfox.desktop"
-<<jailfox-desktop>>
 #+END_SRC
 
 **** mpv tangle
@@ -5040,14 +5008,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: mpv-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/mpv.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/mpv.desktop"
 <<mpv-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: mpv-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/mpv.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/mpv.desktop"
 <<mpv-desktop>>
 #+END_SRC
 
@@ -5056,14 +5024,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: nvidia-settings-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/nvidia-settings.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/nvidia-settings.desktop"
 <<nvidia-settings-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: nvidia-settings-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/nvidia-settings.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/nvidia-settings.desktop"
 <<nvidia-settings-desktop>>
 #+END_SRC
 
@@ -5072,14 +5040,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: qt5ct-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/qt5ct.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/qt5ct.desktop"
 <<qt5ct-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: qt5ct-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/qt5ct.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/qt5ct.desktop"
 <<qt5ct-desktop>>
 #+END_SRC
 
@@ -5088,14 +5056,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: vlc-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vlc.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/vlc.desktop"
 <<vlc-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: vlc-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vlc.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/vlc.desktop"
 <<vlc-desktop>>
 #+END_SRC
 
@@ -5104,14 +5072,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: vpn-chromium-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-chromium.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/vpn-chromium.desktop"
 <<vpn-chromium-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: vpn-chromium-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-chromium.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/vpn-chromium.desktop"
 <<vpn-chromium-desktop>>
 #+END_SRC
 
@@ -5120,14 +5088,14 @@ Exec=setfib 1 firefox -private-window
 + home dir
   
 #+NAME: vpn-firefox-desktop-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-firefox.desktop"
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/vpn-firefox.desktop"
 <<vpn-firefox-desktop>>
 #+END_SRC
   
 + current dir
 
 #+NAME: vpn-firefox-desktop-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-firefox.desktop"
+#+BEGIN_SRC conf :tangle ".local/share/applications/vpn-firefox.desktop"
 <<vpn-firefox-desktop>>
 #+END_SRC
 
@@ -5166,14 +5134,14 @@ ENV=$HOME/.shrc; export ENV
 + home dir
 
 #+NAME: profile-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.profile"
+#+BEGIN_SRC conf :tangle "~/.profile"
 <<profile>>
 #+END_SRC
 
 + current dir
 
 #+NAME: profile-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".profile"
+#+BEGIN_SRC conf :tangle ".profile"
 <<profile>>
 #+END_SRC
 
@@ -5194,14 +5162,14 @@ me:\
 + home dir
 
 #+NAME: login_conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.login_conf"
+#+BEGIN_SRC conf :tangle "~/.login_conf"
 <<login_conf>>
 #+END_SRC
 
 + current dir
 
 #+NAME: login_conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".login_conf"
+#+BEGIN_SRC conf :tangle ".login_conf"
 <<login_conf>>
 #+END_SRC
 
@@ -5222,14 +5190,14 @@ ui = true
 + home dir
 
 #+NAME: gitconfig-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/git/config"
+#+BEGIN_SRC conf :tangle "~/.config/git/config"
 <<gitconfig>>
 #+END_SRC
 
 + current dir
 
 #+NAME: gitconfig-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/git/config"
+#+BEGIN_SRC conf :tangle ".config/git/config"
 <<gitconfig>>
 #+END_SRC
 
@@ -5248,14 +5216,14 @@ max-cache-ttl 36000
 + home dir
 
 #+NAME: gpg-agent-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.gnupg/gpg-agent"
+#+BEGIN_SRC conf :tangle "~/.gnupg/gpg-agent"
 <<gpg-agent>>
 #+END_SRC
 
 + current dir
 
 #+NAME: gpg-agent-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".gnupg/gpg-agent"
+#+BEGIN_SRC conf :tangle ".gnupg/gpg-agent"
 <<gpg-agent>>
 #+END_SRC
 
@@ -5275,14 +5243,14 @@ gtk-application-prefer-dark-theme = true
 + home dir
 
 #+NAME: gtk-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/gtk-3.0/settings.ini"
+#+BEGIN_SRC conf :tangle "~/.config/gtk-3.0/settings.ini"
 <<gtk>>
 #+END_SRC
 
 + current dir
 
 #+NAME: gtk-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/gtk-3.0/settings.ini"
+#+BEGIN_SRC conf :tangle ".config/gtk-3.0/settings.ini"
 <<gtk>>
 #+END_SRC
 
@@ -5311,14 +5279,14 @@ mkdir -p ~/.config/xkb/{compat,keycodes,rules,symbols,types}
 + home dir
 
 #+NAME: evdev-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/rules/evdev"
+#+BEGIN_SRC conf :tangle "~/.config/xkb/rules/evdev"
 <<evdev>>
 #+END_SRC
 
 + current dir
 
 #+NAME: evdev-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/rules/evdev"
+#+BEGIN_SRC conf :tangle ".config/xkb/rules/evdev"
 <<evdev>>
 #+END_SRC
 
@@ -5368,14 +5336,14 @@ mkdir -p ~/.config/xkb/{compat,keycodes,rules,symbols,types}
 + home dir
 
 #+NAME: evdev.xml-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/rules/evdev.xml"
+#+BEGIN_SRC conf :tangle "~/.config/xkb/rules/evdev.xml"
 <<evdev.xml>>
 #+END_SRC
 
 + current dir
 
 #+NAME: evdev.xml-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/rules/evdev.xml"
+#+BEGIN_SRC conf :tangle ".config/xkb/rules/evdev.xml"
 <<evdev.xml>>
 #+END_SRC
 
@@ -5397,14 +5365,14 @@ xkb_symbols "swap_sterling_numbersign" {
 + home dir
 
 #+NAME: custom-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/symbols/custom"
+#+BEGIN_SRC conf :tangle "~/.config/xkb/symbols/custom"
 <<custom>>
 #+END_SRC
 
 + current dir
 
 #+NAME: custom-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/symbols/custom"
+#+BEGIN_SRC conf :tangle ".config/xkb/symbols/custom"
 <<custom>>
 #+END_SRC
 
@@ -5426,13 +5394,13 @@ xkb_symbols "swap_sterling_numbersign" {
 + home dir
 
 #+NAME: gb-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xkb/symbols/gb"
+#+BEGIN_SRC conf :tangle "~/.config/xkb/symbols/gb"
 <<gb>>
 #+END_SRC
 
 + current dir
 
 #+NAME: gb-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/xkb/symbols/gb"
+#+BEGIN_SRC conf :tangle ".config/xkb/symbols/gb"
 <<gb>>
 #+END_SRC
