@@ -5766,12 +5766,12 @@ xkb_symbols "swap_sterling_numbersign" {
 ** pkg prime-list 
 
 #+NAME: pkg-prime-list
-#+begin_src sh :results output replace :wrap verse
+#+begin_src sh :results output verbatim replace :wrap quote
 pkg prime-list
 #+end_src
 
 #+RESULTS: pkg-prime-list
-#+begin_verse
+#+begin_quote
 FreeBSD-kernel-generic
 FreeBSD-set-base
 FreeBSD-set-devel
@@ -5888,4 +5888,4 @@ zip
 zsh
 zsh-completions
 zsh-syntax-highlighting
-#+end_verse
+#+end_quote
