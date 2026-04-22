@@ -5766,7 +5766,7 @@ xkb_symbols "swap_sterling_numbersign" {
 ** pkg prime-list 
 
 #+NAME: pkg-prime-list
-#+begin_src sh :results output verbatim replace :wrap quote
+#+begin_src sh :results output raw replace :wrap quote
 pkg prime-list
 #+end_src
 
