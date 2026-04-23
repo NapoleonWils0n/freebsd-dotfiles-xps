@@ -5470,6 +5470,7 @@ pkg prime-list
 - oath-toolkit
 - obs-studio
 - openvpn
+- pavucontrol
 - pinentry-curses
 - pkg
 - pkgconf
@@ -5494,6 +5495,7 @@ pkg prime-list
 - tree
 - tree-sitter
 - ts
+- vm-bhyve-devel
 - wayland
 - wayland-protocols
 - wayland-utils
