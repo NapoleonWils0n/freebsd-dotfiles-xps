@@ -9,11 +9,6 @@ Name=vpn-qBittorrent
 Terminal=false
 Type=Application
 StartupNotify=false
-StartupWMClass=qbittorrent
+StartupWMClass=vpn-qbittorrent
 Keywords=bittorrent;torrent;magnet;download;p2p;
 SingleMainWindow=true
-
-# Translations
-GenericName[en_GB]=BitTorrent client
-Comment[en_GB]=Download and share files over BitTorrent
-Name[en_GB]=qBittorrent
