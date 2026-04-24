@@ -5474,10 +5474,12 @@ pkg prime-list
 - pkgconf
 - playerctl
 - poudriere
+- qbittorrent
 - qt5-style-plugins
 - qt5-wayland
 - qt5ct
 - qt6-wayland
+- qt6ct
 - ripgrep
 - ripgrep-all
 - rsync
