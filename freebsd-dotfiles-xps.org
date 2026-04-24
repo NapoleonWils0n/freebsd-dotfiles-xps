@@ -5495,7 +5495,6 @@ pkg prime-list
 - tree
 - tree-sitter
 - ts
-- vm-bhyve-devel
 - wayland
 - wayland-protocols
 - wayland-utils
@@ -5507,6 +5506,7 @@ pkg prime-list
 - wlrctl
 - wlrobs
 - wlroots019
+- wlvncc
 - xcb-util-wm
 - xdg-desktop-portal-wlr
 - yt-dlp
