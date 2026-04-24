@@ -5415,7 +5415,6 @@ pkg prime-list
 - aria2
 - aspell
 - bat
-- bhyve-firmware
 - ca_root_nss
 - cantarell-fonts
 - chromium
@@ -5424,7 +5423,6 @@ pkg prime-list
 - doas
 - dwlb
 - e2fsprogs-core
-- edk2-bhyve
 - emacs-devel
 - en-aspell
 - evdev-proto
@@ -5439,7 +5437,6 @@ pkg prime-list
 - gmake
 - gnome-themes-extra
 - gpu-firmware-intel-kmod-kabylake
-- grub2-bhyve
 - gstreamer1-libav
 - gstreamer1-plugins-bad
 - gstreamer1-plugins-opus
@@ -5506,7 +5503,6 @@ pkg prime-list
 - wlrctl
 - wlrobs
 - wlroots019
-- wlvncc
 - xcb-util-wm
 - xdg-desktop-portal-wlr
 - yt-dlp
