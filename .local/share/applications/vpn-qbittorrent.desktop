@@ -1,0 +1,19 @@
+[Desktop Entry]
+Categories=Network;FileTransfer;P2P;Qt;
+Exec=sh -c 'setfib 1 /usr/local/bin/qbittorrent %U'
+GenericName=BitTorrent client
+Comment=Download and share files over BitTorrent
+Icon=qbittorrent
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+Name=vpn-qBittorrent
+Terminal=false
+Type=Application
+StartupNotify=false
+StartupWMClass=qbittorrent
+Keywords=bittorrent;torrent;magnet;download;p2p;
+SingleMainWindow=true
+
+# Translations
+GenericName[en_GB]=BitTorrent client
+Comment[en_GB]=Download and share files over BitTorrent
+Name[en_GB]=qBittorrent
