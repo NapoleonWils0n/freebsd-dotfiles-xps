@@ -3831,7 +3831,7 @@ profile-cond=path:find('bbc.co.uk/iplayer') ~= nil
 # include hwdec profile 
 profile=hwdec
 # override hwdec profile cache setting
-cache=no
+cache=yes
 # fullscreen 2nd display
 fs
 fs-screen-name=DP-3
@@ -3847,7 +3847,7 @@ profile-cond=path:find('bbc:pips:service') ~= nil
 # include hwdec profile 
 profile=hwdec
 # override hwdec profile cache setting
-cache=no
+cache=yes
 # fullscreen 2nd display
 fs
 fs-screen-name=DP-3
