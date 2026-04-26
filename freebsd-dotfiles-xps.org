@@ -5811,6 +5811,7 @@ pkg prime-list
 - nvidia-settings
 - oath-toolkit
 - obs-studio
+- ollama
 - openvpn
 - pavucontrol
 - pinentry-curses
