@@ -5532,7 +5532,9 @@ pkg prime-list
 - pkg
 - pkgconf
 - playerctl
+- podman-suite
 - poudriere
+- py311-podman-compose
 - qbittorrent
 - qt5-style-plugins
 - qt5-wayland
