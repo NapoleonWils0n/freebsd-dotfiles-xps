@@ -2077,6 +2077,61 @@ gptel is a simple Large Language Model chat client for Emacs, with support for m
 
 [[https://github.com/karthink/gptel]]
 
+***** mcp server
+
+#+NAME: emacs-mcp-server
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers `(("searxng" . ( ; General web search tool
+                                   :command "/usr/local/bin/doas"
+                                   :args ("/usr/local/bin/podman" "run" "-i" "--rm"
+                                          "--network=host"
+                                          "-e" "SEARXNG_URL=http://localhost:8080"
+                                          "mcp-searxng-enhanced:local")
+                                   ))
+                     )) ;; closing parentheses
+
+  :config
+  (require 'mcp-hub))
+#+end_src
+
+****** info
+
+#+begin_quote
+This is an Emacs client for interfacing with MCP, supporting connections to MCP servers.
+#+end_quote
+
+[[https://github.com/lizqwerscott/mcp.el]]
+
+***** dockerfile mode
+
+#+NAME: emacs-dockerfile-mode
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; dockerfile-mode
+;; ----------------------------------------------------------------------------------
+
+(use-package dockerfile-mode
+  :custom
+  (dockerfile-mode-command "podman"))
+#+end_src
+
+****** info
+
+#+begin_quote
+A Dockerfile mode for emacs
+
+Adds syntax highlighting as well as the ability to build the image directly using C-c C-b from the buffer (C-c M-b to bypass docker build cache).
+#+end_quote
+
+[[https://github.com/spotify/dockerfile-mode]]
+
 ***** garbage collection
 
 #+NAME: emacs-garbage-collection

@@ -1494,6 +1494,33 @@
 
 
 ;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers `(("searxng" . ( ; General web search tool
+                                   :command "/usr/local/bin/doas"
+                                   :args ("/usr/local/bin/podman" "run" "-i" "--rm"
+                                          "--network=host"
+                                          "-e" "SEARXNG_URL=http://localhost:8080"
+                                          "mcp-searxng-enhanced:local")
+                                   ))
+                     )) ;; closing parentheses
+
+  :config
+  (require 'mcp-hub))
+
+;; ----------------------------------------------------------------------------------
+;; dockerfile-mode
+;; ----------------------------------------------------------------------------------
+
+(use-package dockerfile-mode
+  :custom
+  (dockerfile-mode-command "podman"))
+
+;; ----------------------------------------------------------------------------------
 ;; garbage collection
 ;; ----------------------------------------------------------------------------------
 
