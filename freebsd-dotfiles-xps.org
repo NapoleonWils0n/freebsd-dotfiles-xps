@@ -4264,6 +4264,668 @@ set -g focus-events on
 <<tmux>>
 #+END_SRC
 
+** yt-dlp
+*** yt-dlp config
+
+#+NAME: yt-dlp
+#+BEGIN_SRC conf
+#===============================================================================
+# yt-dlp config
+#===============================================================================
+
+#===============================================================================
+# external downloader aria2
+#===============================================================================
+
+#--downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M'
+
+
+#===============================================================================
+# native downloader for dash and m3u8
+#===============================================================================
+
+--downloader 'dash,m3u8:native'
+
+
+#===============================================================================
+# restrict filenames
+#===============================================================================
+
+--restrict-filenames
+
+
+#===============================================================================
+# merge output format mkv
+#===============================================================================
+
+--merge-output-format mkv
+
+
+#===============================================================================
+# ouput template
+#===============================================================================
+
+-o '%(title)s-[%(id)s]-%(upload_date>%Y-%m-%d)s.%(ext)s' 
+#+END_SRC
+
+*** yt-dlp tangle
+
++ home dir
+
+#+NAME: yt-dlp-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/yt-dlp/config"
+<<yt-dlp>>
+#+END_SRC
+
++ current dir
+
+#+NAME: yt-dlp-current-dir
+#+BEGIN_SRC conf :tangle ".config/yt-dlp/config"
+<<yt-dlp>>
+#+END_SRC
+
+** mpd
+*** mpd config
+
+#+NAME: mpd
+#+BEGIN_SRC conf
+#===============================================================================
+# mpd.conf
+#===============================================================================
+
+music_directory		"/home/djwilcox/music"
+playlist_directory	"/home/djwilcox/.config/mpd/playlists"
+db_file			"/home/djwilcox/.config/mpd/mpd.db"
+log_file		"/home/djwilcox/.config/mpd/mpd.log"
+pid_file		"/home/djwilcox/.config/mpd/mpd.pid"
+state_file		"/home/djwilcox/.config/mpd/mpdstate"
+sticker_file		"/home/djwilcox/.config/mpd/sticker.sql"
+user			"djwilcox"
+group			"djwilcox"
+bind_to_address		"/home/djwilcox/.config/mpd/socket"
+
+input {
+        plugin "curl"
+}
+
+audio_output {
+	type		"oss"
+	name		"My OSS Device"
+#	device		"/dev/dsp"	# optional
+	mixer_type      "hardware"	# optional
+	mixer_device	"/dev/mixer"	# optional
+#	mixer_control	"PCM"		# optional
+	mixer_control	"vol"		# optional
+}
+#+END_SRC
+
+*** mpd tangle
+
++ home dir
+
+#+NAME: mpd-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/mpd/mpd.conf"
+<<mpd>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mpd-current-dir
+#+BEGIN_SRC conf :tangle ".config/mpd/mpd.conf"
+<<mpd>>
+#+END_SRC
+
+** ncmpc
+*** ncmpc config
+
+#+NAME: ncmpc
+#+BEGIN_SRC conf
+#===============================================================================
+# ncmpc conf
+#===============================================================================
+
+host = "/home/djwilcox/.config/mpd/socket"
+screen-list = playlist browse
+seek-time = 30
+list-format = "%name%|[%artist% - ]%title%|%file%"
+status-format = "[%artist% - ]%title%|%shortfile%"
+visible-bitrate = yes
+wrap-around = yes
+
+## Enable/disable colors.
+enable-colors = no
+
+## Set the background color.
+color background = none
+
+## Set the text color for the title row.
+color title = none,black
+
+## Set the text color for the title row (the bold part).
+color title-bold = blue,bold
+
+## Set the color of the line on the second row.
+color line = black
+
+## Set the text color used to indicate mpd flags on the second row.
+color line-flags = black,bold
+
+## Set the text color in the main area of ncmpc.
+color list = none
+
+## Set the bold text color in the main area of ncmpc.
+color list-bold = none,bold
+
+## Sets the text color of directories in the browser
+color browser-directory = none
+
+## Sets the text color of playlists in the browser
+color browser-playlist = none
+
+## Set the color of the progress indicator.
+color progressbar = black
+
+## Set the text color used to display mpd status in the status window.
+color status-state = black,bold
+
+## Set the text color used to display song names in the status window.
+color status-song  = black
+
+## Set the text color used to display time the status window.
+color status-time  = black
+
+## Text color used to display alerts in the status window.
+color alert = black,bold
+#+END_SRC
+
+*** ncmpc tangle
+
++ home dir
+
+#+NAME: ncmpc-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/ncmpc/config"
+<<ncmpc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: ncmpc-current-dir
+#+BEGIN_SRC conf :tangle ".config/ncmpc/config"
+<<ncmpc>>
+#+END_SRC
+
+** podman
+*** searxng
+**** searxng config
+***** compose.yaml
+
+#+NAME: searxng-compose.yaml
+#+begin_src yaml
+version: "3.8"
+
+services:
+  redis:
+    container_name: redis
+    image: docker.io/library/redis:7-bookworm
+    command: ["redis-server", "--save", "30", "1", "--loglevel", "warning"]
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - valkey-data2:/data
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ${HOME}/podman/searxng:/etc/searxng:rw
+      - ./searxng-genkey:/usr/local/bin/searxng-genkey
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+      # Use 127.0.0.1 because network_mode: host shares the interface
+      - SEARXNG_REDIS_URL=redis://127.0.0.1:6379/0
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+      - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
+      - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
+
+networks:
+  searxng:
+
+volumes:
+  searxng_config:
+  valkey-data2:
+
+#+end_src
+
+***** limiter.toml
+
+#+NAME: searxng-limiter.toml
+#+begin_src toml
+# This configuration file updates the default configuration file
+# See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+
+[botdetection.ip_limit]
+# activate link_token method in the ip_limit method
+link_token = true
+
+#+end_src
+
+***** searxng-genkey
+
+#+NAME: searxng-genkey
+#+begin_src sh
+#!/bin/sh
+
+# This script generates a new secret key and starts the SearXNG containers.
+
+# Generate a new random 32-byte hex secret key.
+SEARXNG_SECRET=$(openssl rand -hex 32)
+#+end_src
+
+***** settings.yml
+
+#+NAME: searxng-settings.yml
+#+begin_src yaml
+# see https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+use_default_settings: true
+server:
+  # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
+  secret_key: ""
+  limiter: false  # changed to false for open-webui
+  image_proxy: true
+ui:
+  static_use_hash: true
+redis:
+  url: redis://redis:6379/0
+general:
+  # Debug mode, only for development. Is overwritten by ${SEARXNG_DEBUG}
+  debug: false
+  # displayed name
+  instance_name: "Searxng"
+  # For example: https://example.com/privacy
+  privacypolicy_url: false
+  # use true to use your own donation page written in searx/info/en/donate.md
+  # use false to disable the donation link
+  donation_url: false
+  # mailto:contact@example.com
+  contact_url: false
+  # record stats
+  enable_metrics: true
+  # expose stats in open metrics format at /metrics
+  # leave empty to disable (no password set)
+  # open_metrics: <password>
+  open_metrics: ''
+
+search:
+  # Filter results. 0: None, 1: Moderate, 2: Strict
+  safe_search: 0
+  # Existing autocomplete backends: "360search", "baidu", "brave", "dbpedia", "duckduckgo", "google", "yandex",
+  # "mwmbl", "seznam", "sogou", "stract", "swisscows", "qwant", "wikipedia" -
+  # leave blank to turn it off by default.
+  autocomplete: ""
+  # minimun characters to type before autocompleter starts
+  autocomplete_min: 4
+  # backend for the favicon near URL in search results.
+  # Available resolvers: "allesedv", "duckduckgo", "google", "yandex" - leave blank to turn it off by default.
+  favicon_resolver: ""
+  # Default search language - leave blank to detect from browser information or
+  # use codes from 'languages.py'
+  default_lang: "auto"
+  # max_page: 0  # if engine supports paging, 0 means unlimited numbers of pages
+  # Available languages
+  # languages:
+  #   - all
+  #   - en
+  #   - en-US
+  #   - de
+  #   - it-IT
+  #   - fr
+  #   - fr-BE
+  # ban time in seconds after engine errors
+  ban_time_on_fail: 5
+  # max ban time in seconds after engine errors
+  max_ban_time_on_fail: 120
+  suspended_times:
+    # Engine suspension time after error (in seconds; set to 0 to disable)
+    # For error "Access denied" and "HTTP error [402, 403]"
+    SearxEngineAccessDenied: 86400
+    # For error "CAPTCHA"
+    SearxEngineCaptcha: 86400
+    # For error "Too many request" and "HTTP error 429"
+    SearxEngineTooManyRequests: 3600
+    # Cloudflare CAPTCHA
+    cf_SearxEngineCaptcha: 1296000
+    cf_SearxEngineAccessDenied: 86400
+    # ReCAPTCHA
+    recaptcha_SearxEngineCaptcha: 604800
+
+  # remove format to deny access, use lower case.
+  # formats: [html, csv, json, rss]
+  formats:
+    - html
+    - csv
+    - json
+    - rss
+categories_as_tabs:
+  general:
+  images:
+  videos:
+  news:
+  it:
+  files:
+  map:
+  social media:
+
+#+end_src
+
+**** searxng tangle
+***** compose.yaml
+
++ home dir
+  
+#+NAME: searxng-compose.yaml-home-dir
+#+BEGIN_SRC conf :tangle "~/podman/searxng/compose.yaml"
+<<searxng-compose.yaml>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: searxng-compose.yaml-current-dir
+#+BEGIN_SRC conf :tangle "podman/searxng/compose.yaml"
+<<searxng-compose.yaml>>
+#+END_SRC
+
+***** limiter.toml
+
++ home dir
+  
+#+NAME: searxng-limiter.toml-home-dir
+#+BEGIN_SRC conf :tangle "~/podman/searxng/searxng-limiter.toml"
+<<searxng-limiter.toml>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: searxng-limiter.toml-current-dir
+#+BEGIN_SRC conf :tangle "podman/searxng/searxng-limiter.toml"
+<<searxng-limiter.toml>>
+#+END_SRC
+
+***** searxng-genkey
+
++ home dir
+  
+#+NAME: searxng-genkey-home-dir
+#+BEGIN_SRC conf :tangle "~/podman/searxng/searxng-genkey" :tangle-mode (identity #o755)
+<<searxng-genkey>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: searxng-genkey-current-dir
+#+BEGIN_SRC conf :tangle "podman/searxng/searxng-genkey" :tangle-mode (identity #o755)
+<<searxng-genkey>>
+#+END_SRC
+
+***** settings.yml
+
++ home dir
+  
+#+NAME: searxng-settings.yml-home-dir
+#+BEGIN_SRC conf :tangle "~/podman/searxng/settings.yml"
+<<searxng-settings.yml>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: searxng-settings.yml-current-dir
+#+BEGIN_SRC conf :tangle "podman/searxng/settings.yml"
+<<searxng-settings.yml>>
+#+END_SRC
+
+** aria2
+*** aria2 config
+
+#+NAME: aria2
+#+BEGIN_SRC conf
+#
+## aria2 config
+#
+# man page  = http://aria2.sourceforge.net/manual/en/html/aria2c.html
+# file path = $HOME/.aria2/aria2.conf
+
+# Download Directory: specify the directory all files will be downloaded to.
+# When this directive is commented out, aria2 will download the files to the
+# current directory where you execute the aria2 binary.
+#dir=/usr/home/djwilcox/downloads
+
+
+# Bit Torrent: If the speed of the incoming data (download) from other peers is
+# greater then the peer-speed-limit, then do not allow any more connections
+# than max-peers. The idea is to limit the amount of clients our system will
+# connect with to reduce our overall load when we are already saturating our
+# incoming bandwidth.  Make sure to set the the peer-speed-limit to your
+# preferred incoming (download) speed. Speeds must be whole numbers so 5.5M is
+# illegal, but 5500K is valid.  For unlimited connections set
+# request-peer-speed-limit something high like 10000M (10gig).
+ bt-max-peers=0
+ bt-request-peer-speed-limit=0
+
+
+# Bit Torrent: the max upload speed for all torrents combined. Again, only
+# whole numbers are valid. We find a global upload limit is more flexible then
+# an upload limit per torrent. Zero(0) is unrestricted upload spreeds.
+ max-overall-upload-limit=128k
+
+
+# Bit Torrent: When downloading a torrent remove ALL trackers from the listing.
+# This is a good way to only use distributed hash table (DHT) and Peer eXchange
+# (PeX) for connections. We find start up of the torrent takes a little longer
+# with all trackers disabled, but helps reduce the load on trackers.
+# bt-exclude-tracker="*"
+ bt-external-ip=127.0.0.1
+
+
+# Bit Torrent: ports and protocols used for bit torrent TCP and UDP
+# connections. Make sure DHT is enabled in order to connect to UDP trackers as
+# well as negotiating with DHT and PEX peers. 
+ dht-listen-port=6882
+ enable-dht=true
+ enable-peer-exchange=true
+ listen-port=6881
+
+
+# When running aria2 on FreeBSD with ZFS, disable disk-cache due to ZFS's use
+# of Adaptive Replacement Cache (ARC). ZFS can also take advantage of the
+# "sparse files" format which is significantly faster then pre allocation of
+# file space. For other file systems like EXT4 and XFS you can test
+# file-allocation with "prealloc" and "falloc" to see which file-allocation
+# allows arai2 to start quicker and use less disk I/O.
+ disk-cache=0
+ file-allocation=none
+
+
+# Bit Torrent: fully encrypt the negotiation as well and the payload of all bit
+# torrent traffic. With this configuration, encryption is required and all old,
+# non-encrypted clients are ignored (dropped). This may help avoid some ISPs
+# rate limiting P2P clients, but will also reduce the amount of clients aria2
+# will talk to.
+ bt-force-encryption=true
+ bt-min-crypto-level=arc4
+ bt-require-crypto=true
+
+
+# Bit Torrent: Download the torrent file into memory (RAM) if there is no need
+# to save the .torrent file itself. This option works with both magnet and
+# torrent URL links.
+ follow-torrent=mem
+
+
+# Bit Torrent: The amount of time and the upload-to-download ratio you wish to
+# seed to. If either the seed time limit ( minutes ) or the seed ratio is
+# reached, torrent seeding will stop. You can set seed-time to zero(0) to
+# disable seeding completely.
+ seed-ratio=100
+ seed-time=0
+
+
+# Bit Torrent: timeout values for servers and clients.
+#bt-tracker-connect-timeout=10
+#bt-tracker-interval=900
+#bt-tracker-timeout=10
+
+
+# Bit Torrent: scripts or commands to execute before, during or after a
+# download finishes.
+# on-bt-download-complete=/path/to/script.sh
+# on-download-complete=/path/to/script.pl
+# on-download-error=/path/to/script
+# on-download-pause=/path/to/script.sh
+# on-download-start=/path/to/script.pl
+# on-download-stop=/path/to/script
+
+
+# Network: maximum socket receive buffer in bytes. 1M can sustain 1Gbit/sec.
+# Default: 0 which is disabled.
+ socket-recv-buffer-size=1M
+
+
+# Event Multiplexing: set polling to the OS type you are using. For FreeBSD,
+# OpenBSD and NetBSD set to "kqueue". For Linux set to "epoll".
+ event-poll=kqueue
+
+
+# Certificate Authority PEM : specify the full path to the OS certificate
+# authority pem file to verify the peers. On FreeBSD with OpenSSL the following
+# file path is valid. Without a valid pem file aria2 will print out the error,
+# "[ERROR] Failed to load trusted CA certificates from no. Cause:
+# error:02001002:system library:fopen:No such file or directory"
+ ca-certificate=/usr/local/openssl/cert.pem
+
+
+# Data Integrity: check the MD5 / SHA256 hash of metalink downloads as well as
+# the hash of bit torrent chunks as our client receives them. CPU time is
+# reasonably low for the high value of real time verified data. Note:
+# check-integrity set as true will show "ERROR - Checksum error detected" for
+# magnet links which can be ignored.
+#check-integrity=true
+ realtime-chunk-checksum=true
+
+
+# File Names: Resume file downloads if we have a partial copy. Do not rename
+# the file or make another copy if the same file is downloaded a second time.
+ allow-overwrite=true
+ always-resume=true
+ auto-file-renaming=false
+ continue=true
+ remote-time=true
+
+
+# User Agent: Disable the identification string of our client. If you connect
+# to a server which requires a certain id string you can always add one here.
+# Trackers should never use client id strings as security authentication or
+# access control.
+ peer-id-prefix=""
+ user-agent=""
+
+
+# Status Summery messages are disabled since the status of the download is
+# updated in real time on the CLI anyways.
+ summary-interval=0
+
+
+# FTP: use passive ftp which is firewall friendly and reuse the ftp data
+# connection when asking for multiple resources from the same server for
+# efficiency.
+ ftp-pasv=true
+ ftp-reuse-connection=true
+
+
+# Metalink: Set the country code to prefer mirrors closest to you. Prefer more
+# secure https mirrors over http and ftp servers.
+ metalink-language=en-US
+ metalink-location=us
+ metalink-preferred-protocol=https
+
+
+# Disconnect from https, http or ftp servers who do not upload data to us
+# faster then the specified value. Aria2 will then find another mirror in the
+# metalink file which might be quicker. If there are no more mirrors left then
+# the current slow mirror is still used. This value is NOT used for bit torrent
+# connections though. NOTE: we hope to convince the developer to add a
+# lower-speed value or even a minimal client U/D ratio to bit torrent some day
+# to kick off leachers too.
+ lowest-speed-limit=50K
+
+
+# Concurrent downloads: Set the number of different servers to download from
+# concurrently; i.e. in parallel. If we are downloading a single file then
+# split that file into the same amount of streams. Make sure to keep in mind
+# that if the amount of parallel downloads times the lowest-speed-limit is
+# greater then your total download bandwidth then you will drop servers
+# incorrectly. For example, we have ten(10) connections at a minimum of
+# 50KiB/sec which equals 500KiB/sec. If our total download bandwidth is not at
+# least 500KiB/sec then arai2 will think the mirrors are too slow and drop
+# connection slowing down the whole download. Do not set the
+# max-connection-per-server greater then three(3) as to avoid abusing a single
+# server.
+ max-concurrent-downloads=10
+ max-connection-per-server=3
+ min-split-size=5M
+ split=10
+
+
+# RPC Interface: To access aria2 through XML-RPC API, like using webui-aria2.
+#enable-rpc
+#rpc-listen-all
+#rpc-user=username
+#rpc-passwd=passwd
+
+
+# Daemon Mode: To run aria2 in the background as a daemon. Use daemon mode to
+# start aria2 on reboot or when using an RPC interface like webui-aria2.
+#daemon
+
+
+#
+#
+# Reference: the following options arethe developers defaults. We kept them
+# here for reference.
+
+# bt-max-open-files=100
+# bt-save-metadata=false
+# bt-stop-timeout=0
+# bt-tracker="udp://tracker.openbittorrent.com:80/announce"
+ check-certificate=true
+ conditional-get=true
+# dht-entry-point="dht.transmissionbt.com:6881"
+# dht-file-path=$HOME/.aria2/dht.dat
+# dht-message-timeout=10
+ disable-ipv6=true
+ http-accept-gzip=true
+# log=$HOME/.aria2/aria2.log
+# log-level=debug
+
+### EOF ###
+#+END_SRC
+
+*** aria2 tangle
+
++ home dir
+  
+#+NAME: aria2-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/aria2/aria2.conf"
+<<aria2>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: aria-current-dir
+#+BEGIN_SRC conf :tangle ".config/aria2/aria2.conf"
+<<aria2>>
+#+END_SRC
+
 ** firefox
 *** config
 **** user.js
@@ -4564,438 +5226,6 @@ td {color: #cccccc !important;}
 #+NAME: firefox-userContent.css-current-dir
 #+BEGIN_SRC conf :tangle ".config/mozilla/firefox/pup4dofr.default-release/chrome/userContent.css"
 <<firefox-userContent.css>>
-#+END_SRC
-
-** yt-dlp
-*** yt-dlp config
-
-#+NAME: yt-dlp
-#+BEGIN_SRC conf
-#===============================================================================
-# yt-dlp config
-#===============================================================================
-
-#===============================================================================
-# external downloader aria2
-#===============================================================================
-
-#--downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M'
-
-
-#===============================================================================
-# native downloader for dash and m3u8
-#===============================================================================
-
---downloader 'dash,m3u8:native'
-
-
-#===============================================================================
-# restrict filenames
-#===============================================================================
-
---restrict-filenames
-
-
-#===============================================================================
-# merge output format mkv
-#===============================================================================
-
---merge-output-format mkv
-
-
-#===============================================================================
-# ouput template
-#===============================================================================
-
--o '%(title)s-[%(id)s]-%(upload_date>%Y-%m-%d)s.%(ext)s' 
-#+END_SRC
-
-*** yt-dlp tangle
-
-+ home dir
-
-#+NAME: yt-dlp-home-dir
-#+BEGIN_SRC conf :tangle "~/.config/yt-dlp/config"
-<<yt-dlp>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: yt-dlp-current-dir
-#+BEGIN_SRC conf :tangle ".config/yt-dlp/config"
-<<yt-dlp>>
-#+END_SRC
-
-** mpd
-*** mpd config
-
-#+NAME: mpd
-#+BEGIN_SRC conf
-#===============================================================================
-# mpd.conf
-#===============================================================================
-
-music_directory		"/home/djwilcox/music"
-playlist_directory	"/home/djwilcox/.config/mpd/playlists"
-db_file			"/home/djwilcox/.config/mpd/mpd.db"
-log_file		"/home/djwilcox/.config/mpd/mpd.log"
-pid_file		"/home/djwilcox/.config/mpd/mpd.pid"
-state_file		"/home/djwilcox/.config/mpd/mpdstate"
-sticker_file		"/home/djwilcox/.config/mpd/sticker.sql"
-user			"djwilcox"
-group			"djwilcox"
-bind_to_address		"/home/djwilcox/.config/mpd/socket"
-
-input {
-        plugin "curl"
-}
-
-audio_output {
-	type		"oss"
-	name		"My OSS Device"
-#	device		"/dev/dsp"	# optional
-	mixer_type      "hardware"	# optional
-	mixer_device	"/dev/mixer"	# optional
-#	mixer_control	"PCM"		# optional
-	mixer_control	"vol"		# optional
-}
-#+END_SRC
-
-*** mpd tangle
-
-+ home dir
-
-#+NAME: mpd-home-dir
-#+BEGIN_SRC conf :tangle "~/.config/mpd/mpd.conf"
-<<mpd>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: mpd-current-dir
-#+BEGIN_SRC conf :tangle ".config/mpd/mpd.conf"
-<<mpd>>
-#+END_SRC
-
-** ncmpc
-*** ncmpc config
-
-#+NAME: ncmpc
-#+BEGIN_SRC conf
-#===============================================================================
-# ncmpc conf
-#===============================================================================
-
-host = "/home/djwilcox/.config/mpd/socket"
-screen-list = playlist browse
-seek-time = 30
-list-format = "%name%|[%artist% - ]%title%|%file%"
-status-format = "[%artist% - ]%title%|%shortfile%"
-visible-bitrate = yes
-wrap-around = yes
-
-## Enable/disable colors.
-enable-colors = no
-
-## Set the background color.
-color background = none
-
-## Set the text color for the title row.
-color title = none,black
-
-## Set the text color for the title row (the bold part).
-color title-bold = blue,bold
-
-## Set the color of the line on the second row.
-color line = black
-
-## Set the text color used to indicate mpd flags on the second row.
-color line-flags = black,bold
-
-## Set the text color in the main area of ncmpc.
-color list = none
-
-## Set the bold text color in the main area of ncmpc.
-color list-bold = none,bold
-
-## Sets the text color of directories in the browser
-color browser-directory = none
-
-## Sets the text color of playlists in the browser
-color browser-playlist = none
-
-## Set the color of the progress indicator.
-color progressbar = black
-
-## Set the text color used to display mpd status in the status window.
-color status-state = black,bold
-
-## Set the text color used to display song names in the status window.
-color status-song  = black
-
-## Set the text color used to display time the status window.
-color status-time  = black
-
-## Text color used to display alerts in the status window.
-color alert = black,bold
-#+END_SRC
-
-*** ncmpc tangle
-
-+ home dir
-
-#+NAME: ncmpc-home-dir
-#+BEGIN_SRC conf :tangle "~/.config/ncmpc/config"
-<<ncmpc>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: ncmpc-current-dir
-#+BEGIN_SRC conf :tangle ".config/ncmpc/config"
-<<ncmpc>>
-#+END_SRC
-
-** aria2
-*** aria2 config
-
-#+NAME: aria2
-#+BEGIN_SRC conf
-#
-## aria2 config
-#
-# man page  = http://aria2.sourceforge.net/manual/en/html/aria2c.html
-# file path = $HOME/.aria2/aria2.conf
-
-# Download Directory: specify the directory all files will be downloaded to.
-# When this directive is commented out, aria2 will download the files to the
-# current directory where you execute the aria2 binary.
-#dir=/usr/home/djwilcox/downloads
-
-
-# Bit Torrent: If the speed of the incoming data (download) from other peers is
-# greater then the peer-speed-limit, then do not allow any more connections
-# than max-peers. The idea is to limit the amount of clients our system will
-# connect with to reduce our overall load when we are already saturating our
-# incoming bandwidth.  Make sure to set the the peer-speed-limit to your
-# preferred incoming (download) speed. Speeds must be whole numbers so 5.5M is
-# illegal, but 5500K is valid.  For unlimited connections set
-# request-peer-speed-limit something high like 10000M (10gig).
- bt-max-peers=0
- bt-request-peer-speed-limit=0
-
-
-# Bit Torrent: the max upload speed for all torrents combined. Again, only
-# whole numbers are valid. We find a global upload limit is more flexible then
-# an upload limit per torrent. Zero(0) is unrestricted upload spreeds.
- max-overall-upload-limit=128k
-
-
-# Bit Torrent: When downloading a torrent remove ALL trackers from the listing.
-# This is a good way to only use distributed hash table (DHT) and Peer eXchange
-# (PeX) for connections. We find start up of the torrent takes a little longer
-# with all trackers disabled, but helps reduce the load on trackers.
-# bt-exclude-tracker="*"
- bt-external-ip=127.0.0.1
-
-
-# Bit Torrent: ports and protocols used for bit torrent TCP and UDP
-# connections. Make sure DHT is enabled in order to connect to UDP trackers as
-# well as negotiating with DHT and PEX peers. 
- dht-listen-port=6882
- enable-dht=true
- enable-peer-exchange=true
- listen-port=6881
-
-
-# When running aria2 on FreeBSD with ZFS, disable disk-cache due to ZFS's use
-# of Adaptive Replacement Cache (ARC). ZFS can also take advantage of the
-# "sparse files" format which is significantly faster then pre allocation of
-# file space. For other file systems like EXT4 and XFS you can test
-# file-allocation with "prealloc" and "falloc" to see which file-allocation
-# allows arai2 to start quicker and use less disk I/O.
- disk-cache=0
- file-allocation=none
-
-
-# Bit Torrent: fully encrypt the negotiation as well and the payload of all bit
-# torrent traffic. With this configuration, encryption is required and all old,
-# non-encrypted clients are ignored (dropped). This may help avoid some ISPs
-# rate limiting P2P clients, but will also reduce the amount of clients aria2
-# will talk to.
- bt-force-encryption=true
- bt-min-crypto-level=arc4
- bt-require-crypto=true
-
-
-# Bit Torrent: Download the torrent file into memory (RAM) if there is no need
-# to save the .torrent file itself. This option works with both magnet and
-# torrent URL links.
- follow-torrent=mem
-
-
-# Bit Torrent: The amount of time and the upload-to-download ratio you wish to
-# seed to. If either the seed time limit ( minutes ) or the seed ratio is
-# reached, torrent seeding will stop. You can set seed-time to zero(0) to
-# disable seeding completely.
- seed-ratio=100
- seed-time=0
-
-
-# Bit Torrent: timeout values for servers and clients.
-#bt-tracker-connect-timeout=10
-#bt-tracker-interval=900
-#bt-tracker-timeout=10
-
-
-# Bit Torrent: scripts or commands to execute before, during or after a
-# download finishes.
-# on-bt-download-complete=/path/to/script.sh
-# on-download-complete=/path/to/script.pl
-# on-download-error=/path/to/script
-# on-download-pause=/path/to/script.sh
-# on-download-start=/path/to/script.pl
-# on-download-stop=/path/to/script
-
-
-# Network: maximum socket receive buffer in bytes. 1M can sustain 1Gbit/sec.
-# Default: 0 which is disabled.
- socket-recv-buffer-size=1M
-
-
-# Event Multiplexing: set polling to the OS type you are using. For FreeBSD,
-# OpenBSD and NetBSD set to "kqueue". For Linux set to "epoll".
- event-poll=kqueue
-
-
-# Certificate Authority PEM : specify the full path to the OS certificate
-# authority pem file to verify the peers. On FreeBSD with OpenSSL the following
-# file path is valid. Without a valid pem file aria2 will print out the error,
-# "[ERROR] Failed to load trusted CA certificates from no. Cause:
-# error:02001002:system library:fopen:No such file or directory"
- ca-certificate=/usr/local/openssl/cert.pem
-
-
-# Data Integrity: check the MD5 / SHA256 hash of metalink downloads as well as
-# the hash of bit torrent chunks as our client receives them. CPU time is
-# reasonably low for the high value of real time verified data. Note:
-# check-integrity set as true will show "ERROR - Checksum error detected" for
-# magnet links which can be ignored.
-#check-integrity=true
- realtime-chunk-checksum=true
-
-
-# File Names: Resume file downloads if we have a partial copy. Do not rename
-# the file or make another copy if the same file is downloaded a second time.
- allow-overwrite=true
- always-resume=true
- auto-file-renaming=false
- continue=true
- remote-time=true
-
-
-# User Agent: Disable the identification string of our client. If you connect
-# to a server which requires a certain id string you can always add one here.
-# Trackers should never use client id strings as security authentication or
-# access control.
- peer-id-prefix=""
- user-agent=""
-
-
-# Status Summery messages are disabled since the status of the download is
-# updated in real time on the CLI anyways.
- summary-interval=0
-
-
-# FTP: use passive ftp which is firewall friendly and reuse the ftp data
-# connection when asking for multiple resources from the same server for
-# efficiency.
- ftp-pasv=true
- ftp-reuse-connection=true
-
-
-# Metalink: Set the country code to prefer mirrors closest to you. Prefer more
-# secure https mirrors over http and ftp servers.
- metalink-language=en-US
- metalink-location=us
- metalink-preferred-protocol=https
-
-
-# Disconnect from https, http or ftp servers who do not upload data to us
-# faster then the specified value. Aria2 will then find another mirror in the
-# metalink file which might be quicker. If there are no more mirrors left then
-# the current slow mirror is still used. This value is NOT used for bit torrent
-# connections though. NOTE: we hope to convince the developer to add a
-# lower-speed value or even a minimal client U/D ratio to bit torrent some day
-# to kick off leachers too.
- lowest-speed-limit=50K
-
-
-# Concurrent downloads: Set the number of different servers to download from
-# concurrently; i.e. in parallel. If we are downloading a single file then
-# split that file into the same amount of streams. Make sure to keep in mind
-# that if the amount of parallel downloads times the lowest-speed-limit is
-# greater then your total download bandwidth then you will drop servers
-# incorrectly. For example, we have ten(10) connections at a minimum of
-# 50KiB/sec which equals 500KiB/sec. If our total download bandwidth is not at
-# least 500KiB/sec then arai2 will think the mirrors are too slow and drop
-# connection slowing down the whole download. Do not set the
-# max-connection-per-server greater then three(3) as to avoid abusing a single
-# server.
- max-concurrent-downloads=10
- max-connection-per-server=3
- min-split-size=5M
- split=10
-
-
-# RPC Interface: To access aria2 through XML-RPC API, like using webui-aria2.
-#enable-rpc
-#rpc-listen-all
-#rpc-user=username
-#rpc-passwd=passwd
-
-
-# Daemon Mode: To run aria2 in the background as a daemon. Use daemon mode to
-# start aria2 on reboot or when using an RPC interface like webui-aria2.
-#daemon
-
-
-#
-#
-# Reference: the following options arethe developers defaults. We kept them
-# here for reference.
-
-# bt-max-open-files=100
-# bt-save-metadata=false
-# bt-stop-timeout=0
-# bt-tracker="udp://tracker.openbittorrent.com:80/announce"
- check-certificate=true
- conditional-get=true
-# dht-entry-point="dht.transmissionbt.com:6881"
-# dht-file-path=$HOME/.aria2/dht.dat
-# dht-message-timeout=10
- disable-ipv6=true
- http-accept-gzip=true
-# log=$HOME/.aria2/aria2.log
-# log-level=debug
-
-### EOF ###
-#+END_SRC
-
-*** aria2 tangle
-
-+ home dir
-  
-#+NAME: aria2-home-dir
-#+BEGIN_SRC conf :tangle "~/.config/aria2/aria2.conf"
-<<aria2>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: aria-current-dir
-#+BEGIN_SRC conf :tangle ".config/aria2/aria2.conf"
-<<aria2>>
 #+END_SRC
 
 ** user-dirs.dirs
