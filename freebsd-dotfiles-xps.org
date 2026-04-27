@@ -5762,6 +5762,7 @@ pkg prime-list
 - ca_root_nss
 - cantarell-fonts
 - chromium
+- cmake
 - dictd
 - dnscrypt-proxy2
 - doas
