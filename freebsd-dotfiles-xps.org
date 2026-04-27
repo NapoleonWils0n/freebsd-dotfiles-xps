@@ -1989,23 +1989,17 @@ It is a way for multiple applications to share a single configuration (in Emacs 
                                   gemini-3-pro-preview)))
   
   ;; ollama
-  (setq gptel-model 'llama3.1:8b)
-  (setq gptel-model 'llama3.2:3b)
-  (setq gptel-model 'qwen3.5:2b)
-  (setq gptel-model 'huihui_ai/qwen3.5-abliterated:2b)
-  (setq gptel-model 'gemma4-uncensored:latest)
-  (setq gptel-model 'gemma4-text:latest)
+  (setq gptel-model 'mistral-nemo:12b)
+  (setq gptel-model 'qwen3.5-abliterated:9b)
+  (setq gptel-model 'qwen3.5:9b)
 
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '(llama3.1:8b
-                                  llama3.2:3b
-                                  huihui_ai/qwen3.5-abliterated:2b 
-                                  qwen3.5:2b
-                                  gemma4-uncensored:latest
-                                  gemma4-text:latest)))
-  
+                        :models '(mistral-nemo:12b
+                                  qwen3.5-abliterated:9b
+                                  qwen3.5:9b)))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; display the Ollama buffer in same window
