@@ -1416,7 +1416,6 @@
   ;; ollama
   (setq gptel-model 'llama3.1:8b)
   (setq gptel-model 'llama3.2:3b)
-  (setq gptel-model 'deepseek-r1:8b)
   (setq gptel-model 'qwen3.5:2b)
   (setq gptel-model 'huihui_ai/qwen3.5-abliterated:2b)
   (setq gptel-model 'gemma4-uncensored:latest)
@@ -1429,7 +1428,6 @@
                                   llama3.2:3b
                                   huihui_ai/qwen3.5-abliterated:2b 
                                   qwen3.5:2b
-                                  deepseek-r1:8b
                                   gemma4-uncensored:latest
                                   gemma4-text:latest)))
   
