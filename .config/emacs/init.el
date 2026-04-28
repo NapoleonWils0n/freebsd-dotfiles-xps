@@ -1414,14 +1414,14 @@
                                   gemini-3-pro-preview)))
   
   ;; ollama
-  (setq gptel-model 'qwen3.5-abliterated:4B)
-  (setq gptel-model 'qwen3.5:4b)
+  (setq gptel-model 'qwen3.5-abliterated:2B)
+  (setq gptel-model 'qwen3.5:2b)
 
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '(qwen3.5-abliterated:4B
-                                  qwen3.5:4b)))
+                        :models '(qwen3.5-abliterated:2B
+                                  qwen3.5:2b)))
 
 
 ;; ----------------------------------------------------------------------------------
