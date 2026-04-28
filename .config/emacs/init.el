@@ -1415,14 +1415,12 @@
   
   ;; ollama
   (setq gptel-model 'qwen3.5-abliterated:4B)
-  (setq gptel-model 'gemma4-text:latest)
   (setq gptel-model 'qwen3.5:4b)
 
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
                         :models '(qwen3.5-abliterated:4B
-                                  gemma4-text:latest 
                                   qwen3.5:4b)))
 
 
