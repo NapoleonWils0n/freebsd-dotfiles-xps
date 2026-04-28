@@ -1989,15 +1989,15 @@ It is a way for multiple applications to share a single configuration (in Emacs 
                                   gemini-3-pro-preview)))
   
   ;; ollama
-  (setq gptel-model 'qwen3.5-abliterated:0.8B)
-  (setq gptel-model 'qwen3.5-abliterated:2B)
+  (setq gptel-model 'huihui_ai/qwen3.5-abliterated:0.8B)
+  (setq gptel-model 'huihui_ai/qwen3.5-abliterated:2b)
   (setq gptel-model 'qwen3.5:2b)
 
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '(qwen3.5-abliterated:0.8B
-                                  qwen3.5-abliterated:2B
+                        :models '(huihui_ai/qwen3.5-abliterated:0.8B
+                                  huihui_ai/qwen3.5-abliterated:2b
                                   qwen3.5:2b)))
 
 
