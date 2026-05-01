@@ -39,18 +39,6 @@ export QT_QPA_PLATFORMTHEME="qt6ct"
 
 
 #===============================================================================
-# ssh-add
-#===============================================================================
-
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
-# Start the agent silently if the socket doesn't exist
-if [ ! -S "$SSH_AUTH_SOCK" ]; then
-    eval $(ssh-agent -a "$SSH_AUTH_SOCK") > /dev/null
-fi
-
-
-#===============================================================================
 # less
 #===============================================================================
 
