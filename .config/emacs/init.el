@@ -1335,14 +1335,19 @@
 ;; eglot
 ;; ----------------------------------------------------------------------------------
 
+;; Add local npm binaries to Emacs path
+(let ((local-npm-bin (expand-file-name "~/.local/bin")))
+  (add-to-list 'exec-path local-npm-bin)
+  (setenv "PATH" (concat local-npm-bin ":" (getenv "PATH"))))
+
 ;; Configure Eglot to recognize and start the language servers.
 (with-eval-after-load 'eglot
   ;; sh-mode (for shell scripts) uses 'bash-language-server' with a 'start' argument
   (add-to-list 'eglot-server-programs
-               '(sh-mode "bash-language-server" "start")))
+               '(bash-ts-mode "bash-language-server" "start")))
 
 ;; Automatically start Eglot when opening a relevant file
-(add-hook 'sh-mode-hook 'eglot-ensure)
+(add-hook 'bash-ts-mode-hook 'eglot-ensure)
 
 ;; ----------------------------------------------------------------------------------
 ;; Rust and LSP (Eglot)
