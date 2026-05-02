@@ -7,7 +7,7 @@
 #===============================================================================
 
 typeset -U PATH path
-path=("$HOME/bin" "/usr/local/bin" "$path[@]")
+path=("$HOME/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
 export PATH
 
 
