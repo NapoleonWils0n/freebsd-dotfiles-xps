@@ -476,6 +476,13 @@
 ;; Vertico
 ;; ----------------------------------------------------------------------------------
 
+;; Improved bridge for Corfu/Vertico compatibility
+(unless (fboundp 'set-local)
+  (defun set-local (var val)
+    "A functional version of setq-local for packages that need it."
+    (set (make-local-variable var) val)))
+(use-package compat :ensure t :demand t)
+
 (use-package vertico
   :init
   (setq vertico-cycle t)
