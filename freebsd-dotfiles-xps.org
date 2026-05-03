@@ -5842,8 +5842,10 @@ pkg prime-list
 - musicpc
 - musicpd
 - ncmpc
+- node
 - noto-basic
 - noto-emoji
+- npm
 - nvidia-driver
 - nvidia-drm-61-kmod
 - nvidia-settings
@@ -5885,6 +5887,7 @@ pkg prime-list
 - wayland-protocols
 - wayland-utils
 - wev
+- wget
 - wget2
 - wifi-firmware-iwlwifi-kmod-22000
 - wl-clipboard
