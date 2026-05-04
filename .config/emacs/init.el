@@ -1500,7 +1500,7 @@
    `(("searxng" . (
       :command "/usr/local/bin/doas"
       :args ("/bin/sh" "-c" 
-             "exec /usr/local/bin/podman run -i --rm --network=host -e SEARXNG_URL=http://localhost:8080 -e PYTHONUNBUFFERED=1 mcp-searxng-enhanced:local")
+             "PYTHONUNBUFFERED=1 /usr/local/bin/podman run -i --rm --network=host -e SEARXNG_URL=http://localhost:8080 localhost/mcp-searxng-enhanced:local")
       ))))
   :config
   (require 'mcp-hub))
