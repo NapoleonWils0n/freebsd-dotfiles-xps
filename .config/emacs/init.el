@@ -1498,7 +1498,7 @@
   :custom
   (mcp-hub-servers 
    `(("searxng" . (
-      :command "/home/djwilcox/bin/mcp-searxng"
+      :command "/home/djwilcox/bin/mcp-searxng-enhanced"
       ))))
   :config
   (require 'mcp-hub))
