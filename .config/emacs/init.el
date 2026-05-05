@@ -1408,15 +1408,7 @@
   (setq gptel-backend (gptel-make-ollama "OllamaCloud"
                         :host "localhost:11434"
                         :stream t
-                        :models '(deepseek-v4-flash:cloud
-                                  deepseek-v4-pro:cloud
-                                  qwen3.5:cloud
-                                  qwen3-coder-next:cloud
-                                  kimi-k2.6:cloud
-                                  glm-5.1:cloud
-                                  ministral-3:14b-cloud
-                                  gemini-3-pro-preview
-                                  gemma4:31b-cloud)))
+                        :models '(gemma4:31b-cloud)))
   
   
   ;; gemini
