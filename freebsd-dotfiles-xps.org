@@ -3164,15 +3164,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 
 *** emacs tangle
 **** init.el
-
-+ home dir
+***** home dir
 
 #+NAME: emacs-init.el-home-dir
 #+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/init.el"
 <<init.el>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: emacs-init.el-current-dir
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/init.el"
@@ -3180,15 +3179,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+END_SRC
 
 **** early-init.el
-
-+ home dir
+***** home dir
 
 #+NAME: emacs-early-init.el-home-dir
 #+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/early-init.el"
 <<early-init.el>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: emacs-early-init.el-current-dir
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/early-init.el"
@@ -3212,15 +3210,14 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+END_SRC
 
 **** bookmark tangle
-
-+ home dir
+***** home dir
 
 #+NAME: emacs-bookmarks-home-dir
 #+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/bookmarks"
 <<emacs-bookmarks>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: emacs-bookmarks-current-dir
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/bookmarks"
@@ -3293,15 +3290,14 @@ y = 4
 #+END_SRC
 
 *** alacritty tangle
-
-+ home dir
+**** home dir
 
 #+NAME: alacritty-home-dir
 #+BEGIN_SRC yaml :tangle "~/.config/alacritty/alacritty.toml"
 <<alacritty>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: alacritty-current-dir
 #+BEGIN_SRC yaml :tangle ".config/alacritty/alacritty.toml"
@@ -3646,15 +3642,14 @@ fi
 
 *** zsh tangle
 **** zshrc tangle
-
-+ home dir
+***** home dir
 
 #+NAME: zshrc-home-dir
 #+BEGIN_SRC conf :tangle "~/.zshrc"
 <<zshrc>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: zshrc-current-dir
 #+BEGIN_SRC conf :tangle ".zshrc"
@@ -3662,15 +3657,14 @@ fi
 #+END_SRC
 
 **** zshenv tangle
-
-+ home dir
+***** home dir
 
 #+NAME: zshenv-home-dir
 #+BEGIN_SRC sh :tangle "~/.zshenv"
 <<zshenv>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: zshenv-current-dir
 #+BEGIN_SRC sh :tangle ".zshenv"
@@ -3678,15 +3672,14 @@ fi
 #+END_SRC
 
 **** zprofile tangle
-
-+ home dir
+***** home dir
 
 #+NAME: zprofile-home-dir
 #+BEGIN_SRC sh :tangle "~/.zprofile"
 <<zprofile>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: zprofile-current-dir
 #+BEGIN_SRC sh :tangle ".zprofile"
@@ -3929,15 +3922,14 @@ fs-screen-name=DP-3
 
 *** mpv tangle
 **** input.conf tangle
-
-+ home dir
+***** home dir
 
 #+NAME: input.conf-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/mpv/input.conf"
 <<input.conf>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: input.conf-current-dir
 #+BEGIN_SRC conf :tangle ".config/mpv/input.conf"
@@ -3945,15 +3937,14 @@ fs-screen-name=DP-3
 #+END_SRC
 
 **** mpv.conf tangle
-
-+ home dir
+***** home dir
 
 #+NAME: mpv.conf-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/mpv/mpv.conf"
 <<mpv.conf>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: mpv.conf-current-dir
 #+BEGIN_SRC conf :tangle ".config/mpv/mpv.conf"
@@ -4001,15 +3992,14 @@ default-result-background-padding = 4
 #+END_SRC
 
 *** tofi tangle
-
-+ home dir
+**** home dir
 
 #+NAME: tofi-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/tofi/config"
 <<tofi>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: tofi-current-dir
 #+BEGIN_SRC conf :tangle ".config/tofi/config"
@@ -4061,15 +4051,14 @@ menu:
 #+END_SRC
 
 *** wlr-which-key tangle
-
-+ home dir
+**** home dir
 
 #+NAME: wlr-which-key-home-dir
 #+BEGIN_SRC yaml :tangle "~/.config/wlr-which-key/config.yaml"
 <<wlr-which-key>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: wlr-which-key-current-dir
 #+BEGIN_SRC yaml :tangle ".config/wlr-which-key/config.yaml"
@@ -4330,15 +4319,14 @@ set-environment -g SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-agent.socket"
 #+END_SRC
 
 *** tmux tangle
-
-+ home dir
+**** home dir
 
 #+NAME: tmux-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/tmux/tmux.conf"
 <<tmux>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: tmux-current-dir
 #+BEGIN_SRC conf :tangle ".config/tmux/tmux.conf"
@@ -4390,15 +4378,14 @@ set-environment -g SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-agent.socket"
 #+END_SRC
 
 *** yt-dlp tangle
-
-+ home dir
+**** home dir
 
 #+NAME: yt-dlp-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/yt-dlp/config"
 <<yt-dlp>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: yt-dlp-current-dir
 #+BEGIN_SRC conf :tangle ".config/yt-dlp/config"
@@ -4441,15 +4428,14 @@ audio_output {
 #+END_SRC
 
 *** mpd tangle
-
-+ home dir
+**** home dir
 
 #+NAME: mpd-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/mpd/mpd.conf"
 <<mpd>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: mpd-current-dir
 #+BEGIN_SRC conf :tangle ".config/mpd/mpd.conf"
@@ -4520,15 +4506,14 @@ color alert = black,bold
 #+END_SRC
 
 *** ncmpc tangle
-
-+ home dir
+**** home dir
 
 #+NAME: ncmpc-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/ncmpc/config"
 <<ncmpc>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: ncmpc-current-dir
 #+BEGIN_SRC conf :tangle ".config/ncmpc/config"
@@ -4702,15 +4687,14 @@ categories_as_tabs:
 
 **** searxng tangle
 ***** compose.yaml
-
-+ home dir
+****** home dir
   
 #+NAME: searxng-compose.yaml-home-dir
 #+BEGIN_SRC conf :tangle "~/podman/searxng/compose.yaml"
 <<searxng-compose.yaml>>
 #+END_SRC
   
-+ current dir
+****** current dir
 
 #+NAME: searxng-compose.yaml-current-dir
 #+BEGIN_SRC conf :tangle "podman/searxng/compose.yaml"
@@ -4718,15 +4702,14 @@ categories_as_tabs:
 #+END_SRC
 
 ***** limiter.toml
-
-+ home dir
+****** home dir
   
 #+NAME: searxng-limiter.toml-home-dir
 #+BEGIN_SRC conf :tangle "~/podman/searxng/searxng-limiter.toml"
 <<searxng-limiter.toml>>
 #+END_SRC
   
-+ current dir
+****** current dir
 
 #+NAME: searxng-limiter.toml-current-dir
 #+BEGIN_SRC conf :tangle "podman/searxng/searxng-limiter.toml"
@@ -4734,15 +4717,14 @@ categories_as_tabs:
 #+END_SRC
 
 ***** searxng-genkey
-
-+ home dir
+****** home dir
   
 #+NAME: searxng-genkey-home-dir
 #+BEGIN_SRC conf :tangle "~/podman/searxng/searxng-genkey" :tangle-mode (identity #o755)
 <<searxng-genkey>>
 #+END_SRC
   
-+ current dir
+****** current dir
 
 #+NAME: searxng-genkey-current-dir
 #+BEGIN_SRC conf :tangle "podman/searxng/searxng-genkey" :tangle-mode (identity #o755)
@@ -4750,15 +4732,14 @@ categories_as_tabs:
 #+END_SRC
 
 ***** settings.yml
-
-+ home dir
+****** home dir
   
 #+NAME: searxng-settings.yml-home-dir
 #+BEGIN_SRC conf :tangle "~/podman/searxng/settings.yml"
 <<searxng-settings.yml>>
 #+END_SRC
   
-+ current dir
+****** current dir
 
 #+NAME: searxng-settings.yml-current-dir
 #+BEGIN_SRC conf :tangle "podman/searxng/settings.yml"
@@ -4992,15 +4973,14 @@ categories_as_tabs:
 #+END_SRC
 
 *** aria2 tangle
-
-+ home dir
+**** home dir
   
 #+NAME: aria2-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/aria2/aria2.conf"
 <<aria2>>
 #+END_SRC
   
-+ current dir
+**** current dir
 
 #+NAME: aria-current-dir
 #+BEGIN_SRC conf :tangle ".config/aria2/aria2.conf"
@@ -5262,15 +5242,14 @@ td {color: #cccccc !important;}
 
 *** tangle
 **** user.js
-
-+ home dir
+***** home dir
 
 #+NAME: firefox-user.js-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/mozilla/firefox/pup4dofr.default-release/user.js"
 <<firefox-user.js>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: firefox-user.js-current-dir
 #+BEGIN_SRC conf :tangle ".config/mozilla/firefox/pup4dofr.default-release/user.js"
@@ -5278,15 +5257,14 @@ td {color: #cccccc !important;}
 #+END_SRC
 
 **** userChrome.css
-
-+ home dir
+***** home dir
 
 #+NAME: firefox-userChrome.css-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/mozilla/firefox/pup4dofr.default-release/chrome/userChrome.css"
 <<firefox-userChrome.css>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: firefox-userChrome.css-current-dir
 #+BEGIN_SRC conf :tangle ".config/mozilla/firefox/pup4dofr.default-release/chrome/userChrome.css"
@@ -5294,15 +5272,14 @@ td {color: #cccccc !important;}
 #+END_SRC
 
 **** userContent.css
-
-+ home dir
+***** home dir
 
 #+NAME: firefox-userContent.css-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/mozilla/firefox/pup4dofr.default-release/chrome/userContent.css"
 <<firefox-userContent.css>>
 #+END_SRC
 
-+ current dir
+***** current dir
 
 #+NAME: firefox-userContent.css-current-dir
 #+BEGIN_SRC conf :tangle ".config/mozilla/firefox/pup4dofr.default-release/chrome/userContent.css"
@@ -5324,15 +5301,14 @@ XDG_VIDEOS_DIR="$HOME/video"
 #+END_SRC
 
 *** user-dirs.dirs tangle
-
-+ home dir
+**** home dir
   
 #+NAME: user-dirs.dirs-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/user-dirs.dirs"
 <<user-dirs.dirs>>
 #+END_SRC
   
-+ current dir
+**** current dir
 
 #+NAME: user-dirs.dirs-current-dir
 #+BEGIN_SRC conf :tangle ".config/user-dirs.dirs"
@@ -5410,15 +5386,14 @@ SingleMainWindow=true
 
 *** desktop files tangle
 **** obs tangle
-
-+ home dir
+***** home dir
   
 #+NAME: obs-desktop-home-dir
 #+BEGIN_SRC conf :tangle "~/.local/share/applications/com.obsproject.Studio.desktop"
 <<obs-desktop>>
 #+END_SRC
   
-+ current dir
+***** current dir
 
 #+NAME: obs-desktop-current-dir
 #+BEGIN_SRC conf :tangle ".local/share/applications/com.obsproject.Studio.desktop"
@@ -5426,15 +5401,14 @@ SingleMainWindow=true
 #+END_SRC
 
 **** vpn-firefox tangle
-
-+ home dir
+***** home dir
   
 #+NAME: vpn-firefox-desktop-home-dir
 #+BEGIN_SRC conf :tangle "~/.local/share/applications/vpn-firefox.desktop"
 <<vpn-firefox-desktop>>
 #+END_SRC
   
-+ current dir
+***** current dir
 
 #+NAME: vpn-firefox-desktop-current-dir
 #+BEGIN_SRC conf :tangle ".local/share/applications/vpn-firefox.desktop"
@@ -5442,15 +5416,14 @@ SingleMainWindow=true
 #+END_SRC
 
 **** vpn-qbittorrent tangle
-
-+ home dir
+***** home dir
   
 #+NAME: vpn-qbittorrent-desktop-home-dir
 #+BEGIN_SRC conf :tangle "~/.local/share/applications/vpn-qbittorrent.desktop"
 <<vpn-qbittorrent-desktop>>
 #+END_SRC
   
-+ current dir
+***** current dir
 
 #+NAME: vpn-qbittorrent-desktop-current-dir
 #+BEGIN_SRC conf :tangle ".local/share/applications/vpn-qbittorrent.desktop"
@@ -5488,15 +5461,14 @@ ENV=$HOME/.shrc; export ENV
 #+END_SRC
 
 *** profile tangle
-
-+ home dir
+**** home dir
 
 #+NAME: profile-home-dir
 #+BEGIN_SRC conf :tangle "~/.profile"
 <<profile>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: profile-current-dir
 #+BEGIN_SRC conf :tangle ".profile"
@@ -5516,15 +5488,14 @@ me:\
 #+END_SRC
 
 *** login_conf tangle
-
-+ home dir
+**** home dir
 
 #+NAME: login_conf-home-dir
 #+BEGIN_SRC conf :tangle "~/.login_conf"
 <<login_conf>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: login_conf-current-dir
 #+BEGIN_SRC conf :tangle ".login_conf"
@@ -5544,15 +5515,14 @@ ui = true
 #+END_SRC
 
 *** gitconfig tangle
-
-+ home dir
+**** home dir
 
 #+NAME: gitconfig-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/git/config"
 <<gitconfig>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: gitconfig-current-dir
 #+BEGIN_SRC conf :tangle ".config/git/config"
@@ -5570,15 +5540,14 @@ max-cache-ttl 36000
 #+END_SRC
 
 *** gpg-agent tangle
-
-+ home dir
+**** home dir
 
 #+NAME: gpg-agent-home-dir
 #+BEGIN_SRC conf :tangle "~/.gnupg/gpg-agent"
 <<gpg-agent>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: gpg-agent-current-dir
 #+BEGIN_SRC conf :tangle ".gnupg/gpg-agent"
@@ -5597,15 +5566,14 @@ gtk-application-prefer-dark-theme = true
 #+END_SRC
 
 *** gtk-3.0 tangle
-
-+ home dir
+**** home dir
 
 #+NAME: gtk-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/gtk-3.0/settings.ini"
 <<gtk>>
 #+END_SRC
 
-+ current dir
+**** current dir
 
 #+NAME: gtk-current-dir
 #+BEGIN_SRC conf :tangle ".config/gtk-3.0/settings.ini"
@@ -5633,15 +5601,14 @@ mkdir -p ~/.config/xkb/{compat,keycodes,rules,symbols,types}
 #+END_SRC
 
 ***** evdev tangle
-
-+ home dir
+****** home dir
 
 #+NAME: evdev-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/xkb/rules/evdev"
 <<evdev>>
 #+END_SRC
 
-+ current dir
+****** current dir
 
 #+NAME: evdev-current-dir
 #+BEGIN_SRC conf :tangle ".config/xkb/rules/evdev"
@@ -5690,15 +5657,14 @@ mkdir -p ~/.config/xkb/{compat,keycodes,rules,symbols,types}
 #+END_SRC
 
 ***** evdev.xml tangle
-
-+ home dir
+****** home dir
 
 #+NAME: evdev.xml-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/xkb/rules/evdev.xml"
 <<evdev.xml>>
 #+END_SRC
 
-+ current dir
+****** current dir
 
 #+NAME: evdev.xml-current-dir
 #+BEGIN_SRC conf :tangle ".config/xkb/rules/evdev.xml"
@@ -5719,15 +5685,14 @@ xkb_symbols "swap_sterling_numbersign" {
 #+END_SRC
 
 ***** custom tangle
-
-+ home dir
+****** home dir
 
 #+NAME: custom-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/xkb/symbols/custom"
 <<custom>>
 #+END_SRC
 
-+ current dir
+****** current dir
 
 #+NAME: custom-current-dir
 #+BEGIN_SRC conf :tangle ".config/xkb/symbols/custom"
@@ -5748,15 +5713,14 @@ xkb_symbols "swap_sterling_numbersign" {
 #+END_SRC
 
 ***** gb tangle
-
-+ home dir
+****** home dir
 
 #+NAME: gb-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/xkb/symbols/gb"
 <<gb>>
 #+END_SRC
 
-+ current dir
+****** current dir
 
 #+NAME: gb-current-dir
 #+BEGIN_SRC conf :tangle ".config/xkb/symbols/gb"
