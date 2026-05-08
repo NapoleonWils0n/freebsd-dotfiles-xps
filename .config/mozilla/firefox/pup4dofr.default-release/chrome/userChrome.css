@@ -36,9 +36,6 @@
 #context-sendimage, /* email image */
 #context-undo, /* undo */
 #context-redo, /* redo */
-#context-cut, /* cut */
-#context-copy, /* copy */
-#context-paste, /* paste */
 #context-delete, /* delete */
 #context-keywordfield, /* add a keyword for this search */
 #context-selectall, /* select all */
