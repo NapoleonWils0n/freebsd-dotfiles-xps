@@ -497,6 +497,35 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
   (setq doom-modeline-now-playing-interval 1)
   (setq doom-modeline-now-playing-playerctl-ignored-players '("firefox" "chromium"))
   (doom-modeline-now-playing-timer))
+
+
+;; fix for invalid slot when using doas and tramp
+(with-eval-after-load 'doom-modeline-now-playing-playerctl
+  (defun my/doom-modeline-fix-playerctl-output (orig-fun &rest args)
+    "Improved advice to ensure playerctl only returns a status object if metadata exists."
+    (let* ((ignore-arg (if (bound-and-true-p doom-modeline-now-playing-playerctl-ignored-players)
+                           (format "--ignore-player=%s"
+                                   (mapconcat #'identity doom-modeline-now-playing-playerctl-ignored-players ","))
+                         ""))
+           (format-str (or (bound-and-true-p doom-modeline-now-playing-playerctl-format)
+                           "{{artist}} - {{title}}"))
+           (command (format "playerctl %s metadata --format '{{playerName}}|{{lc(status)}}|%s' 2>/dev/null"
+                            ignore-arg
+                            format-str))
+           ;; Use condition-case to catch any shell errors silently
+           (result (condition-case nil
+                       (string-trim (shell-command-to-string command))
+                     (error ""))))
+      (when (and (not (string-empty-p result))
+                 (not (string-match-p "No players found" result))
+                 (string-match-p "|" result)) ; Ensure we actually got a delimited string
+        (pcase-let ((`(,player ,status ,text) (split-string result "|")))
+          (make-instance 'doom-modeline-now-playing-status
+                         :status (or status "")
+                         :player (or player "")
+                         :text (or text ""))))))
+
+  (advice-add 'doom-modeline-now-playing-provider-get-info :override #'my/doom-modeline-fix-playerctl-output))
 #+end_src
 
 ****** info
