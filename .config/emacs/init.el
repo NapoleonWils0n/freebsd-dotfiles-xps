@@ -790,7 +790,7 @@
           ("\\.mov\\'" . "mpv %s")
           ("\\.pdf\\'" . default)))
         browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "firefox")
+        browse-url-generic-program "xdg-open")
   :config
   (require 'org-tempo)
   (require 'org-protocol)
