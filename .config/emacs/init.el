@@ -1430,7 +1430,8 @@
                         :stream t
                         :models '(huihui_ai/qwen3.5-abliterated:0.8B
                                   huihui_ai/qwen3.5-abliterated:2b
-                                  qwen3.5:2b)))
+                                  qwen3.5:2b
+                                  granite4.1:3b-q6_K)))
 
 
   ;; ollama cloud
