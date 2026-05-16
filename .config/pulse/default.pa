@@ -8,3 +8,8 @@
 load-module module-esound-protocol-unix
 .endif
 load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
+
+# keep socket open
+.ifexists module-suspend-on-idle.so
+unload-module module-suspend-on-idle
+.endif
