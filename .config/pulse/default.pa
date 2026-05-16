@@ -3,9 +3,6 @@
 # include default.pa and override
 .include /usr/local/etc/pulse/default.pa
 
-# autospawn
-autospawn = yes
-
 # pulseaudio.socket
 .ifexists module-esound-protocol-unix.so
 load-module module-esound-protocol-unix
