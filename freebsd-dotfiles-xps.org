@@ -4776,6 +4776,40 @@ categories_as_tabs:
 <<searxng-settings.yml>>
 #+END_SRC
 
+** pulseaudio
+
+#+NAME: pulseaudio
+#+BEGIN_SRC conf
+#!/usr/local/bin/pulseaudio -nF
+
+# include default.pa and override
+.include /usr/local/etc/pulse/default.pa
+
+# autospawn
+autospawn = yes
+
+# pulseaudio.socket
+.ifexists module-esound-protocol-unix.so
+load-module module-esound-protocol-unix
+.endif
+load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
+#+END_SRC
+
+*** pulseaudio tangle
+**** home dir
+
+#+NAME: pulseaudio-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/pulse/default.pa"
+<<pulseaudio>>
+#+END_SRC
+
+**** current dir
+
+#+NAME: pulseaudio-current-dir
+#+BEGIN_SRC conf :tangle ".config/pulse/default.pa"
+<<pulseaudio>>
+#+END_SRC
+
 ** aria2
 *** aria2 config
 
@@ -6113,6 +6147,7 @@ pkg prime-list
 - firacode
 - firefox
 - fusefs-ext2
+- gcc
 - gdb
 - git
 - gmake
