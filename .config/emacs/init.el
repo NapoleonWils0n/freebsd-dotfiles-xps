@@ -1535,6 +1535,23 @@
   (dockerfile-mode-command "podman"))
 
 ;; ----------------------------------------------------------------------------------
+;; kokoro speak region
+;; ----------------------------------------------------------------------------------
+
+(require 'json)
+(defun my/kokoro-speak-region (start end)
+  "Send the selected region to the Kokoro API."
+  (interactive "r")
+  (let* ((text (buffer-substring-no-properties start end))
+         (payload (json-encode `(("text" . ,text) ("voice" . "bm_lewis")))))
+    (start-process "kokoro-curl-process" nil 
+                   "curl" "-s" "-X" "POST" "http://127.0.0.1:8000/v1/audio/speech"
+                   "-H" "Content-Type: application/json"
+                   "-d" payload)))
+
+(global-set-key (kbd "C-c s") 'my/kokoro-speak-region)
+
+;; ----------------------------------------------------------------------------------
 ;; garbage collection
 ;; ----------------------------------------------------------------------------------
 
