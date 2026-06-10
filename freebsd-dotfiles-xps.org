@@ -2155,6 +2155,31 @@ Adds syntax highlighting as well as the ability to build the image directly usin
 
 [[https://github.com/spotify/dockerfile-mode]]
 
+***** docker
+
+#+NAME: emacs-docker
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; docker
+;; ----------------------------------------------------------------------------------
+
+(use-package docker
+  :bind ("C-c d" . docker)
+  :custom
+  (docker-command "doas podman")
+  (docker-compose-command "doas podman compose"))
+#+end_src
+
+****** info
+
+#+begin_quote
+Emacs integration for Docker!
+
+Supports docker containers, images, volumes, networks, contexts and docker-compose.
+#+end_quote
+
+[[https://github.com/Silex/docker.el]]
+
 ***** kokoro speak region
 
 #+NAME: emacs-kokoro
