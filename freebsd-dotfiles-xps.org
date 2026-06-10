@@ -3221,12 +3221,18 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("containers"
-  (filename . "~/podman/freebsd-cuda/containers/")
-  (front-context-string . "ai\n  drwxr-xr-x ")
-  (rear-context-string . " 3 May 27 13:25 ")
-  (position . 98)
-  (last-modified 27177 61886 814468 676000))
+(("makefiles"
+  (filename . "~/git/freebsd/freebsd-dotfiles-xps/makefiles/")
+  (front-context-string)
+  (rear-context-string . " 3 Jun 11 00:56 ")
+  (position . 111)
+  (last-modified 27177 64007 369202 60000))
+("containers"
+ (filename . "~/podman/freebsd-cuda/containers/")
+ (front-context-string . "ai\n  drwxr-xr-x ")
+ (rear-context-string . " 3 May 27 13:25 ")
+ (position . 98)
+ (last-modified 27177 61886 814468 676000))
 ("changelog"
  (filename . "~/git/changelog/README.org")
  (front-context-string . "#+STARTUP: show2")
@@ -4876,6 +4882,102 @@ categories_as_tabs:
 #+NAME: searxng-settings.yml-current-dir
 #+BEGIN_SRC conf :tangle "podman/searxng/settings.yml"
 <<searxng-settings.yml>>
+#+END_SRC
+
+** makefiles
+*** invidious
+**** invidious config
+
+#+NAME: invidious-makefile
+#+begin_src makefile
+#===============================================================================
+# FILE: Makefile
+# Project: Invidious
+#===============================================================================
+
+
+#===============================================================================
+# PHONY
+#===============================================================================
+
+.PHONY: all clean
+
+
+#===============================================================================
+# commands
+#===============================================================================
+
+# vm name
+VM_NAME     	:= ubuntu
+VM_START     	:= start
+VM_STOP     	:= stop
+
+# server name set in ~/.ssh/config
+SERVER     	:= loki
+SERVER_IP	:= 192.168.1.236
+PORT		:= 22
+
+REMOTE_DIR	:= 'podman/invidious-podman/'
+PODMAN_START 	:= './start-invidious'
+PODMAN_STOP 	:= 'podman-compose down'
+
+REMOTE_START	:= 'cd $(REMOTE_DIR); $(PODMAN_START)'
+REMOTE_STOP	:= 'cd $(REMOTE_DIR); $(PODMAN_STOP)'
+
+
+
+#===============================================================================
+# default target
+#===============================================================================
+
+all: ssh
+
+
+#===============================================================================
+# start the vm
+#===============================================================================
+
+vm: 
+	doas vm $(VM_START) $(VM_NAME)
+
+
+#===============================================================================
+# netcat
+#===============================================================================
+
+netcat: vm
+	@echo "Probing $(SERVER) SSH port $(PORT)..."
+	@until nc -z -w 2 $(SERVER_IP) $(PORT) 2>/dev/null; do \
+		echo "Guest OS booting up... waiting for SSH service..."; \
+		sleep 1; \
+	done
+	@echo "SSH daemon is online."
+
+
+#===============================================================================
+# start the vm
+#===============================================================================
+
+ssh: netcat
+	ssh $(SERVER) $(REMOTE_START)
+
+
+#===============================================================================
+# Clean 
+#===============================================================================
+
+clean:
+	ssh $(SERVER) $(REMOTE_STOP)
+	doas vm $(VM_STOP) $(VM_NAME)
+
+#+end_src
+
+**** invidious tangle
+***** current dir
+
+#+NAME: invidious-makefile-current-dir
+#+BEGIN_SRC conf :tangle "makefiles/invidious/Makefile"
+<<invidious-makefile>>
 #+END_SRC
 
 ** pulseaudio
