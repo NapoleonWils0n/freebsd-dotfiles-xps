@@ -1424,17 +1424,6 @@
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
-  ;; ollama
-  (setq gptel-backend (gptel-make-ollama "Ollama"
-                        :host "localhost:11434"
-                        :stream t
-                        :models '(gemma4-text:latest 
-                                  huihui_ai/qwen3.5-abliterated:0.8B
-                                  huihui_ai/qwen3.5-abliterated:2b
-                                  qwen3.5:2b
-                                  granite4.1:3b-q6_K)))
-
-
   ;; ollama cloud
   (setq gptel-backend (gptel-make-ollama "OllamaCloud"
                         :host "localhost:11434"
@@ -1451,6 +1440,17 @@
                                   gemma-4-26b-a4b-it
                                   gemini-3-flash-preview
                                   gemini-2.5-flash)))
+
+
+  ;; ollama
+  (setq gptel-backend (gptel-make-ollama "Ollama"
+                        :host "localhost:11434"
+                        :stream t
+                        :models '(gemma4-text:latest 
+                                  huihui_ai/qwen3.5-abliterated:0.8B
+                                  huihui_ai/qwen3.5-abliterated:2b
+                                  qwen3.5:2b
+                                  granite4.1:3b-q6_K)))
 
 
 ;; ----------------------------------------------------------------------------------
