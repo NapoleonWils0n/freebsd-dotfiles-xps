@@ -228,6 +228,15 @@
                (side . right)
                (window-width . 0.50)))
 
+
+;; compilation switch to buffer
+(add-to-list 'display-buffer-alist
+             '("\\*compilation\\*"
+               (display-buffer-reuse-window display-buffer-pop-up-window)
+               (reusable-frames . visible)
+               (body-function . select-window)))
+
+
 ;; Man display in current buffer
 (setq Man-notify-method 'bully)
 
@@ -1550,6 +1559,15 @@
                    "-d" payload)))
 
 (global-set-key (kbd "C-c s") 'my/kokoro-speak-region)
+
+;; ----------------------------------------------------------------------------------
+;; compile make files
+;; ----------------------------------------------------------------------------------
+
+(setq compilation-scroll-output t)
+
+;; Quick compilation binding
+(keymap-global-set "C-c m" 'compile)
 
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection

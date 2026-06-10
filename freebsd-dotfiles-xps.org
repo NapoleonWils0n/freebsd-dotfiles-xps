@@ -310,6 +310,15 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
                (side . right)
                (window-width . 0.50)))
 
+
+;; compilation switch to buffer
+(add-to-list 'display-buffer-alist
+             '("\\*compilation\\*"
+               (display-buffer-reuse-window display-buffer-pop-up-window)
+               (reusable-frames . visible)
+               (body-function . select-window)))
+
+
 ;; Man display in current buffer
 (setq Man-notify-method 'bully)
 #+end_src
@@ -2166,6 +2175,20 @@ Adds syntax highlighting as well as the ability to build the image directly usin
                    "-d" payload)))
 
 (global-set-key (kbd "C-c s") 'my/kokoro-speak-region)
+#+end_src
+
+***** compile
+
+#+NAME: emacs-compile
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; compile make files
+;; ----------------------------------------------------------------------------------
+
+(setq compilation-scroll-output t)
+
+;; Quick compilation binding
+(keymap-global-set "C-c m" 'compile)
 #+end_src
 
 ***** garbage collection
