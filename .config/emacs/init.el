@@ -1579,6 +1579,18 @@
 ;; Quick compilation binding
 (keymap-global-set "C-c m" 'compile)
 
+(defun my-find-file-as-doas ()
+  "Get the full absolute path of the current file (or file under cursor in Dired) and open with /doas::"
+  (interactive)
+  (let ((full-path (expand-file-name 
+                    (cond
+                     ((derived-mode-p 'dired-mode) (dired-get-filename))
+                     (buffer-file-name buffer-file-name)
+                     (t default-directory)))))
+    (find-file (concat "/doas::" full-path))))
+
+(global-set-key (kbd "C-c o") 'my-find-file-as-doas)
+
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection
 ;; ----------------------------------------------------------------------------------
