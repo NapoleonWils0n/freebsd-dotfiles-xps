@@ -1443,6 +1443,7 @@
 
 
   ;; ollama
+  (setq-default gptel-model 'gemma4-qat:latest)
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
