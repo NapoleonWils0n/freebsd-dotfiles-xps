@@ -1449,6 +1449,7 @@
                         :stream t
                         :models '(gemma4-qat:latest
                                   gemma4-text:latest 
+                                  gemma4-unsloth-text:latest 
                                   huihui_ai/qwen3.5-abliterated:0.8B
                                   huihui_ai/qwen3.5-abliterated:2b
                                   qwen3.5:2b
