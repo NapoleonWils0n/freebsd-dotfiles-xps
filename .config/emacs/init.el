@@ -1433,13 +1433,6 @@
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
-  ;; ollama cloud
-  (setq gptel-backend (gptel-make-ollama "OllamaCloud"
-                        :host "localhost:11434"
-                        :stream t
-                        :models '(gemma4:31b-cloud)))
-  
-  
   ;; gemini
   (setq-default gptel-model 'gemma-4-31b-it)
   (setq gptel-backend (gptel-make-gemini "Gemini"
