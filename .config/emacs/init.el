@@ -1455,7 +1455,8 @@
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '(gemma4-text:latest 
+                        :models '(gemma4-qat:latest
+                                  gemma4-text:latest 
                                   huihui_ai/qwen3.5-abliterated:0.8B
                                   huihui_ai/qwen3.5-abliterated:2b
                                   qwen3.5:2b
