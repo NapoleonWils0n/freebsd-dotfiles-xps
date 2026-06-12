@@ -1443,16 +1443,13 @@
 
 
   ;; ollama
-  (setq-default gptel-model 'gemma4-qat:latest)
+  (setq-default gptel-model 'gemma4-unsloth:latest)
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '(gemma4-qat:latest
-                                  gemma4-text:latest 
-                                  gemma4-unsloth-text:latest 
-                                  huihui_ai/qwen3.5-abliterated:0.8B
-                                  huihui_ai/qwen3.5-abliterated:2b
-                                  qwen3.5:2b
+                        :models '(gemma4-unsloth:latest
+                                  gemma4-qat:latest
+                                  gemma4-bartowski:latest 
                                   granite4.1:3b-q6_K)))
 
 
