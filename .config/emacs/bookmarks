@@ -2,12 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("makefiles"
-  (filename . "~/git/freebsd/freebsd-dotfiles-xps/makefiles/")
-  (front-context-string)
-  (rear-context-string . " 3 Jun 11 00:56 ")
-  (position . 111)
-  (last-modified 27177 64007 369202 60000))
+(("make"
+  (filename . "~/make/")
+  (front-context-string . "invidious\n  drwx")
+  (rear-context-string . " 3 Jun 13 19:09 ")
+  (position . 74)
+  (last-modified 27181 40415 296295 175000))
 ("containers"
  (filename . "~/podman/freebsd-cuda/containers/")
  (front-context-string . "ai\n  drwxr-xr-x ")
