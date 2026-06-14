@@ -330,7 +330,7 @@
 ;; ----------------------------------------------------------------------------------
 
 (keymap-set global-map "C-c h" 'iedit-mode)
-(keymap-set global-map "C-c l" 'org-store-link)
+;;(keymap-set global-map "C-c l" 'org-store-link)
 (keymap-set global-map "C-c a" 'org-agenda)
 
 ;; mpv seek to position at point
@@ -982,34 +982,56 @@
      :link link
      :description description))
   
+
+  ;; ----------------------------------------------------------------------------------
+  ;; mpv-play-or-append-url
+  ;; ----------------------------------------------------------------------------------
   
-  ;; mpv-play-remote-video
-  (defun mpv-play-remote-video (url &rest args)
-    "Start an mpv process playing the video stream at URL."
-    (interactive)
+
+  (defun mpv-play-or-append-url (url)
+    "Play the URL if MPV is idle, otherwise seamlessly append it to the playback playlist."
     (unless (mpv--url-p url)
-      (user-error "Invalid argument: `%s' (must be a valid URL)" url))
-    (if (not mpv--process)
-        ;; mpv isnt running play file
+      (user-error "Invalid argument: `%s' (must be a valid video URL)" url))
+    (if (not (mpv-live-p))
+        ;; mpv isnt running, play fresh stream
         (mpv-start url)
-      ;; mpv running append file to playlist
-      (mpv--playlist-append url)))
+      ;; mpv is running, append stream manually via IPC to guarantee playlist queueing
+      (mpv-run-command "loadfile" url "append-play")
+      (message "Added to MPV playlist: %s" url)))
+
   
+  ;; ----------------------------------------------------------------------------------
+  ;; Playback Commands
+  ;; ----------------------------------------------------------------------------------
+
+
+  ;; mpv-play-remote-video
+  (defun mpv-play-remote-video (url &rest _args)
+    "Start or append an mpv process playing the video stream at URL."
+    (interactive)
+    (mpv-play-or-append-url url))
   
   ;; mpv-play-clipboard - play url from clipboard
   (defun mpv-play-clipboard ()
-    "Start an mpv process playing the video stream at URL."
+    "Play the web video URL currently sitting on your system clipboard."
     (interactive)
     (let ((url (current-kill 0 t)))
-      (unless (mpv--url-p url)
-        (user-error "Invalid argument: `%s' (must be a valid URL)" url))
-      (if (not mpv--process)
-          ;; mpv isnt running play file
-          (mpv-start url)
-        ;; mpv running append file to playlist
-        (mpv--playlist-append url))))
+      (mpv-play-or-append-url url)))
+
+  ;; mpv-eww play url 
+  (defun mpv-eww ()
+    "Play the URL under the cursor from an EWW browser buffer."
+    (interactive)
+    (let ((url (car (eww-suggested-uris))))
+      (if (not url)
+          (message "No link under cursor!")
+        (mpv-play-or-append-url url))))
   
-  
+
+  ;; ----------------------------------------------------------------------------------
+  ;; File Links & Hooks
+  ;; ----------------------------------------------------------------------------------
+
   ;; create a mpv: link type that opens a file using mpv-play
   (defun org-mpv-complete-link (&optional arg)
     (replace-regexp-in-string
@@ -1132,15 +1154,17 @@
         (when (>= secs 0)
           (mpv-seek secs)))))
 
-  
+
   ;; mpv-play-dired
   (defun mpv-play-dired (path)
-    "Start an mpv process playing the file at PATH append subsequent files to the playlist"
-    (if (not mpv--process)
-        ;; mpv isnt running play file
-        (mpv-start (expand-file-name path))
-      ;; mpv running append file to playlist
-      (mpv--playlist-append (expand-file-name path))))
+    "Start an mpv process playing the local file at PATH, or append it to the playlist if running."
+    (let ((expanded-path (expand-file-name path)))
+      (if (not (mpv-live-p))
+          ;; mpv isnt running, play fresh local file
+          (mpv-start expanded-path)
+        ;; mpv running, append local file cleanly via direct IPC loadfile
+        (mpv-run-command "loadfile" expanded-path "append-play")
+        (message "Added to MPV playlist: %s" (file-name-nondirectory expanded-path)))))
   ) ;; This is the final closing parenthesis for the entire (use-package mpv ...) block
 
 ;; ----------------------------------------------------------------------------------
@@ -1561,6 +1585,13 @@
     (find-file (concat "/doas::" full-path))))
 
 (global-set-key (kbd "C-c o") 'my-find-file-as-doas)
+
+;; ----------------------------------------------------------------------------------
+;; eww - open links with mpv
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'eww
+  (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
 
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection
