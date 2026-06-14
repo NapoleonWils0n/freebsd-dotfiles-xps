@@ -1028,6 +1028,23 @@
         (mpv-play-or-append-url url))))
   
 
+  ;; rewrite youtube urls from the clipboard to invidious urls and play them
+  (defun my-mpv-play-invidious-clipboard ()
+    "Fetch the URL from the kill ring, instantly rewrite YouTube to Invidious, and play via MPV."
+    (interactive)
+    ;; Use your exact clipboard scraping method
+    (let ((url (current-kill 0 t))
+          (invidious-base "http://192.168.1.236:3000/"))
+      (if (and url (stringp url))
+          (let ((new-url (replace-regexp-in-string 
+                          "^https://\\(www\\.\\)?youtube\\.com/" 
+                          invidious-base 
+                          url)))
+            ;; Pass the rewritten string directly into your package's core playback function
+            (mpv-play-or-append-url new-url))
+        (message "No valid text found on the clipboard."))))
+
+
   ;; ----------------------------------------------------------------------------------
   ;; File Links & Hooks
   ;; ----------------------------------------------------------------------------------
