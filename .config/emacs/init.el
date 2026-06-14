@@ -1214,28 +1214,8 @@
     ("e" mpv-jump-to-playlist-entry)
     ("r" mpv-remove-playlist-entry))
 
-  ;; Define hydra-emacs
-  (defhydra hydra-emacs (:hint nil :exit t)
-    "
-    ^Actions^
-    ^^^^^^^^--------------
-    _m_: mpv clipboard
-    _p_: pinch url
-    ^
-    "
-    ("m" mpv-play-clipboard)
-    ("p" pinch-clipboard))
-
-  ;; Define hydra-nested
-  (defvar hydra-stack nil)
-
-  (defhydra hydra-nested (:exit t)
-    ("e" hydra-emacs/body "emacs" :column "hydra")
-    ("m" hydra-mpv/body "mpv" :column "hydra")
-    ("q" nil "quit"))
-
   ;; Set global keybinding
-  (global-set-key (kbd "C-a") 'hydra-nested/body))
+  (global-set-key (kbd "C-a") 'hydra-mpv/body))
 
 ;; ----------------------------------------------------------------------------------
 ;; google-translate
