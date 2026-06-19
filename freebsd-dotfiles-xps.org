@@ -5135,6 +5135,75 @@ clean:
 <<invidious-makefile>>
 #+END_SRC
 
+*** ollama
+**** ollama config
+
+#+NAME: ollama-makefile
+#+begin_src makefile
+#===============================================================================
+# FILE: Makefile
+# Project: Ollama
+#===============================================================================
+
+
+#===============================================================================
+# PHONY
+#===============================================================================
+
+.PHONY: all clean
+
+
+#===============================================================================
+# commands
+#===============================================================================
+
+# compose.yaml
+COMPOSE_FILE  	:= ${HOME}/podman/freebsd-cuda/containers/ai/ollama/compose.yaml
+COMPOSE_CMD	:= doas podman-compose -f
+ENV_FILE  	:= ${HOME}/podman/freebsd-cuda/containers/ai/ollama/.env
+JAIL_NAME	:= ollama
+STARTUP_SCRIPT	:= start-ollama
+COMPOSE_DOWN	:= $(COMPOSE_CMD) $(COMPOSE_FILE) down
+
+
+#===============================================================================
+# default target
+#===============================================================================
+
+all: container
+
+
+#===============================================================================
+# compose up
+#===============================================================================
+
+container: 
+	wrapper-freebsd -j $(JAIL_NAME) -a $(STARTUP_SCRIPT) -c $(COMPOSE_FILE) -e $(ENV_FILE)
+
+
+#===============================================================================
+# clean 
+#===============================================================================
+
+clean:
+	$(COMPOSE_DOWN)
+#+end_src
+
+**** ollama tangle
+***** home dir
+
+#+NAME: ollama-makefile-home-dir
+#+BEGIN_SRC makefile :tangle "~/make/ollama/Makefile"
+<<ollama-makefile>>
+#+END_SRC
+
+***** current dir
+
+#+NAME: ollama-makefile-current-dir
+#+BEGIN_SRC makefile :tangle "make/ollama/Makefile"
+<<ollama-makefile>>
+#+END_SRC
+
 *** seaxng
 **** searxng config
 
