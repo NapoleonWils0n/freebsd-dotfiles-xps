@@ -5135,6 +5135,75 @@ clean:
 <<invidious-makefile>>
 #+END_SRC
 
+*** kokoro-onnx
+**** kokoro-onnx config
+
+#+NAME: kokoro-onnx-makefile
+#+begin_src makefile
+#===============================================================================
+# FILE: Makefile
+# Project: Kokoro
+#===============================================================================
+
+
+#===============================================================================
+# PHONY
+#===============================================================================
+
+.PHONY: all clean
+
+
+#===============================================================================
+# commands
+#===============================================================================
+
+# compose.yaml
+COMPOSE_FILE  	:= ${HOME}/podman/freebsd-cuda/containers/python/kokoro-onnx/compose.yaml
+COMPOSE_CMD	:= doas podman-compose -f
+ENV_FILE  	:= ${HOME}/podman/freebsd-cuda/containers/python/kokoro-onnx/.env
+JAIL_NAME	:= kokoro-onnx
+STARTUP_SCRIPT	:= kokoro-api
+COMPOSE_DOWN	:= $(COMPOSE_CMD) $(COMPOSE_FILE) down
+
+
+#===============================================================================
+# default target
+#===============================================================================
+
+all: container
+
+
+#===============================================================================
+# compose up
+#===============================================================================
+
+container: 
+	wrapper-freebsd -j $(JAIL_NAME) -a $(STARTUP_SCRIPT) -c $(COMPOSE_FILE) -e $(ENV_FILE)
+
+
+#===============================================================================
+# clean 
+#===============================================================================
+
+clean:
+	$(COMPOSE_DOWN)
+#+end_src
+
+**** kokoro-onnx tangle
+***** home dir
+
+#+NAME: kokoro-onnx-makefile-home-dir
+#+BEGIN_SRC makefile :tangle "~/make/kokoro/Makefile"
+<<kokoro-onnx-makefile>>
+#+END_SRC
+
+***** current dir
+
+#+NAME: kokoro-onnx-makefile-current-dir
+#+BEGIN_SRC makefile :tangle "make/kokoro/Makefile"
+<<kokoro-onnx-makefile>>
+#+END_SRC
+
 *** ollama
 **** ollama config
 
