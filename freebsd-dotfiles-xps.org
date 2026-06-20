@@ -6620,6 +6620,7 @@ pkg prime-list
 - aria2
 - aspell
 - bat
+- bhyve-firmware
 - ca_root_nss
 - cantarell-fonts
 - chromium
@@ -6629,6 +6630,7 @@ pkg prime-list
 - doas
 - dwlb
 - e2fsprogs-core
+- edk2-bhyve
 - emacs-devel
 - en-aspell
 - evdev-proto
@@ -6645,6 +6647,7 @@ pkg prime-list
 - gnome-themes-extra
 - gpu-firmware-intel-kmod-kabylake
 - graphviz
+- grub2-bhyve
 - gstreamer1-libav
 - gstreamer1-plugins-bad
 - gstreamer1-plugins-opus
@@ -6652,6 +6655,8 @@ pkg prime-list
 - hs-pandoc
 - imv
 - jq
+- kodi
+- kodi-addon-inputstream.adaptive
 - libc6-shim
 - libheif
 - libinput
@@ -6674,7 +6679,7 @@ pkg prime-list
 - noto-emoji
 - npm
 - nvidia-driver
-- nvidia-drm-61-kmod
+- nvidia-drm-66-kmod
 - nvidia-settings
 - oath-toolkit
 - obs-studio
@@ -6710,9 +6715,11 @@ pkg prime-list
 - tree-sitter
 - ts
 - unbound
+- vm-bhyve-devel
 - wayland
 - wayland-protocols
 - wayland-utils
+- waypipe
 - wev
 - wget
 - wget2
@@ -6722,6 +6729,7 @@ pkg prime-list
 - wlrctl
 - wlrobs
 - wlroots019
+- wlvncc
 - xcb-util-wm
 - xdg-desktop-portal-wlr
 - yt-dlp
