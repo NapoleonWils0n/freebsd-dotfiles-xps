@@ -2257,6 +2257,41 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
 #+end_src
 
+***** whisper-cpp
+
+#+NAME: emacs-whisper-cpp
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; whisper-cpp
+;; ----------------------------------------------------------------------------------
+
+(use-package whisper
+  ;; Leverage the built-in package-vc features to clone the exact fork branch
+  :vc (:url "https://github.com/sachac/whisper.el"
+       :branch "whisper-insert-text-at-point-function")
+  :ensure t
+  :bind ("C-c w" . whisper-run)
+  :config
+  (setq whisper-install-whispercpp nil)
+  (setq whisper-model "small")
+  (setq whisper-language "en")
+  (setq whisper-return-cursor-to-start nil)
+  ;; Explicitly tell ffmpeg to use the Open Sound System driver for FreeBSD
+  (setq whisper--ffmpeg-input-format "oss")
+  ;; Point to your primary system microphone device (usually /dev/dsp)
+  (setq whisper--ffmpeg-input-device "/dev/dsp3")
+
+  (defun whisper-command (file)
+      (list "whisper-cli"
+            "-m" (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin")
+            "-l" whisper-language
+            "-np"
+            "-nt"
+            "-f" file))
+  (setq whisper-insert-text-at-point-function #'insert))
+
+#+end_src
+
 ***** garbage collection
 
 #+NAME: emacs-garbage-collection
