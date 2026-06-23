@@ -2281,6 +2281,46 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   ;; Point to your primary system microphone device (usually /dev/dsp)
   (setq whisper--ffmpeg-input-device "/dev/dsp3")
 
+  ;; set the recording directory
+  (defvar my-whisper-dir (expand-file-name "~/video/whisper/"))
+  
+  (defun my-whisper-set-temp-filename ()
+    "Generate a unique timestamped filename inside the custom archive folder."
+    ;; Create the directory dynamically if it doesn't exist yet
+    (unless (file-directory-p my-whisper-dir)
+      (make-directory my-whisper-dir t))
+    (setq whisper--temp-file (expand-file-name
+                              (format-time-string "%Y-%m-%d-%H-%M-%S.wav")
+                              my-whisper-dir)))
+
+  ;; Use the correct hook name evaluated right before recording starts
+  (add-hook 'whisper-before-recording-hook #'my-whisper-set-temp-filename)
+
+  ;; ffmpeg wth rnnoise, noise gate, compressor and limiter
+  (defun whisper--record-command (output-file)
+      "Produces FFmpeg command to run with RNNoise and audio enhancement filters."
+      (unless (executable-find "ffmpeg")
+        (error "Needs FFmpeg to record audio"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-format)
+        (error "Set a suitable value for whisper--ffmpeg-input-format"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        (error "Set a suitable value for whisper--ffmpeg-input-device"))
+  
+      `("ffmpeg"
+        "-hide_banner"
+        ,@(unless whisper--ffmpeg-input-file
+            (list "-f" whisper--ffmpeg-input-format))
+        "-i" ,(or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        ,@(when (and (not whisper--ffmpeg-input-file) whisper-recording-timeout)
+            (list "-t" (number-to-string whisper-recording-timeout)))
+        "-af" ,(concat "arnndn=m=" (expand-file-name "~/.local/share/rnnoise/sh.rnnn") 
+                       ",agate=threshold=0.05:range=0.03:attack=25:release=150"
+                       ",acompressor=threshold=0.125:ratio=10:attack=6:release=60"
+                       ",volume=7.5dB"
+                       ",alimiter=level_out=0.79:release=60")
+        "-ar" "16000"
+        "-y" ,output-file))
+
   (defun whisper-command (file)
       (list "whisper-cli"
             "-m" (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin")
@@ -2289,7 +2329,6 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
             "-nt"
             "-f" file))
   (setq whisper-insert-text-at-point-function #'insert))
-
 #+end_src
 
 ***** garbage collection
