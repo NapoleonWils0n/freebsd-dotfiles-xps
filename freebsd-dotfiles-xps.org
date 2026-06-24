@@ -6794,6 +6794,7 @@ pkg prime-list
 - gstreamer1-libav
 - gstreamer1-plugins-bad
 - gstreamer1-plugins-opus
+- hdf5
 - hs-ShellCheck
 - hs-pandoc
 - imv
