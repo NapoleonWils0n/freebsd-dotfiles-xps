@@ -6760,7 +6760,6 @@ pkg prime-list
 - adwaita-qt6
 - alacritty
 - apg
-- ardour
 - aria2
 - aspell
 - bat
@@ -6814,7 +6813,6 @@ pkg prime-list
 - libxcb
 - libxkbcommon
 - linux-nvidia-libs
-- lsp-plugins-lv2
 - mixertui
 - mpv
 - mpv-mpris
@@ -6878,7 +6876,6 @@ pkg prime-list
 - wlrobs
 - wlroots019
 - wlvncc
-- x42-plugins-lv2
 - xcb-util-wm
 - xdg-desktop-portal-wlr
 - yt-dlp
