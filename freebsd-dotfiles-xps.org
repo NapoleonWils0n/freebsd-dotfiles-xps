@@ -6801,6 +6801,7 @@ pkg prime-list
 - jq
 - kodi
 - kodi-addon-inputstream.adaptive
+- ladspa
 - libc6-shim
 - libheif
 - libinput
