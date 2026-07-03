@@ -1,1 +1,1 @@
-/usr/local/bin/jackd -R -doss -r48000 -C/dev/dsp3 -o0
+/usr/local/bin/jackd -doss -r48000 -p4096 -n4 -C/dev/dsp3 -o0
