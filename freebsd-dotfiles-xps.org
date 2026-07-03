@@ -7020,6 +7020,7 @@ pkg prime-list
 - adwaita-qt6
 - alacritty
 - apg
+- ardour
 - aria2
 - aspell
 - bat
@@ -7073,6 +7074,7 @@ pkg prime-list
 - libxcb
 - libxkbcommon
 - linux-nvidia-libs
+- lsp-plugins-lv2
 - mixertui
 - mpv
 - mpv-mpris
@@ -7105,6 +7107,7 @@ pkg prime-list
 - qt5ct
 - qt6-wayland
 - qt6ct
+- realesrgan-ncnn-vulkan
 - ripgrep
 - ripgrep-all
 - rsync
