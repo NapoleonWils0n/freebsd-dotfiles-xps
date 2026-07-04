@@ -6369,7 +6369,7 @@ Version=1.0
 Name=OBS
 GenericName=Streaming/Recording Software
 Comment=Free and Open Source Streaming/Recording Software
-Exec=sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" obs'
+Exec=sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" obs --websocket_ipv4_only'
 #Exec=obs
 Icon=com.obsproject.Studio
 Terminal=false
