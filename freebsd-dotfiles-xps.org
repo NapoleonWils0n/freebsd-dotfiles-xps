@@ -7188,6 +7188,7 @@ pkg prime-list
 - podman-suite
 - poudriere
 - py311-podman-compose
+- python3
 - qbittorrent
 - qjackctl
 - qt5-style-plugins
