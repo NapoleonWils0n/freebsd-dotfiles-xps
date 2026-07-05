@@ -7222,6 +7222,7 @@ pkg prime-list
 - wget
 - wget2
 - wifi-firmware-iwlwifi-kmod-22000
+- wireplumber
 - wl-clipboard
 - wlr-which-key
 - wlrctl
