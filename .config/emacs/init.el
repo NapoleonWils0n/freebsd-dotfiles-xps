@@ -969,18 +969,19 @@
 
   :config
   ;; create a video: link type that opens a url using mpv-play-remote-video
-  (org-link-set-parameters "video"
-                           :follow #'mpv-play-remote-video
-                           :store #'org-video-store-link)
-  
-  
-  ;; org video store link
-  (defun org-video-store-link ()
-    "Store a link to a video url."
-    (org-link-store-props
-     :type "video"
-     :link link
-     :description description))
+  ;; commented out to fix a bug
+  ;;(org-link-set-parameters "video"
+  ;;                         :follow #'mpv-play-remote-video
+  ;;                         :store #'org-video-store-link)
+  ;;
+  ;;
+  ;;;; org video store link
+  ;;(defun org-video-store-link ()
+  ;;  "Store a link to a video url."
+  ;;  (org-link-store-props
+  ;;   :type "video"
+  ;;   :link link
+  ;;   :description description))
   
 
   ;; ----------------------------------------------------------------------------------
