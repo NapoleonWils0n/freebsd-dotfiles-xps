@@ -64,7 +64,7 @@ export MPD_HOST="/home/djwilcox/.config/mpd/socket"
 # ollama vulkan
 #===============================================================================
 
-#export OLLAMA_VULKAN=1
+export OLLAMA_VULKAN=1
 
 
 #===============================================================================
