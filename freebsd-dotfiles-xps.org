@@ -7122,6 +7122,9 @@ pkg prime-list
 - syncthing
 - tmux
 - tofi
+- tor
+- tor-browser
+- torsocks
 - translate-shell
 - tree
 - tree-sitter
