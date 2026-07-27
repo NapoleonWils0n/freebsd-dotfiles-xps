@@ -143,3 +143,5 @@ user_pref("browser.tabs.groups.smart.userEnabled", false);
 user_pref("browser.ml.linkPreview.enabled", false);
 // Block AI enhancements
 user_pref("browser.preferences.aiControls", false);
+// disable emoji picker
+user_pref("widget.gtk.native-emoji-dialog", false);
