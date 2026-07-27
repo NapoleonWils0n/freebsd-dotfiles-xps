@@ -6797,6 +6797,7 @@ pkg prime-list
 - cantarell-fonts
 - chromium
 - cmake
+- dict
 - dictd
 - dnscrypt-proxy2
 - doas
