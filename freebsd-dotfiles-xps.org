@@ -4011,7 +4011,8 @@ profile=hwdec
 profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
 vo=gpu
 gpu-context=wayland
-hwdec=vaapi
+hwdec=nvdec-copy
+#hwdec=vaapi
 
 
 #===============================================================================
@@ -4029,10 +4030,12 @@ cache=no
 
 
 #===============================================================================
-# yt-dlp best format 1080 or less
+# yt-dlp format
+# Prefers HW-supported codecs (H.264/VP9/HEVC/VP8) up to 1080p SDR (8-bit nv12).
+# Fallbacks: 1) 10-bit stream, 2) Any 1080p stream (e.g. AV1 SW), 3) Best pre-merged.
 #===============================================================================
 
-ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+ytdl-format="bv*[vcodec~='(?i)^(avc1|vp09|vp9|vp8|h264|hevc|h265)'][dynamic_range=SDR][height<=?1080]+ba/bv*[vcodec~='(?i)^(avc1|vp09|vp9|vp8|h264|hevc|h265)'][height<=?1080]+ba/bv*[height<=?1080]+ba/best[height<=?1080]/best"
 
 
 #===============================================================================
@@ -4077,6 +4080,7 @@ cache=auto
 [youtube]
 profile-desc="youtube hardware acceleration, cache"
 profile-cond=path:find('youtu%.?be') ~= nil
+#profile-cond=path:find('youtu%.?be') ~= nil or path:find('googlevideo%.com') ~= nil
 # include hwdec profile 
 profile=hwdec
 # override hwdec profile cache setting
