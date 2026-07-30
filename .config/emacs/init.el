@@ -962,8 +962,6 @@
 ;; ----------------------------------------------------------------------------------
 
 (use-package mpv
-  :custom
-  (mpv-executable (expand-file-name "~/bin/mpv"))
   :init
   ;; mpv-default-options play fullscreen on second display
   (setq mpv-default-options '("--fs" "--fs-screen-name=DP-3"))
