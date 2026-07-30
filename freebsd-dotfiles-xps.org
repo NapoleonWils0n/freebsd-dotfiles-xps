@@ -1366,6 +1366,8 @@ The main purpose of this elisp is to handle each tree in an org buffer as a slid
 ;; ----------------------------------------------------------------------------------
 
 (use-package mpv
+  :custom
+  (mpv-executable (expand-file-name "~/bin/mpv"))
   :init
   ;; mpv-default-options play fullscreen on second display
   (setq mpv-default-options '("--fs" "--fs-screen-name=DP-3"))
@@ -4011,8 +4013,8 @@ profile=hwdec
 profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
 vo=gpu
 gpu-context=wayland
-#hwdec=nvdec-copy
-hwdec=vaapi
+hwdec=nvdec-copy
+#hwdec=vaapi
 
 
 #===============================================================================
