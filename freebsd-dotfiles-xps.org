@@ -5074,7 +5074,11 @@ categories_as_tabs:
   files:
   map:
   social media:
-
+engines:
+  - name: brave
+    disabled: true
+  - name: startpage
+    disabled: true
 #+end_src
 
 **** searxng tangle
