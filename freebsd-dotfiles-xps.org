@@ -5383,6 +5383,76 @@ clean:
 <<ollama-makefile>>
 #+END_SRC
 
+*** searxng
+**** searxng config
+
+#+NAME: searxng-makefile
+#+begin_src makefile
+#===============================================================================
+# FILE: Makefile
+# Project: Searxng Nix
+#===============================================================================
+
+
+#===============================================================================
+# PHONY
+#===============================================================================
+
+.PHONY: all clean container
+
+
+#===============================================================================
+# commands
+#===============================================================================
+
+# compose.yaml
+COMPOSE_FILE  	:= ${HOME}/podman/freebsd-cuda-nix/containers/web/searxng/compose.yaml
+COMPOSE_CMD	:= doas podman-compose -f
+ENV_FILE  	:= ${HOME}/podman/freebsd-cuda-nix/containers/web/searxng/.env
+
+JAIL_NAME	:= searxng-nix
+STARTUP_SCRIPT	:= searxng-run
+
+COMPOSE_DOWN	:= $(COMPOSE_CMD) $(COMPOSE_FILE) down
+
+
+#===============================================================================
+# default target
+#===============================================================================
+
+all: container
+
+
+#===============================================================================
+# compose up
+#===============================================================================
+
+container: 
+	wrapper-freebsd -j $(JAIL_NAME) -a $(STARTUP_SCRIPT) -c $(COMPOSE_FILE) -e $(ENV_FILE) -p off
+
+#===============================================================================
+# clean 
+#===============================================================================
+
+clean:
+	$(COMPOSE_DOWN)
+#+end_src
+
+**** searxng tangle
+***** home dir
+
+#+NAME: searxng-makefile-home-dir
+#+BEGIN_SRC makefile :tangle "~/make/searxng/Makefile"
+<<searxng-makefile>>
+#+END_SRC
+
+***** current dir
+
+#+NAME: searxng-makefile-current-dir
+#+BEGIN_SRC makefile :tangle "make/searxng/Makefile"
+<<searxng-makefile>>
+#+END_SRC
+
 ** pulseaudio
 
 #+NAME: pulseaudio
