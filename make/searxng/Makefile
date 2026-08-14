@@ -38,7 +38,7 @@ all: container
 #===============================================================================
 
 container: 
-	wrapper-freebsd -j $(JAIL_NAME) -a $(STARTUP_SCRIPT) -c $(COMPOSE_FILE) -e $(ENV_FILE) -p off
+	wrapper-freebsd-nix -j $(JAIL_NAME) -a $(STARTUP_SCRIPT) -c $(COMPOSE_FILE) -e $(ENV_FILE) -p off
 
 #===============================================================================
 # clean 
