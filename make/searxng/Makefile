@@ -16,9 +16,9 @@
 #===============================================================================
 
 # compose.yaml
-COMPOSE_FILE  	:= ${HOME}/podman/freebsd-cuda-nix/containers/web/searxng/compose.yaml
+COMPOSE_FILE  	:= ${HOME}/podman/freebsd-nixpkgs/containers/web/searxng/compose.yaml
 COMPOSE_CMD	:= doas podman-compose -f
-ENV_FILE  	:= ${HOME}/podman/freebsd-cuda-nix/containers/web/searxng/.env
+ENV_FILE  	:= ${HOME}/podman/freebsd-nixpkgs/containers/web/searxng/.env
 
 JAIL_NAME	:= searxng-nix
 STARTUP_SCRIPT	:= searxng-run
