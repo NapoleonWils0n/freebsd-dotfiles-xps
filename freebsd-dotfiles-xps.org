@@ -6585,6 +6585,7 @@ pkg prime-list
 - edk2-bhyve
 - emacs-devel
 - en-aspell
+- erdtree
 - evdev-proto
 - fd-find
 - ffmpeg
@@ -6641,6 +6642,7 @@ pkg prime-list
 - obs-studio
 - ollama
 - openvpn
+- p5-Graph-Easy
 - pavucontrol
 - pinentry-curses
 - pkg
@@ -6670,9 +6672,6 @@ pkg prime-list
 - syncthing
 - tmux
 - tofi
-- tor
-- tor-browser
-- torsocks
 - translate-shell
 - tree
 - tree-sitter
