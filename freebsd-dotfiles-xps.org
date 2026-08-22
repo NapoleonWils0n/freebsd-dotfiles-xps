@@ -6585,7 +6585,6 @@ pkg prime-list
 - edk2-bhyve
 - emacs-devel
 - en-aspell
-- erdtree
 - evdev-proto
 - fd-find
 - ffmpeg
