@@ -1320,7 +1320,9 @@
 
 (setq major-mode-remap-alist
       '((sh-mode . bash-ts-mode)
-        (rust-mode . rust-ts-mode)))
+        (rust-mode . rust-ts-mode)
+        (c-mode . c-ts-mode)
+        (c++-mode . c++-ts-mode)))
 
 ;; treesitter explore open in side window
 (add-to-list 'display-buffer-alist
@@ -1414,10 +1416,15 @@
 (with-eval-after-load 'eglot
   ;; sh-mode (for shell scripts) uses 'bash-language-server' with a 'start' argument
   (add-to-list 'eglot-server-programs
-               '(bash-ts-mode "bash-language-server" "start")))
+               '(bash-ts-mode "bash-language-server" "start"))
+
+;; C / C++ modes using clangd on FreeBSD
+  (add-to-list 'eglot-server-programs
+               '((c-mode c-ts-mode c++-mode c++-ts-mode) . ("clangd"))))
 
 ;; Automatically start Eglot when opening a relevant file
-(add-hook 'bash-ts-mode-hook 'eglot-ensure)
+(dolist (hook '(c-ts-mode-hook c++-ts-mode-hook bash-ts-mode-hook))
+  (add-hook hook #'eglot-ensure))
 
 ;; ----------------------------------------------------------------------------------
 ;; Rust and LSP (Eglot)
