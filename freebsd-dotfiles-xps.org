@@ -6686,6 +6686,7 @@ pkg prime-list
 - ts
 - unbound
 - vm-bhyve-devel
+- vulkan-tools
 - wayland
 - wayland-protocols
 - wayland-utils
