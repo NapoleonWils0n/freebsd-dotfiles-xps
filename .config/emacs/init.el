@@ -1482,6 +1482,8 @@
                         :models '(gemma4-unsloth:latest
                                   gemma4-qat:latest
                                   gemma4-bartowski:latest 
+                                  qwen2.5-coder:7b-instruct-q4_K_M 
+                                  translategemma:4b 
                                   huihui_ai/llama3.2-abliterate:3b 
                                   granite4.1:3b-q6_K)))
 
