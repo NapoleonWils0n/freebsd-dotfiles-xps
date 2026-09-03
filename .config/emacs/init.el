@@ -1694,6 +1694,19 @@
   (setq whisper-insert-text-at-point-function #'insert))
 
 ;; ----------------------------------------------------------------------------------
+;; emamux
+;; ----------------------------------------------------------------------------------
+
+(use-package emamux
+  :demand t
+  :config
+  ;; Remap send-region to C-a inside emamux:keymap
+  (define-key emamux:keymap (kbd "C-a") 'emamux:send-region)
+
+  ;; Single global binding handles all modes
+  (global-set-key (kbd "C-`") emamux:keymap))
+
+;; ----------------------------------------------------------------------------------
 ;; garbage collection
 ;; ----------------------------------------------------------------------------------
 

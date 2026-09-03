@@ -2345,6 +2345,28 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   (setq whisper-insert-text-at-point-function #'insert))
 #+end_src
 
+***** emamux
+
+#+NAME: emacs-emamux
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emamux
+;; ----------------------------------------------------------------------------------
+
+(use-package emamux
+  :demand t
+  :config
+  ;; Remap send-region to C-a inside emamux:keymap
+  (define-key emamux:keymap (kbd "C-a") 'emamux:send-region)
+
+  ;; Single global binding handles all modes
+  (global-set-key (kbd "C-`") emamux:keymap))
+#+end_src
+
+****** info
+
+[[https://github.com/emacsorphanage/emamux]]
+
 ***** garbage collection
 
 #+NAME: emacs-garbage-collection
