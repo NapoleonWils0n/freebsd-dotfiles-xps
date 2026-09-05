@@ -1697,14 +1697,24 @@
 ;; emamux
 ;; ----------------------------------------------------------------------------------
 
+(defun my/emamux-smart-send ()
+  "Send active visual selection, or the current line if no selection."
+  (interactive)
+  (if (and (bound-and-true-p evil-mode) (evil-visual-state-p))
+      (progn
+        (emamux:send-region (region-beginning) (region-end))
+        (evil-exit-visual-state))
+    (emamux:send-region (line-beginning-position) (line-end-position))))
+
 (use-package emamux
   :demand t
   :config
-  ;; Remap send-region to C-a inside emamux:keymap
-  (define-key emamux:keymap (kbd "C-a") 'emamux:send-region)
+  ;; Global binding for normal/insert modes
+  (global-set-key (kbd "C-`") 'my/emamux-smart-send)
 
-  ;; Single global binding handles all modes
-  (global-set-key (kbd "C-`") emamux:keymap))
+  ;; Explicitly bind in Evil visual state so visual selections work
+  (with-eval-after-load 'evil
+    (define-key evil-visual-state-map (kbd "C-`") 'my/emamux-smart-send)))
 
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection
