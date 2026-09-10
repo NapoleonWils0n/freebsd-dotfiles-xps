@@ -81,7 +81,7 @@
              (not
               (let ((method (file-remote-p name 'method)))
                 (when (stringp method)
-                  (member method '("su" "sudo" "doas"))))))))
+                  (member method '("su" "sudo" "doas" "ssh"))))))))
 
 
 ;; save
