@@ -6673,6 +6673,7 @@ pkg prime-list
 - musicpc
 - musicpd
 - ncmpc
+- newsboat
 - node
 - noto-basic
 - noto-emoji
