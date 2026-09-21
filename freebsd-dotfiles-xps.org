@@ -6634,6 +6634,7 @@ pkg prime-list
 - firacode
 - firefox
 - fusefs-ext2
+- fzf
 - gcc
 - gdb
 - git
