@@ -1,0 +1,21 @@
+#===============================================================================
+# newsraft - config
+#===============================================================================
+
+# status placeholder
+status-placeholder "r:reload  R:reload-all d:read o:open-in-browser y:copy-url n:exec-sauron  i:exec-imv  q:quit"
+
+# sauron
+bind n exec sauron "%l" 1>/dev/null
+
+# open image links with imv
+bind i exec imv "%l"
+
+# page centering false
+pager-centering false
+
+# scroll wrap 
+scrollwrap true
+
+# hide global feeds
+global-section-hide true

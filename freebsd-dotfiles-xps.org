@@ -4795,112 +4795,47 @@ set-environment -g SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-agent.socket"
 <<yt-dlp>>
 #+END_SRC
 
-** newsboat
-*** newsboat config
+** newsraft
+*** newsraft config
 
-#+NAME: newsboat
+#+NAME: newsraft
 #+BEGIN_SRC conf
 #===============================================================================
-# Newsboat - config
+# newsraft - config
 #===============================================================================
 
-#===============================================================================
-# general settings
-#===============================================================================
+# status placeholder
+status-placeholder "r:reload  R:reload-all d:read o:open-in-browser y:copy-url n:exec-sauron  i:exec-imv  q:quit"
 
-auto-reload yes
-max-items 50 
-reload-time 30 # update all feeds every x minutes
-reload-threads 100
-prepopulate-query-feeds yes
-cleanup-on-quit yes
-confirm-mark-feed-read no
-wrap-scroll yes
+# sauron
+bind n exec sauron "%l" 1>/dev/null
 
+# open image links with imv
+bind i exec imv "%l"
 
-#===============================================================================
-# externel browser
-#===============================================================================
+# page centering false
+pager-centering false
 
-macro . set browser "/home/djwilcox/bin/sauron %u"; open-in-browser 
+# scroll wrap 
+scrollwrap true
 
-
-#===============================================================================
-# text width
-#===============================================================================
-
-text-width 80
-
-
-#===============================================================================
-# unbind keys
-#===============================================================================
-
-unbind-key ENTER
-unbind-key j
-unbind-key k
-unbind-key J
-unbind-key K
-
-
-#===============================================================================
-# bind keys - vim style
-#===============================================================================
-
-bind-key j down
-bind-key k up
-bind-key l open
-bind-key h quit
-
-
-#===============================================================================
-# podboat
-#===============================================================================
-
-download-path "~/Downloads/%n"
-player "mpv"
-
-
-#===============================================================================
-# colours
-#===============================================================================
-
-color listnormal         default default
-color listnormal_unread  default default
-color listfocus          black blue
-color listfocus_unread   black blue
-color info               black blue
-color article            default default
-
-
-#===============================================================================
-# highlights
-#===============================================================================
-
-highlight article "^(Feed|Title|Link|Date|Author):.*$" color12 color8
-highlight article "https?://[^ ]+" color4 color8 protect
-
-
-#===============================================================================
-# kill files ignore articles marked #shorts to filter out youtube shorts
-#===============================================================================
-
-ignore-article "*" "title =~ \"#shorts$\""
+# hide global feeds
+global-section-hide true
 #+END_SRC
 
-*** newsboat tangle
+*** newsraft tangle
 **** home dir
 
-#+NAME: newsboat-home-dir
-#+BEGIN_SRC conf :tangle "~/.config/newsboat/config"
-<<newsboat>>
+#+NAME: newsraft-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/newsraft/config"
+<<newsraft>>
 #+END_SRC
 
 **** current dir
 
-#+NAME: newsboat-current-dir
-#+BEGIN_SRC conf :tangle ".config/newsboat/config"
-<<newsboat>>
+#+NAME: newsraft-current-dir
+#+BEGIN_SRC conf :tangle ".config/newsraft/config"
+<<newsraft>>
 #+END_SRC
 
 ** mpd
@@ -6782,7 +6717,7 @@ pkg prime-list
 - musicpc
 - musicpd
 - ncmpc
-- newsboat
+- newsraft
 - node
 - noto-basic
 - noto-emoji
