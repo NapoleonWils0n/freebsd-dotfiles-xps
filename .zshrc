@@ -181,6 +181,9 @@ zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin /h
 # rehash commands
 zstyle ':completion:*' rehash true
 
+# nv-sglrun apply autocompletions for binaries after nv-sglrun
+compdef _precommand nv-sglrun
+
 
 #===============================================================================
 # highlighting
