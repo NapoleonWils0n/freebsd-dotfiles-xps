@@ -2063,14 +2063,6 @@ It is a way for multiple applications to share a single configuration (in Emacs 
 
 
 ;; ----------------------------------------------------------------------------------
-;; display the Gemini buffer in same window
-;; ----------------------------------------------------------------------------------
-
-  (add-to-list 'display-buffer-alist
-               '("^*Gemini*" display-buffer-same-window))
-
-
-;; ----------------------------------------------------------------------------------
 ;; gptel set org source blocks to use sh and not bash
 ;; ----------------------------------------------------------------------------------
 
@@ -3435,8 +3427,6 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/init.el"
 <<init.el>>
 #+END_SRC
-
-#+RESULTS: emacs-init.el-home-dir
 
 ***** current dir
 
