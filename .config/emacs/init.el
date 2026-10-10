@@ -1527,9 +1527,8 @@
 
 (with-eval-after-load 'gptel
   (add-to-list 'gptel-directives
-               '(web-search . "Use the search_web tool to answer the prompt.
-Use emacs org mode formatting for links: [[URL][Description]]. Never use parentheses () or markdown [text](url) syntax.
-No intro/outro filler.")))
+               '(web-search . "Use the mcp-searxng tools to answer the prompt.")))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; gptel-custom-tools.el loaded from ~/.config/emacs/lisp/gptel-custom-tools.el
