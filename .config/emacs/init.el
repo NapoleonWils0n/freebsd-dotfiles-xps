@@ -1528,7 +1528,7 @@
 (with-eval-after-load 'gptel
   (add-to-list 'gptel-directives
                '(web-search . "Use the search_web tool to answer the prompt.
-Format links as [[URL][Description]].
+Use emacs org mode formatting for the link [[URL][Description]].
 No intro/outro filler.")))
 
 
