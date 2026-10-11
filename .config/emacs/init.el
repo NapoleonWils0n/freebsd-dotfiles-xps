@@ -1466,14 +1466,15 @@
   (setq-default gptel-temperature 0.1)
 
   ;; ollama
-  (setq-default gptel-model 'gemma4-unsloth:latest)
+  (setq-default gptel-model 'qwen3.5:4b)
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '(gemma4-unsloth:latest
+                        :models '(qwen3.5:4b
                                   qwen2.5-coder:7b-instruct-q8_0
                                   qwen2.5-coder:14b
                                   huihui_ai/qwen3.5-abliterated:4b
+                                  gemma4-unsloth:latest
                                   translategemma:4b)))
 
 
