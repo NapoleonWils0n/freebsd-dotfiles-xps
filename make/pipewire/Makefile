@@ -1,6 +1,6 @@
 #===============================================================================
 # FILE: Makefile
-# Project: Start Pipewire and xdg desktop portals
+# Project: Start Pipewire and xdg desktop portals on wlroots
 # for OBS Studio and Browser Screen sharing
 #===============================================================================
 
