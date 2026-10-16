@@ -4391,8 +4391,15 @@ bind=SUPER+Alt,Right,tagmon,right
 bind=super+shift,comma,tagmon,left
 bind=super+shift,period,tagmon,right
 
-# layouts
+# cycle layouts
 circle_layout=tile,monocle,vertical_tile,scroller,grid
+
+# switch layouts
+bind=SUPER,t,setlayout,tile
+bind=SUPER,m,setlayout,monocle
+bind=SUPER,v,setlayout,vertical_tile
+bind=SUPER,s,setlayout,scroller
+bind=SUPER,g,setlayout,grid
 
 # Window effect
 blur=0
@@ -4547,7 +4554,7 @@ bind=SUPER,g,toggleglobal,
 bind=ALT,Tab,togglejump,
 bind=ALT,backslash,togglefloating,
 bind=ALT,a,togglemaximizescreen,
-bind=SUPER,s,togglefullscreen,
+bind=SUPER,grave,togglefullscreen,
 bind=ALT+SHIFT,f,togglefakefullscreen,
 bind=SUPER,i,minimized,
 bind=SUPER,o,toggleoverlay,
