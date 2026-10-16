@@ -7153,6 +7153,8 @@ pkg prime-list
 - linux-nvidia-libs
 - llvm
 - lsp-plugins-lv2
+- mangobar
+- meson
 - mixertui
 - mpv
 - mpv-mpris
@@ -7160,6 +7162,7 @@ pkg prime-list
 - musicpd
 - ncmpc
 - newsraft
+- ninja
 - node
 - noto-basic
 - noto-emoji
