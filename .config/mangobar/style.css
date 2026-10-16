@@ -1,0 +1,104 @@
+/* =========================================================
+ * mangobar style - dwlb / dwl classic theme
+ * ========================================================= */
+
+* {
+    font-family: "Noto Sans Mono";
+    font-size: 16px;
+    font-weight: bold;
+    color: #bbbbbb;
+    background-color: #222222;
+    padding: 0px 8px;
+    margin: 0px 0px;
+    border-radius: 0px;
+}
+
+#bar {
+    background-color: #222222;
+    margin: 0px;
+    padding: 0px;
+}
+
+#bar.sel {
+    background-color: #222222;
+}
+
+#tags {
+    padding: 0px 8px;
+    margin: 0px;
+    background-color: #222222;
+}
+
+#tags.active {
+    background-color: #005577;
+    color: #eeeeee;
+}
+
+#tags.occupied {
+    background-color: #222222;
+    color: #bbbbbb;
+}
+
+#tags.urgent {
+    background-color: #ff0000;
+    color: #ffffff;
+}
+
+#tags.empty {
+    background-color: #222222;
+    color: #555555;
+}
+
+/* Overview mode */
+#overview {
+    background-color: #005577;
+    color: #eeeeee;
+}
+
+/* Layout symbol */
+#layout {
+    padding: 0px 8px;
+    background-color: #222222;
+    color: #bbbbbb;
+    min-width: 24px;
+}
+
+/* Window title */
+#title {
+    background-color: #222222;
+    color: #eeeeee;
+}
+
+
+/* Right-side modules */
+#clock {
+    background-color: #222222;
+    color: #bbbbbb;
+}
+
+#hideclients {
+    background-color: #222222;
+    color: #bbbbbb;
+}
+
+#tray {
+    background-color: #222222;
+    padding: 0px 8px;
+}
+
+menu {
+    background-color: #222222;
+    border: 1px solid #444444;
+    border-radius: 0px;
+    font-size: 14px;
+}
+
+menuitem {
+    color: #bbbbbb;
+    background-color: #222222;
+}
+
+menuitem:hover {
+    color: #eeeeee;
+    background-color: #005577;
+}

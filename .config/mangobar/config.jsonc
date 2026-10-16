@@ -1,0 +1,40 @@
+// mangobar config (JSONC).
+{
+    "layer": "top",
+    "height": 30,
+    "buffer-scale": 1,
+    "modules-left": [
+        "workspaces",
+        "layout",
+        "window"
+    ],
+    "modules-center": [],
+    "modules-right": [
+        "hideclients",
+        "tray",
+        "clock#time",
+    ],
+
+    "workspaces": {
+        "hide-empty": true,
+        "overview-label": "OVERVIEW",
+        "on-click": "activate",
+        "on-click-right": "toggle"
+    },
+    "layout": {
+        "format": "[{}]"
+    },
+    "window": {
+        "format": "{}"
+    },
+    "hideclients": {
+        "format": " {}"
+    },
+    "clock#time": {
+        "format": "{:L%H:%M}"
+    },
+    "tray": {
+        "icon-size": 25,
+        "spacing": 10
+    },
+}

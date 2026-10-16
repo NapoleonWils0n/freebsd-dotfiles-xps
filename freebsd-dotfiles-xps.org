@@ -4345,6 +4345,509 @@ end)
 <<invidious.lua>>
 #+END_SRC
 
+** mangowm
+*** mangowm config
+
+#+NAME: mangowm
+#+BEGIN_SRC conf
+# More option see https://github.com/DreamMaoMao/mango/wiki/
+# mango-0.17.4
+
+# mangobar
+exec-once=mangobar
+
+# menu and terminal
+bind=super,a,spawn,tofi-drun
+bind=super+shift,return,spawn,alacritty
+bind=super+ctrl,return,spawn,emacsclient -a= -c
+
+# Audio controls via mixer
+bind=none,XF86AudioRaiseVolume,spawn,/usr/sbin/mixer vol=+5%:+5%
+bind=none,XF86AudioLowerVolume,spawn,/usr/sbin/mixer vol=-5%:-5%
+bind=none,XF86AudioMute,spawn,/usr/sbin/mixer vol.mute=^
+
+# Custom tools and media keys
+bind=super,z,spawn,wlr-which-key
+bind=super+alt,space,spawn,playerctl play-pause
+
+# monitor
+# Laptop display: 1080p, 60Hz, positioned at origin
+monitorrule=name:^eDP-1$,width:1920,height:1080,refresh:60,x:0,y:0
+
+# External monitor: 1080p, 60Hz, positioned to the right
+monitorrule=name:^DP-3$,width:1920,height:1080,refresh:60,x:1920,y:0
+
+# mpv - play on second display and dont focus
+windowrule=monitor:DP-3,isopensilent:1,appid:mpv
+
+# monitor switch
+bind=SUPER,comma,focusmon,left
+bind=SUPER,period,focusmon,right
+
+bind=SUPER+Alt,Left,tagmon,left
+bind=SUPER+Alt,Right,tagmon,right
+
+# Move window to another monitor (matching dwl tagmon)
+bind=super+shift,comma,tagmon,left
+bind=super+shift,period,tagmon,right
+
+# layouts
+circle_layout=tile,monocle,vertical_tile,scroller,grid
+
+# Window effect
+blur=0
+blur_layer=0
+
+shadows = 0
+layer_shadows = 0
+
+border_radius=0
+no_radius_when_single=0
+focused_opacity=1.0
+unfocused_opacity=1.0
+
+dim_enable=0
+dim_focused_color=0x00000000
+dim_unfocused_color=0x00000055
+
+# Animation Configuration(support type:zoom,slide)
+# tag_animation_direction: 1-horizontal,0-vertical
+animations=0
+layer_animations=0
+animation_fade_in=0
+animation_fade_out=0
+
+# Scroller Layout Setting
+scroller_structs=20
+scroller_default_proportion=0.8
+scroller_focus_center=0
+scroller_prefer_center=0
+edge_scroller_pointer_focus=1
+edge_scroller_focus_allow_speed=0.0
+scroller_default_proportion_single=1.0
+scroller_proportion_preset=0.5,0.8,1.0
+
+# Master-Stack Layout Setting
+new_is_master=0
+default_mfact=0.55
+default_nmaster=1
+tag_num=9
+smartgaps=0
+
+# Overview Setting
+hotarea_size=10
+enable_hotarea=0
+hotarea_disable_on_fullscreen=1
+overviewgappi=5
+overviewgappo=30
+overcircle_center_ratio=0.5
+
+# Misc
+no_border_when_single=0
+axis_bind_apply_timeout=100
+focus_on_activate=0
+idleinhibit_ignore_visible=0
+idleinhibit_when_fullscreen=0
+sloppyfocus=1
+warpcursor=1
+focus_cross_monitor=0
+focusdir_only_zone_overlap=1
+focus_cross_tag=0
+enable_floating_snap=0
+snap_distance=30
+float_full_to_top=0
+cursor_size=24
+drag_tile_to_tile=1
+drag_tile_small=1
+
+# keyboard
+repeat_rate=35
+repeat_delay=400
+numlockon=0
+xkb_rules_layout=gb
+xkb_rules_options=ctrl:swap_lalt_lctl,custom:swap_sterling_numbersign,caps:none
+xkb_rules_rules=evdev
+xkb_rules_variant=mac
+
+# Trackpad
+# need relogin to make it apply
+disable_trackpad=0
+tap_to_click=1
+tap_and_drag=1
+drag_lock=1
+trackpad_natural_scrolling=0
+trackpad_disable_while_typing=1
+trackpad_left_handed=0
+trackpad_middle_button_emulation=0
+swipe_min_threshold=1
+
+# mouse
+# need relogin to make it apply
+mouse_natural_scrolling=0
+
+# Appearance
+gappih=5
+gappiv=5
+gappoh=0
+gappov=0
+scratchpad_width_ratio=0.8
+scratchpad_height_ratio=0.9
+borderpx=1
+rootcolor=0x222222ff
+bordercolor=0x444444ff
+dropcolor=0x8FBA7C55
+splitcolor=0xEB441EFF
+focuscolor=0x005577ff
+maximizescreencolor=0x89aa61ff
+urgentcolor=0xff0000ff
+scratchpadcolor=0x516c93ff
+globalcolor=0xb153a7ff
+overlaycolor=0x14a57cff
+
+# layout support:
+# tile,scroller,grid,deck,monocle,center_tile,vertical_tile,vertical_scroller
+tagrule=id:1,layout_name:tile
+tagrule=id:2,layout_name:tile
+tagrule=id:3,layout_name:tile
+tagrule=id:4,layout_name:tile
+tagrule=id:5,layout_name:tile
+tagrule=id:6,layout_name:tile
+tagrule=id:7,layout_name:tile
+tagrule=id:8,layout_name:tile
+tagrule=id:9,layout_name:tile
+
+# Key Bindings
+# key name refer to `xev` or `wev` command output,
+# mod keys name: super,ctrl,alt,shift,none
+
+# reload config
+bind=super,r,reload_config
+
+# exit mango
+bind=SUPER+SHIFT,q,quit
+
+# close windows
+bind=super+shift,c,killclient
+
+# switch window focus
+bind=SUPER,Tab,focusstack,next
+bind=SUPER,h,focusdir,left
+bind=SUPER,l,focusdir,right
+bind=SUPER,k,focusdir,up
+bind=SUPER,j,focusdir,down
+
+# swap window
+bind=SUPER+SHIFT,k,exchange_client,up
+bind=SUPER+SHIFT,j,exchange_client,down
+bind=SUPER+SHIFT,h,exchange_client,left
+bind=SUPER+SHIFT,l,exchange_client,right
+
+# switch window status
+bind=SUPER,g,toggleglobal,
+bind=ALT,Tab,togglejump,
+bind=ALT,backslash,togglefloating,
+bind=ALT,a,togglemaximizescreen,
+bind=SUPER,s,togglefullscreen,
+bind=ALT+SHIFT,f,togglefakefullscreen,
+bind=SUPER,i,minimized,
+bind=SUPER,o,toggleoverlay,
+bind=SUPER+SHIFT,I,restore_minimized
+bind=ALT,z,toggle_scratchpad
+
+# scroller layout
+bind=ALT,e,set_proportion,1.0
+#bind=ALT,x,switch_proportion_preset,
+bind=alt+super+ctrl,Left,scroller_stack,left
+bind=alt+super+ctrl,Right,scroller_stack,right
+bind=alt+super+ctrl,Up,scroller_stack,up
+bind=alt+super+ctrl,Down,scroller_stack,down
+
+#dwindle layout(manual split mode)
+bind=alt+shift,Return,dwindle_toggle_split_direction
+
+# switch layout
+bind=SUPER,n,switch_layout
+
+# tag switch
+bind=SUPER,Left,viewtoleft,0
+bind=CTRL,Left,viewtoleft_have_client,0
+bind=SUPER,Right,viewtoright,0
+bind=CTRL,Right,viewtoright_have_client,0
+bind=CTRL+SUPER,Left,tagtoleft,0
+bind=CTRL+SUPER,Right,tagtoright,0
+
+bind=SUPER,1,view,1,0
+bind=SUPER,2,view,2,0
+bind=SUPER,3,view,3,0
+bind=SUPER,4,view,4,0
+bind=SUPER,5,view,5,0
+bind=SUPER,6,view,6,0
+bind=SUPER,7,view,7,0
+bind=SUPER,8,view,8,0
+bind=SUPER,9,view,9,0
+
+# tag: move client to the tag and focus it
+# tagsilent: move client to the tag and not focus it
+# bind=Alt,1,tagsilent,1
+bind=SUPER+SHIFT,1,tag,1,0
+bind=SUPER+SHIFT,2,tag,2,0
+bind=SUPER+SHIFT,3,tag,3,0
+bind=SUPER+SHIFT,4,tag,4,0
+bind=SUPER+SHIFT,5,tag,5,0
+bind=SUPER+SHIFT,6,tag,6,0
+bind=SUPER+SHIFT,7,tag,7,0
+bind=SUPER+SHIFT,8,tag,8,0
+bind=SUPER+SHIFT,9,tag,9,0
+
+# gaps
+bind=ALT+SHIFT,X,incgaps,1
+bind=ALT+SHIFT,Z,incgaps,-1
+bind=ALT+SHIFT,R,togglegaps
+
+# movewin
+bind=CTRL+SHIFT,Up,movewin,+0,-50
+bind=CTRL+SHIFT,Down,movewin,+0,+50
+bind=CTRL+SHIFT,Left,movewin,-50,+0
+bind=CTRL+SHIFT,Right,movewin,+50,+0
+
+# resizewin
+bind=CTRL+ALT,Up,resizewin,+0,-50
+bind=CTRL+ALT,Down,resizewin,+0,+50
+bind=CTRL+ALT,Left,resizewin,-50,+0
+bind=CTRL+ALT,Right,resizewin,+50,+0
+
+# Mouse Button Bindings
+# btn_left and btn_right can't bind none mod key
+mousebind=SUPER,btn_left,moveresize,curmove
+mousebind=NONE,btn_middle,togglemaximizescreen,0
+mousebind=SUPER,btn_right,moveresize,curresize
+
+
+# Axis Bindings
+axisbind=SUPER,UP,viewtoleft_have_client
+axisbind=SUPER,DOWN,viewtoright_have_client
+
+# Gesture Bindings
+gesturebind=none,left,3,focusdir,left
+gesturebind=none,right,3,focusdir,right
+gesturebind=none,up,3,focusdir,up
+gesturebind=none,down,3,focusdir,down
+gesturebind=none,right,4,viewprev_have_client
+gesturebind=none,left,4,viewnext_have_client
+gesturebind=none,up,4,enteroverview
+gesturebind=none,down,4,leaveoverview
+
+
+# layer rule
+layerrule=animation_type_open:zoom,layer_name:rofi
+layerrule=animation_type_close:zoom,layer_name:rofi
+#+END_SRC
+
+*** mangowm tangle
+**** home dir
+
+#+NAME: mangowm-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/mango/config.conf"
+<<mangowm>>
+#+END_SRC
+
+**** current dir
+
+#+NAME: mangowm-current-dir
+#+BEGIN_SRC conf :tangle ".config/mango/config.conf"
+<<mangowm>>
+#+END_SRC
+
+** mangobar
+*** mangobar config
+**** mangobar-config
+
+#+NAME: mangobar-config
+#+BEGIN_SRC js
+// mangobar config (JSONC).
+{
+    "layer": "top",
+    "height": 30,
+    "buffer-scale": 1,
+    "modules-left": [
+        "workspaces",
+        "layout",
+        "window"
+    ],
+    "modules-center": [],
+    "modules-right": [
+        "hideclients",
+        "tray",
+        "clock#time",
+    ],
+
+    "workspaces": {
+        "hide-empty": true,
+        "overview-label": "OVERVIEW",
+        "on-click": "activate",
+        "on-click-right": "toggle"
+    },
+    "layout": {
+        "format": "[{}]"
+    },
+    "window": {
+        "format": "{}"
+    },
+    "hideclients": {
+        "format": " {}"
+    },
+    "clock#time": {
+        "format": "{:L%H:%M}"
+    },
+    "tray": {
+        "icon-size": 25,
+        "spacing": 10
+    },
+}
+#+END_SRC
+
+**** mangobar-style
+
+#+NAME: mangobar-style
+#+begin_src css
+/* =========================================================
+ ,* mangobar style - dwlb / dwl classic theme
+ ,* ========================================================= */
+
+,* {
+    font-family: "Noto Sans Mono";
+    font-size: 16px;
+    font-weight: bold;
+    color: #bbbbbb;
+    background-color: #222222;
+    padding: 0px 8px;
+    margin: 0px 0px;
+    border-radius: 0px;
+}
+
+#bar {
+    background-color: #222222;
+    margin: 0px;
+    padding: 0px;
+}
+
+#bar.sel {
+    background-color: #222222;
+}
+
+#tags {
+    padding: 0px 8px;
+    margin: 0px;
+    background-color: #222222;
+}
+
+#tags.active {
+    background-color: #005577;
+    color: #eeeeee;
+}
+
+#tags.occupied {
+    background-color: #222222;
+    color: #bbbbbb;
+}
+
+#tags.urgent {
+    background-color: #ff0000;
+    color: #ffffff;
+}
+
+#tags.empty {
+    background-color: #222222;
+    color: #555555;
+}
+
+/* Overview mode */
+#overview {
+    background-color: #005577;
+    color: #eeeeee;
+}
+
+/* Layout symbol */
+#layout {
+    padding: 0px 8px;
+    background-color: #222222;
+    color: #bbbbbb;
+    min-width: 24px;
+}
+
+/* Window title */
+#title {
+    background-color: #222222;
+    color: #eeeeee;
+}
+
+
+/* Right-side modules */
+#clock {
+    background-color: #222222;
+    color: #bbbbbb;
+}
+
+#hideclients {
+    background-color: #222222;
+    color: #bbbbbb;
+}
+
+#tray {
+    background-color: #222222;
+    padding: 0px 8px;
+}
+
+menu {
+    background-color: #222222;
+    border: 1px solid #444444;
+    border-radius: 0px;
+    font-size: 14px;
+}
+
+menuitem {
+    color: #bbbbbb;
+    background-color: #222222;
+}
+
+menuitem:hover {
+    color: #eeeeee;
+    background-color: #005577;
+}
+
+#+end_src
+
+*** mangobar tangle
+**** mangobar-config
+***** home dir
+
+#+NAME: mangobar-config-home-dir
+#+BEGIN_SRC js :tangle "~/.config/mangobar/config.jsonc"
+<<mangobar-config>>
+#+END_SRC
+
+***** current dir
+
+#+NAME: mangobar-config-current-dir
+#+BEGIN_SRC js :tangle ".config/mangobar/config.jsonc"
+<<mangobar-config>>
+#+END_SRC
+
+**** mangobar-style
+***** home dir
+
+#+NAME: mangobar-style-home-dir
+#+BEGIN_SRC css :tangle "~/.config/mangobar/style.css"
+<<mangobar-style>>
+#+END_SRC
+
+***** current dir
+
+#+NAME: mangobar-style-current-dir
+#+BEGIN_SRC css :tangle ".config/mangobar/style.css"
+<<mangobar-style>>
+#+END_SRC
+
 ** tofi
 *** tofi config
 
@@ -4352,9 +4855,10 @@ end)
 #+BEGIN_SRC conf
 anchor = top
 #output = "eDP-1"
+output = ""
 border-width = 0
 drun-launch = true
-font = "/usr/local/share/fonts/firacode/FiraCode-Bold.ttf"
+font = "/usr/local/share/fonts/noto/NotoSansMono-Bold.ttf"
 font-size = 12
 height = 32
 hint-font = false
@@ -4366,23 +4870,19 @@ padding-bottom = 0
 padding-left = 0
 padding-right = 0
 padding-top = 0
-prompt-color = #eee8d5
+prompt-color = #eeeeee
 prompt-text = ""
-input-color = #eee8d5
+input-color = #eeeeee
 result-spacing = 18
-selection-color = #002b36
-default-result-color = #eee8d5
-text-color = #eee8d5
-width = 100%
-default-result-background = #073642
-selection-background = #268bd2
-background-color = #005577 
-#background-color = #2b2b2b
-prompt-background=#002b36
+selection-color = #eeeeee
+default-result-color = #bbbbbb
+text-color = #bbbbbb
+width = 75%
+selection-background = #005577
+background-color = #222222
+prompt-background=#222222
 selection-background-padding = 4
-#selection-background-corner-radius = 6
 default-result-background-padding = 4
-#default-result-background-corner-radius = 6
 #+END_SRC
 
 *** tofi tangle
@@ -6425,293 +6925,6 @@ xkb_symbols "swap_sterling_numbersign" {
 #+BEGIN_SRC conf :tangle ".config/xkb/symbols/gb"
 <<gb>>
 #+END_SRC
-
-** dwl
-*** config.h
-
-#+NAME: dwl-config.h
-#+begin_src c
-/* Taken from https://github.com/djpohly/dwl/issues/466 */
-#define COLOR(hex)    { ((hex >> 24) & 0xFF) / 255.0f, \
-                        ((hex >> 16) & 0xFF) / 255.0f, \
-                        ((hex >> 8) & 0xFF) / 255.0f, \
-                        (hex & 0xFF) / 255.0f }
-/* appearance */
-static const int sloppyfocus               = 1;  /* focus follows mouse */
-static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
-static const unsigned int borderpx         = 1;  /* border pixel of windows */
-static const unsigned int snap             = 32; /* snap pixel */
-static const float rootcolor[]             = COLOR(0x222222ff);
-static const float bordercolor[]           = COLOR(0x444444ff);
-static const float focuscolor[]            = COLOR(0x005577ff);
-static const float urgentcolor[]           = COLOR(0xff0000ff);
-/* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
-static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
-
-/* tagging - TAGCOUNT must be no greater than 31 */
-#define TAGCOUNT (9)
-
-/* logging */
-static int log_level = WLR_ERROR;
-
-static const Rule rules[] = {
-	/* app_id             title       tags mask     isfloating   monitor */
-	{ "mpv",  NULL,           0,       1,           0 },
-    /* default/example rule: can be changed but cannot be eliminated; at least one rule must exist */
-};
-
-/* layout(s) */
-static const Layout layouts[] = {
-	/* symbol     arrange function */
-	{ "[]=",      tile },
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
-};
-
-/* monitors */
-/* (x=-1, y=-1) is reserved as an "autoconfigure" monitor position indicator
- ,* WARNING: negative values other than (-1, -1) cause problems with Xwayland clients due to
- ,* https://gitlab.freedesktop.org/xorg/xserver/-/issues/899 */
-static const MonitorRule monrules[] = {
-   /* name        mfact  nmaster scale layout       rotate/reflect                x    y
-    ,* example of a HiDPI laptop monitor:
-    { "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 }, */
-	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
-	/* default monitor rule: can be changed but cannot be eliminated; at least one monitor rule must exist */
-};
-
-/* keyboard */
-static const struct xkb_rule_names xkb_rules = {
-	/* can specify fields: rules, model, layout, variant, options */
-	/* example:
-	.options = "ctrl:nocaps",
-	,*/
-	.layout = "gb",
-	.model = "104",
-	.options = "ctrl:swap_lalt_lctl,custom:swap_sterling_numbersign,caps:none",
-	.rules = "evdev",
-	.variant = "mac",
-};
-
-static const int repeat_rate = 35;
-static const int repeat_delay = 400;
-
-/* Trackpad */
-static const int tap_to_click = 1;
-static const int tap_and_drag = 1;
-static const int drag_lock = 1;
-static const int natural_scrolling = 0;
-static const int disable_while_typing = 1;
-static const int left_handed = 0;
-static const int middle_button_emulation = 0;
-/* You can choose between:
-LIBINPUT_CONFIG_SCROLL_NO_SCROLL
-LIBINPUT_CONFIG_SCROLL_2FG
-LIBINPUT_CONFIG_SCROLL_EDGE
-LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN
-,*/
-static const enum libinput_config_scroll_method scroll_method = LIBINPUT_CONFIG_SCROLL_2FG;
-
-/* You can choose between:
-LIBINPUT_CONFIG_CLICK_METHOD_NONE
-LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS
-LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER
-,*/
-static const enum libinput_config_click_method click_method = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
-
-/* You can choose between:
-LIBINPUT_CONFIG_SEND_EVENTS_ENABLED
-LIBINPUT_CONFIG_SEND_EVENTS_DISABLED
-LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE
-,*/
-static const uint32_t send_events_mode = LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
-
-/* You can choose between:
-LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT
-LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE
-,*/
-static const enum libinput_config_accel_profile accel_profile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
-static const double accel_speed = 1.0;
-
-/* You can choose between:
-LIBINPUT_CONFIG_TAP_MAP_LRM -- 1/2/3 finger tap maps to left/right/middle
-LIBINPUT_CONFIG_TAP_MAP_LMR -- 1/2/3 finger tap maps to left/middle/right
-,*/
-static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TAP_MAP_LRM;
-
-/* If you want to use the windows key for MODKEY, use WLR_MODIFIER_LOGO */
-#define MODKEY WLR_MODIFIER_LOGO
-
-#define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                    KEY,            view,            {.ui = 1 << TAG} }, \
-	{ MODKEY|WLR_MODIFIER_CTRL,  KEY,            toggleview,      {.ui = 1 << TAG} }, \
-	{ MODKEY|WLR_MODIFIER_SHIFT, KEY,            tag,             {.ui = 1 << TAG} }, \
-	{ MODKEY|WLR_MODIFIER_CTRL|WLR_MODIFIER_SHIFT,KEY,toggletag,  {.ui = 1 << TAG} }
-
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-
-/* commands */
-static const char *termcmd[] = { "alacritty", NULL };
-static const char *menucmd[] = { "tofi-drun", NULL };
-static const char *volumeup[]      = { "/usr/sbin/mixer",   "vol=+5%:+5%",  NULL };
-static const char *volumedown[]    = { "/usr/sbin/mixer",   "vol=-5%:-5%",  NULL };
-static const char *mutevolume[]    = { "/usr/sbin/mixer",   "vol.mute=^",        NULL };
-static const char *cursorleft[]    = { "/usr/local/bin/wlrctl",   "pointer",  "move", "-1920",     NULL };
-static const char *cursorright[]    = { "/usr/local/bin/wlrctl",   "pointer", "move", "1920",        NULL };
-static const char *wlrwhichkey[]    = { "/usr/local/bin/wlr-which-key",  NULL };
-
-
-static const Key keys[] = {
-	/* modifier                  key                  function          argument */
-	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn,   {.v = volumeup   } },
-	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn,   {.v = volumedown } },
-	{ 0,                         XKB_KEY_XF86AudioMute, spawn,          {.v = mutevolume } },
-	{ MODKEY,                    XKB_KEY_z,           spawn,            {.v = wlrwhichkey} },
-	{ MODKEY,                    XKB_KEY_a,           spawn,            {.v = menucmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,      spawn,            {.v = termcmd} },
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,      spawn,            SHCMD("emacsclient -a= -c") },
-	{ MODKEY|WLR_MODIFIER_ALT,  XKB_KEY_space,        spawn,            SHCMD("playerctl play-pause") },
-	{ MODKEY,                    XKB_KEY_j,           focusstack,       {.i = +1} },
-	{ MODKEY,                    XKB_KEY_k,           focusstack,       {.i = -1} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,           movestack,        {.i = +1} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,           movestack,        {.i = -1} },
-	{ MODKEY,                    XKB_KEY_i,           incnmaster,       {.i = +1} },
-	{ MODKEY,                    XKB_KEY_d,           incnmaster,       {.i = -1} },
-	{ MODKEY,                    XKB_KEY_h,           setmfact,         {.f = -0.05f} },
-	{ MODKEY,                    XKB_KEY_l,           setmfact,         {.f = +0.05f} },
-	{ MODKEY,                    XKB_KEY_Return,      zoom,             {0} },
-	{ MODKEY,                    XKB_KEY_Tab,         view,             {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,           killclient,       {0} },
-	{ MODKEY,                    XKB_KEY_t,           setlayout,        {.v = &layouts[0]} },
-	{ MODKEY,                    XKB_KEY_f,           setlayout,        {.v = &layouts[1]} },
-	{ MODKEY,                    XKB_KEY_m,           setlayout,        {.v = &layouts[2]} },
-	{ MODKEY,                    XKB_KEY_space,       setlayout,        {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,       togglefloating,   {0} },
-	{ MODKEY,                    XKB_KEY_s,           togglefullscreen, {0} },
-	{ MODKEY,                    XKB_KEY_0,           view,             {.ui = ~0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_0,           tag,              {.ui = ~0} },
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_comma,       focusmon,         {.i = WLR_DIRECTION_LEFT} },
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_period,      focusmon,         {.i = WLR_DIRECTION_RIGHT} },
-	{ MODKEY,                    XKB_KEY_comma,       spawn,            {.v = cursorleft} },
-	{ MODKEY,                    XKB_KEY_period,      spawn,            {.v = cursorright} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,        tagmon,           {.i = WLR_DIRECTION_LEFT} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,     tagmon,           {.i = WLR_DIRECTION_RIGHT} },
-	TAGKEYS(                     XKB_KEY_1,           0),
-	TAGKEYS(                     XKB_KEY_2,           1),
-	TAGKEYS(                     XKB_KEY_3,           2),
-	TAGKEYS(                     XKB_KEY_4,           3),
-	TAGKEYS(                     XKB_KEY_5,           4),
-	TAGKEYS(                     XKB_KEY_6,           5),
-	TAGKEYS(                     XKB_KEY_7,           6),
-	TAGKEYS(                     XKB_KEY_8,           7),
-	TAGKEYS(                     XKB_KEY_9,           8),
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,           quit,             {0} },
-
-	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
-	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_BackSpace, quit, {0} },
-	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
-	 ,* do not remove them.
-	 ,*/
-#define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_F##n, chvt, {.ui = (n)} }
-	CHVT(1), CHVT(2), CHVT(3), CHVT(4), CHVT(5), CHVT(6),
-	CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
-};
-
-static const Button buttons[] = {
-	{ MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
-	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
-	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
-};
-
-static const Axis axes[] = {
-	{ MODKEY, AxisUp,   spawn, SHCMD("volume-up_EXAMPLE") },
-	{ MODKEY, AxisDown, spawn, SHCMD("volume-down_EXAMPLE") },
-};
-#+end_src
-
-*** Makefile
-
-#+NAME: dwl-Makefile
-#+begin_src makefile
-.POSIX:
-.SUFFIXES:
-
-include config.mk
-
-# flags for compiling
-DWLCPPFLAGS = -I. -DWLR_USE_UNSTABLE -D_XOPEN_SOURCE=700 \
-	-DVERSION=\"$(VERSION)\" $(XWAYLAND) $(CPPFLAGS)
-DWLDEVCFLAGS = -g -Wpedantic -Wall -Wextra -Wdeclaration-after-statement \
-	-Wno-unused-parameter -Wshadow -Wunused-macros -Werror=strict-prototypes \
-	-Werror=implicit -Werror=return-type -Werror=incompatible-pointer-types \
-	-Wfloat-conversion
-
-# CFLAGS / LDFLAGS
-PKGS      = wayland-server xkbcommon libinput $(XLIBS)
-DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(WLR_INCS) $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CFLAGS)
-LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` $(WLR_LIBS) -lm $(LIBS)
-
-all: dwl
-dwl: dwl.c client.h config.h ime.h util.h config.mk cursor-shape-v1-protocol.h \
-	ext-image-copy-capture-v1-protocol.h \
-	pointer-constraints-unstable-v1-protocol.h wlr-layer-shell-unstable-v1-protocol.h \
-	wlr-output-power-management-unstable-v1-protocol.h xdg-shell-protocol.h
-	$(CC) dwl.c $(DWLCFLAGS) $(LDFLAGS) $(LDLIBS) -o $@
-
-# wayland-scanner is a tool which generates C headers and rigging for Wayland
-# protocols, which are specified in XML. wlroots requires you to rig these up
-# to your build system yourself and provide them in the include path.
-WAYLAND_SCANNER   = `$(PKG_CONFIG) --variable=wayland_scanner wayland-scanner`
-WAYLAND_PROTOCOLS = `$(PKG_CONFIG) --variable=pkgdatadir wayland-protocols`
-
-cursor-shape-v1-protocol.h:
-	$(WAYLAND_SCANNER) enum-header \
-		$(WAYLAND_PROTOCOLS)/staging/cursor-shape/cursor-shape-v1.xml $@
-ext-image-copy-capture-v1-protocol.h:
-	$(WAYLAND_SCANNER) enum-header \
-		$(WAYLAND_PROTOCOLS)/staging/ext-image-copy-capture/ext-image-copy-capture-v1.xml $@
-pointer-constraints-unstable-v1-protocol.h:
-	$(WAYLAND_SCANNER) enum-header \
-		$(WAYLAND_PROTOCOLS)/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml $@
-wlr-layer-shell-unstable-v1-protocol.h:
-	$(WAYLAND_SCANNER) enum-header \
-		protocols/wlr-layer-shell-unstable-v1.xml $@
-wlr-output-power-management-unstable-v1-protocol.h:
-	$(WAYLAND_SCANNER) server-header \
-		protocols/wlr-output-power-management-unstable-v1.xml $@
-xdg-shell-protocol.h:
-	$(WAYLAND_SCANNER) server-header \
-		$(WAYLAND_PROTOCOLS)/stable/xdg-shell/xdg-shell.xml $@
-
-config.h:
-	cp config.def.h $@
-clean:
-	rm -f dwl *.o *-protocol.h
-
-dist: clean
-	mkdir -p dwl-$(VERSION)
-	cp -R LICENSE* Makefile CHANGELOG.md README.md client.h config.def.h \
-		config.mk protocols dwl.1 dwl.c ime.h util.h dwl.desktop \
-		dwl-$(VERSION)
-	tar -caf dwl-$(VERSION).tar.gz dwl-$(VERSION)
-	rm -rf dwl-$(VERSION)
-
-install: dwl
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	rm -f $(DESTDIR)$(PREFIX)/bin/dwl
-	cp -f dwl $(DESTDIR)$(PREFIX)/bin
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/dwl
-	mkdir -p $(DESTDIR)$(MANDIR)/man1
-	cp -f dwl.1 $(DESTDIR)$(MANDIR)/man1
-	chmod 644 $(DESTDIR)$(MANDIR)/man1/dwl.1
-	mkdir -p $(DESTDIR)$(DATADIR)/wayland-sessions
-	cp -f dwl.desktop $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
-	chmod 644 $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
-uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/dwl $(DESTDIR)$(MANDIR)/man1/dwl.1 \
-		$(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
-#+end_src
 
 ** xdg-desktop-portal
 *** xdg-desktop-portal config
