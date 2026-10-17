@@ -4520,9 +4520,11 @@ overlay_color = 0x14a57cff
 # reload config
 "SUPER+r" = "reload_config"
 
-# menu and terminal
-"SUPER+a" = "spawn,tofi-drun"
+# tofi open on current tag using cursor position
+"SUPER+a" = "spawn_shell,tofi-drun --output=$(mmsg get cursorpos | jq -r '.monitor')"
+# alacritty 
 "SUPER+SHIFT+Return" = "spawn,alacritty"
+# emacs
 "SUPER+ctrl+Return" = "spawn,emacsclient -a= -c"
 
 # exit
@@ -4969,7 +4971,7 @@ result-spacing = 18
 selection-color = #eeeeee
 default-result-color = #bbbbbb
 text-color = #bbbbbb
-width = 75%
+width = 100%
 selection-background = #005577
 background-color = #222222
 prompt-background=#222222
