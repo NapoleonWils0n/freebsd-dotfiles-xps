@@ -1,0 +1,28 @@
+# Center screen placement
+anchor = center
+width = 800
+height = 400
+num-results = 8
+result-spacing = 10
+
+# Theme consistency (#222222 bg, #005577 selection blue)
+background-color = #222222
+text-color = #bbbbbb
+default-result-color = #bbbbbb
+prompt-color = #eeeeee
+input-color = #eeeeee
+selection-color = #eeeeee
+selection-background = #005577
+
+font = "/usr/local/share/fonts/noto/NotoSansMono-Bold.ttf"
+font-size = 12
+border-width = 0
+outline-width = 0
+padding-top = 10
+padding-bottom = 10
+padding-left = 10
+padding-right = 10
+selection-background-padding = 4
+default-result-background-padding = 4
+prompt-text = ""
+prompt-background = #222222

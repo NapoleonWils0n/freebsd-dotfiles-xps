@@ -94,7 +94,7 @@ user_pref("general.smoothScroll", false);
 user_pref("geo.enabled", false);
 // general
 user_pref("gfx.webrender.all", true);
-user_pref("layout.css.devPixelsPerPx", "1");
+//user_pref("layout.css.devPixelsPerPx", "-1.0");
 // media autoplay = 5
 user_pref("media.autoplay.default", "5");
 user_pref("media.navigator.enabled", false);
@@ -145,3 +145,5 @@ user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.preferences.aiControls", false);
 // disable emoji picker
 user_pref("widget.gtk.native-emoji-dialog", false);
+// obs screen sharing fix
+//user_pref("widget.wayland.opaque-region.enabled", false);

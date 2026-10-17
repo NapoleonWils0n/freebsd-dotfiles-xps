@@ -4941,6 +4941,7 @@ menuitem:hover {
 
 ** tofi
 *** tofi config
+**** tofi menu
 
 #+NAME: tofi
 #+BEGIN_SRC conf
@@ -4976,19 +4977,69 @@ selection-background-padding = 4
 default-result-background-padding = 4
 #+END_SRC
 
+**** tofi obs
+
+#+NAME: tofi-obs
+#+begin_src conf
+# Center screen placement
+anchor = center
+width = 800
+height = 400
+num-results = 8
+result-spacing = 10
+
+# Theme consistency (#222222 bg, #005577 selection blue)
+background-color = #222222
+text-color = #bbbbbb
+default-result-color = #bbbbbb
+prompt-color = #eeeeee
+input-color = #eeeeee
+selection-color = #eeeeee
+selection-background = #005577
+
+font = "/usr/local/share/fonts/noto/NotoSansMono-Bold.ttf"
+font-size = 12
+border-width = 0
+outline-width = 0
+padding-top = 10
+padding-bottom = 10
+padding-left = 10
+padding-right = 10
+selection-background-padding = 4
+default-result-background-padding = 4
+prompt-text = ""
+prompt-background = #222222
+#+end_src
+
 *** tofi tangle
-**** home dir
+**** tofi menu
+***** home dir
 
 #+NAME: tofi-home-dir
 #+BEGIN_SRC conf :tangle "~/.config/tofi/config"
 <<tofi>>
 #+END_SRC
 
-**** current dir
+***** current dir
 
 #+NAME: tofi-current-dir
 #+BEGIN_SRC conf :tangle ".config/tofi/config"
 <<tofi>>
+#+END_SRC
+
+**** tofi obs
+***** home dir
+
+#+NAME: tofi-obs-home-dir
+#+BEGIN_SRC conf :tangle "~/.config/tofi/config-obs"
+<<tofi-obs>>
+#+END_SRC
+
+***** current dir
+
+#+NAME: tofi-obs-current-dir
+#+BEGIN_SRC conf :tangle ".config/tofi/config-obs"
+<<tofi-obs>>
 #+END_SRC
 
 ** wlr-which-key
@@ -6348,7 +6399,7 @@ user_pref("general.smoothScroll", false);
 user_pref("geo.enabled", false);
 // general
 user_pref("gfx.webrender.all", true);
-user_pref("layout.css.devPixelsPerPx", "1");
+//user_pref("layout.css.devPixelsPerPx", "-1.0");
 // media autoplay = 5
 user_pref("media.autoplay.default", "5");
 user_pref("media.navigator.enabled", false);
@@ -6399,6 +6450,8 @@ user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.preferences.aiControls", false);
 // disable emoji picker
 user_pref("widget.gtk.native-emoji-dialog", false);
+// obs screen sharing fix
+//user_pref("widget.wayland.opaque-region.enabled", false);
 #+end_src
 
 **** userChrome.css
@@ -7023,23 +7076,24 @@ xkb_symbols "swap_sterling_numbersign" {
 #+NAME: xdg-desktop-portal
 #+BEGIN_SRC conf
 [preferred]
-default=wlr
+default=gtk
 org.freedesktop.impl.portal.ScreenCast=wlr
 org.freedesktop.impl.portal.Screenshot=wlr
+org.freedesktop.impl.portal.Inhibit=none
 #+END_SRC
 
 *** xdg-desktop-portal tangle
 **** home dir
 
 #+NAME: xdg-desktop-portal-home-dir
-#+BEGIN_SRC conf :tangle "~/.config/xdg-desktop-portal/portals.conf"
+#+BEGIN_SRC conf :tangle "~/.config/xdg-desktop-portal/mango-portals.conf"
 <<xdg-desktop-portal>>
 #+END_SRC
 
 **** current dir
 
 #+NAME: xdg-desktop-portal-current-dir
-#+BEGIN_SRC conf :tangle ".config/xdg-desktop-portal/portals.conf"
+#+BEGIN_SRC conf :tangle ".config/xdg-desktop-portal/mango-portals.conf"
 <<xdg-desktop-portal>>
 #+END_SRC
 
@@ -7051,8 +7105,8 @@ org.freedesktop.impl.portal.Screenshot=wlr
 [screencast]
 output_name=eDP-1
 max_fps=30
-chooser_type=simple
-chooser_cmd=slurp -f %o -or
+chooser_type=dmenu
+chooser_cmd = tofi --config ~/.config/tofi/config-obs
 #+END_SRC
 
 *** xdg-desktop-portal tangle
