@@ -2040,6 +2040,16 @@ It is a way for multiple applications to share a single configuration (in Emacs 
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
+  ;; gemini config for gptel (Free Tier Optimized)
+  (setq gptel-model 'gemini-3.8-flash
+        gptel-backend (gptel-make-gemini "Gemini"
+                        :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                        :stream t
+                        :models '(gemini-3.8-flash
+                                  gemini-3.6-flash
+                                  gemini-2.5-flash
+                                  gemma-4-31b-it)))
+
   ;; ollama
   (setq-default gptel-model 'qwen3.5:4b)
   (setq gptel-backend (gptel-make-ollama "Ollama"
@@ -2059,6 +2069,14 @@ It is a way for multiple applications to share a single configuration (in Emacs 
 
   (add-to-list 'display-buffer-alist
                '("^*Ollama*" display-buffer-same-window))
+
+
+;; ----------------------------------------------------------------------------------
+;; display the Gemini buffer in same window
+;; ----------------------------------------------------------------------------------
+
+  (add-to-list 'display-buffer-alist
+     '("^*Gemini*" display-buffer-same-window))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -3442,6 +3460,8 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/init.el"
 <<init.el>>
 #+END_SRC
+
+#+RESULTS: emacs-init.el-current-dir
 
 **** early-init.el
 ***** home dir
