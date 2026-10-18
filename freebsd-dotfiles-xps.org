@@ -4373,7 +4373,6 @@ end)
 [global]
 
 exec_once = ["mangobar"]
-circle_layout = ["tile", "monocle", "vertical_tile", "scroller", "grid"]
 
 # More option see https://github.com/DreamMaoMao/mango/wiki/
 # Window effect
@@ -4546,6 +4545,9 @@ overlay_color = 0x14a57cff
 # tofi window switcher
 "SUPER+w" = "spawn_shell,wlrctl toplevel activate title:\"$(wlrctl toplevel list | awk -F': ' '{print $2}' | tofi --output=$(mmsg get cursorpos | jq -r '.monitor'))\""
 
+# switch layouts with tofi
+"SUPER+n" = "spawn_shell,mmsg dispatch setlayout,$(printf 'tile\nscroller\nmonocle\ngrid\ndeck\ncenter_tile\nvertical_tile\nright_tile\nvertical_scroller\nvertical_grid\nvertical_deck\ndwindle\nfair\nvertical_fair\n' | tofi --output=$(mmsg get cursorpos | jq -r '.monitor'))"
+
 # alacritty 
 "SUPER+SHIFT+Return" = "spawn,alacritty"
 
@@ -4607,9 +4609,6 @@ overlay_color = 0x14a57cff
 
 #dwindle layout(manual split mode)
 "alt+shift+Return" = "dwindle_toggle_split_direction"
-
-# switch layout
-"SUPER+n" = "switch_layout"
 
 # tag switch
 "SUPER+Left" = "viewtoleft,0"
@@ -4983,7 +4982,7 @@ height = 32
 hint-font = false
 horizontal = true
 min-input-width = 0
-num-results = 10
+num-results = 15
 outline-width = 0
 padding-bottom = 0
 padding-left = 0
