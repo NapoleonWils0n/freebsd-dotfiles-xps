@@ -7139,6 +7139,40 @@ chooser_cmd = tofi --config ~/.config/tofi/config-obs
 <<xdg-desktop-portal-wlr>>
 #+END_SRC
 
+** org-mcp
+*** org-mcp config
+
+#+NAME: org-mcp
+#+BEGIN_SRC toml
+[org]
+org_directory = "~/git/cerberus"
+org_todo_keywords = ["TODO", "|", "DONE"]
+org_auto_created_property = false
+org_auto_closed_timestamp = false
+
+[logging]
+level = "info"
+file = "~/.local/share/org-mcp-server/logs/server.log"
+
+[cli]
+default_format = "plain"  # plain | json
+#+END_SRC
+
+*** org-mcp tangle
+**** home dir
+
+#+NAME: org-mcp-home-dir
+#+BEGIN_SRC toml :tangle "~/.config/org-mcp/config.toml"
+<<org-mcp>>
+#+END_SRC
+
+**** current dir
+
+#+NAME: org-mcp-current-dir
+#+BEGIN_SRC toml :tangle ".config/org-mcp/config.toml"
+<<org-mcp>>
+#+END_SRC
+
 ** pkg prime-list 
 
 #+NAME: pkg-prime-list

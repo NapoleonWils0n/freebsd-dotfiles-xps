@@ -1,0 +1,12 @@
+[org]
+org_directory = "~/git/cerberus"
+org_todo_keywords = ["TODO", "|", "DONE"]
+org_auto_created_property = false
+org_auto_closed_timestamp = false
+
+[logging]
+level = "info"
+file = "~/.local/share/org-mcp-server/logs/server.log"
+
+[cli]
+default_format = "plain"  # plain | json
