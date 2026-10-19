@@ -2040,16 +2040,6 @@ It is a way for multiple applications to share a single configuration (in Emacs 
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
-  ;; gemini config for gptel (Free Tier Optimized)
-  (setq gptel-model 'gemini-3.8-flash
-        gptel-backend (gptel-make-gemini "Gemini"
-                        :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
-                        :stream t
-                        :models '(gemini-3.8-flash
-                                  gemini-3.6-flash
-                                  gemini-2.5-flash
-                                  gemma-4-31b-it)))
-
   ;; ollama
   (setq-default gptel-model 'qwen3.5:4b)
   (setq gptel-backend (gptel-make-ollama "Ollama"
@@ -2069,14 +2059,6 @@ It is a way for multiple applications to share a single configuration (in Emacs 
 
   (add-to-list 'display-buffer-alist
                '("^*Ollama*" display-buffer-same-window))
-
-
-;; ----------------------------------------------------------------------------------
-;; display the Gemini buffer in same window
-;; ----------------------------------------------------------------------------------
-
-  (add-to-list 'display-buffer-alist
-     '("^*Gemini*" display-buffer-same-window))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -2121,6 +2103,11 @@ It is a way for multiple applications to share a single configuration (in Emacs 
 
 (with-eval-after-load 'gptel
   (add-to-list 'gptel-directives
+               '(org . "You are an assistant querying local Emacs Org files.
+When the user asks to find an org file about a topic, use `org-search` to locate it.
+Automatically prepend `~/git/cerberus/` to the returned relative file path and print the file path,
+then read the text of that file using the read_file tool.
+And follow any instructions the user gives you in regard to the file")
                '(web-search . "Use the mcp-searxng tools to answer the prompt.")))
 
 
@@ -2154,6 +2141,9 @@ gptel is a simple Large Language Model chat client for Emacs, with support for m
   (mcp-hub-servers 
    `(("searxng" . (
       :command "/home/djwilcox/bin/mcp-searxng-enhanced"
+      ))
+     ("org-mode" . (
+      :command "/home/djwilcox/bin/org-mcp-server"
       ))))
   :config
   (require 'mcp-hub))
@@ -3460,8 +3450,6 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/init.el"
 <<init.el>>
 #+END_SRC
-
-#+RESULTS: emacs-init.el-current-dir
 
 **** early-init.el
 ***** home dir

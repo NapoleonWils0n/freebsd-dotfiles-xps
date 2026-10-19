@@ -1528,6 +1528,11 @@
 
 (with-eval-after-load 'gptel
   (add-to-list 'gptel-directives
+               '(org . "You are an assistant querying local Emacs Org files.
+When the user asks to find an org file about a topic, use `org-search` to locate it.
+Automatically prepend `~/git/cerberus/` to the returned relative file path and print the file path,
+then read the text of that file using the read_file tool.
+And follow any instructions the user gives you in regard to the file")
                '(web-search . "Use the mcp-searxng tools to answer the prompt.")))
 
 
@@ -1548,6 +1553,9 @@
   (mcp-hub-servers 
    `(("searxng" . (
       :command "/home/djwilcox/bin/mcp-searxng-enhanced"
+      ))
+     ("org-mode" . (
+      :command "/home/djwilcox/bin/org-mcp-server"
       ))))
   :config
   (require 'mcp-hub))
