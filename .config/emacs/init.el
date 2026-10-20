@@ -1465,6 +1465,14 @@
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
+  ;; gemini
+  (setq gptel-backend (gptel-make-gemini "Gemini"
+                        :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                        :stream t
+                        :models '(gemma-4-26b-a4b-it
+                                  gemini-3-flash-preview
+                                  gemini-2.5-flash)))
+
   ;; ollama
   (setq-default gptel-model 'qwen3.5:4b)
   (setq gptel-backend (gptel-make-ollama "Ollama"
@@ -1484,6 +1492,14 @@
 
   (add-to-list 'display-buffer-alist
                '("^*Ollama*" display-buffer-same-window))
+
+
+;; ----------------------------------------------------------------------------------
+;; display the Gemini buffer in same window
+;; ----------------------------------------------------------------------------------
+
+  (add-to-list 'display-buffer-alist
+               '("^*Gemini*" display-buffer-same-window))
 
 
 ;; ----------------------------------------------------------------------------------
