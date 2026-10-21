@@ -2464,6 +2464,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 ****** create_file
 
 #+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
 ;; ----------------------------------------------------------------------------------
 ;; gptel-tools file tools
 ;; ----------------------------------------------------------------------------------
