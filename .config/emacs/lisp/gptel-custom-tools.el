@@ -43,6 +43,27 @@
  :category "filesystem")
 
 ;; ----------------------------------------------------------------------------------
+;; gptel-tools search directories
+;; ----------------------------------------------------------------------------------
+
+(gptel-make-tool
+ :function (lambda (path query)
+             (let* ((resolved-path (expand-file-name path))
+                    (files (directory-files-recursively resolved-path "" t)))
+               (seq-filter (lambda (file)
+                             (string-match-p (regexp-quote query) file))
+                           files)))
+ :name "search_directories"
+ :description "Search for files within a given directory path that match a query string."
+ :args '((:name "path"
+          :type string
+          :description "The directory path to look inside (supports ~, absolute paths, or relative paths).")
+         (:name "query"
+          :type string
+          :description "The subject or keyword to search for."))
+ :category "filesystem")
+
+;; ----------------------------------------------------------------------------------
 ;; gptel-tools edit file
 ;; ----------------------------------------------------------------------------------
 

@@ -1531,7 +1531,7 @@
 When the user asks to find an org file about a topic, use `org-search` to locate it.
 Automatically prepend `~/git/cerberus/` to the returned relative file path and print the file path,
 then read the text of that file using the read_file tool.
-And follow any instructions the user gives you in regard to the file")
+After reading, if the user requested a specific section or steps, output that section's exact text verbatim rather than summarizing.")
                '(web-search . "Use the mcp-searxng tools to answer the prompt.")))
 
 
