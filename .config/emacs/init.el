@@ -1628,8 +1628,7 @@ After reading, if the user requested a specific section or steps, output that se
 
 (use-package whisper
   ;; Leverage the built-in package-vc features to clone the exact fork branch
-  :vc (:url "https://github.com/sachac/whisper.el"
-       :branch "whisper-insert-text-at-point-function")
+  :vc (:url "https://github.com/natrys/whisper.el")
   :ensure t
   :bind ("C-c w" . whisper-run)
   :config
