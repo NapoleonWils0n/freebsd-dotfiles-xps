@@ -1690,7 +1690,58 @@ After reading, if the user requested a specific section or steps, output that se
             "-np"
             "-nt"
             "-f" file))
-  (setq whisper-insert-text-at-point-function #'insert))
+
+;;  (setq whisper-insert-text-at-point-function #'insert))
+
+
+(setq whisper-insert-text-at-point
+        '(sacha-whisper-handle-commands
+          )))
+
+(defun sacha-whisper-handle-commands (text)
+	(interactive (list (if (region-active-p)
+	 (buffer-substring (region-beginning) (region-end))
+	 (buffer-substring (line-beginning-position) (line-end-position)))))
+	(let (done entry func num-args)
+		(while (and text (not (string= text "")) (not done))
+			(setq entry
+						(seq-find
+						 (lambda (row)
+							 (string-match (format "^\\(?:%s\\)\\>" (car row)) text))
+						 sacha-whisper-commands))
+			(if (null entry)
+					(setq done t)
+				(setq func (cdr entry))
+				(setq num-args (and func (func-arity func)))
+				(cond
+				 ((commandp func)
+					(setq text (replace-match "" nil nil text))
+					(call-interactively func))
+				 ((and (functionp func) (>= (cdr num-args) 1))
+					(unless (match-string 1 text)
+						(setq text (replace-match "" nil nil text)))
+					(setq text (funcall func (or (match-string 1 text) text))))
+				 ((functionp func)
+					(setq text (replace-match "" nil nil text))
+					(funcall func))))
+			(when (string-match "^[ \\.?,]+\\(?:and \\)?" text)
+				(setq text (replace-match "" nil nil text))))
+		(when (string= text "") (setq text nil))
+		text))
+
+(defvar sacha-whisper-commands
+  `(("scroll up" . scroll-down-command)
+    ("scrolling up" . scroll-down-command)
+    ("page up" . scroll-down-command)
+    ("scroll down" . scroll-up-command)
+    ("scroll down" . scroll-up-command)
+    ("page down" . scroll-up-command)
+    ("next page" . scroll-up-command)
+    ("run the buffer" . eval-buffer)
+    ("mark buffer" . mark-whole-buffer)
+    ("run buffer" . eval-buffer)
+    ("mark paragraph" . mark-paragraph)
+    ("expand" . expand-region)))
 
 ;; ----------------------------------------------------------------------------------
 ;; emamux
