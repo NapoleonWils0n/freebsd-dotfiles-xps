@@ -1716,7 +1716,6 @@ After reading, if the user requested a specific section or steps, output that se
 	(interactive (list (if (region-active-p)
 	 (buffer-substring (region-beginning) (region-end))
 	 (buffer-substring (line-beginning-position) (line-end-position)))))
-        (message "WHISPER RAW TEXT: %S" text)
 	(let (done entry func num-args)
 		(while (and text (not (string= text "")) (not done))
 			(setq entry
