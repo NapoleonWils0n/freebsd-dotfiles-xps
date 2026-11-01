@@ -1656,7 +1656,10 @@ After reading, if the user requested a specific section or steps, output that se
                               my-whisper-dir)))
 
   ;; Use the correct hook name evaluated right before recording starts
-  (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename)
+  ;;(add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename)
+
+  ;; execute whisper-before-transcription-hook with with-eval-after-load
+  (setq whisper-before-transcription-hook nil)
 
   ;; ffmpeg wth rnnoise, noise gate, compressor and limiter
   (defun whisper--record-command (output-file)
@@ -1692,6 +1695,10 @@ After reading, if the user requested a specific section or steps, output that se
             "-f" file)))
 
 ;;  (setq whisper-insert-text-at-point-function #'insert))
+
+;; set whisper output directory
+(with-eval-after-load 'whisper
+  (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
 
 
 ;; note
