@@ -1656,7 +1656,7 @@ After reading, if the user requested a specific section or steps, output that se
                               my-whisper-dir)))
 
   ;; Use the correct hook name evaluated right before recording starts
-  (add-hook 'whisper-before-recording-hook #'my-whisper-set-temp-filename)
+  (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename)
 
   ;; ffmpeg wth rnnoise, noise gate, compressor and limiter
   (defun whisper--record-command (output-file)
