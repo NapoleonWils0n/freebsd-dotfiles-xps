@@ -2345,9 +2345,10 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 ;;  (setq whisper-insert-text-at-point-function #'insert))
 
 
+(with-eval-after-load 'whisper
 (setq whisper-insert-text-at-point
         '(sacha-whisper-handle-commands
-          )))
+          ))))
 
 (defun sacha-whisper-handle-commands (text)
 	(interactive (list (if (region-active-p)

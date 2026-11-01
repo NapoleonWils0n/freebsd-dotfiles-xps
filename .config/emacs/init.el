@@ -1694,9 +1694,10 @@ After reading, if the user requested a specific section or steps, output that se
 ;;  (setq whisper-insert-text-at-point-function #'insert))
 
 
+(with-eval-after-load 'whisper
 (setq whisper-insert-text-at-point
         '(sacha-whisper-handle-commands
-          )))
+          ))))
 
 (defun sacha-whisper-handle-commands (text)
 	(interactive (list (if (region-active-p)
