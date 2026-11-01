@@ -1689,27 +1689,34 @@ After reading, if the user requested a specific section or steps, output that se
             "-l" whisper-language
             "-np"
             "-nt"
-            "-f" file))
+            "-f" file)))
 
 ;;  (setq whisper-insert-text-at-point-function #'insert))
 
 
-(with-eval-after-load 'whisper
-(setq whisper-insert-text-at-point
-        '(sacha-whisper-handle-commands
-          ))))
+;; note
+;; when i say mark buffer its output into the buffer
+;; and the command isnt run to the mark the buffer
+;; but if i select the text and run M-x sacha-whisper-handle-commands it works and selects the buffer
 
+(with-eval-after-load 'whisper
+  (setq whisper-insert-text-at-point
+        '(sacha-whisper-handle-commands)))
+
+
+;;;###autoload
 (defun sacha-whisper-handle-commands (text)
 	(interactive (list (if (region-active-p)
 	 (buffer-substring (region-beginning) (region-end))
 	 (buffer-substring (line-beginning-position) (line-end-position)))))
+        (message "WHISPER RAW TEXT: %S" text)
 	(let (done entry func num-args)
 		(while (and text (not (string= text "")) (not done))
 			(setq entry
-						(seq-find
-						 (lambda (row)
-							 (string-match (format "^\\(?:%s\\)\\>" (car row)) text))
-						 sacha-whisper-commands))
+                	(seq-find
+                	 (lambda (row)
+                		 (string-match (format "^\\(?:%s\\)\\>" (car row)) text))
+                	 sacha-whisper-commands))
 			(if (null entry)
 					(setq done t)
 				(setq func (cdr entry))
@@ -1735,14 +1742,16 @@ After reading, if the user requested a specific section or steps, output that se
     ("scrolling up" . scroll-down-command)
     ("page up" . scroll-down-command)
     ("scroll down" . scroll-up-command)
-    ("scroll down" . scroll-up-command)
     ("page down" . scroll-up-command)
     ("next page" . scroll-up-command)
     ("run the buffer" . eval-buffer)
     ("mark buffer" . mark-whole-buffer)
+    ("Foo" . mark-whole-buffer)
+    ("Foo." . mark-whole-buffer)
     ("run buffer" . eval-buffer)
     ("mark paragraph" . mark-paragraph)
     ("expand" . expand-region)))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; emamux
