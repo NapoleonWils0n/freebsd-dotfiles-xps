@@ -1633,9 +1633,9 @@ After reading, if the user requested a specific section or steps, output that se
 (use-package whisper
   ;; Leverage the built-in package-vc features to clone the exact fork branch
   :vc (:url "https://github.com/sachac/whisper.el"
-       :branch "whisper-insert-text-at-point-function")
+       :branch "master")
   :ensure t
-  :bind ("C-c w" . whisper-run)
+;;  :bind ("C-z" . whisper-run)
   :config
   (setq whisper-install-whispercpp nil)
   (setq whisper-model "small")
@@ -1686,13 +1686,14 @@ After reading, if the user requested a specific section or steps, output that se
         "-ar" "16000"
         "-y" ,output-file))
 
-  (defun whisper-command (file)
-      (list "whisper-cli"
-            "-m" (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin")
-            "-l" whisper-language
-            "-np"
-            "-nt"
-            "-f" file)))
+(defun whisper--find-whispercpp-server ()
+    (expand-file-name "~/bin/whisper-server"))
+
+(defun whisper--model-file (&rest _)
+    (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin"))
+
+(setq whisper-server-mode 'local)) ;; whisper use package end
+
 
 ;; set whisper output directory
 (with-eval-after-load 'whisper
@@ -1704,37 +1705,49 @@ After reading, if the user requested a specific section or steps, output that se
         '(my-whisper-handle-commands
           insert)))
 
-;; handle whisper commands
+;; Bind C-z globally to whisper-run, overriding Evil mode's default binding
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "C-z") 'whisper-run)
+  (define-key evil-insert-state-map (kbd "C-z") 'whisper-run)
+  (define-key evil-visual-state-map (kbd "C-z") 'whisper-run)
+  (define-key evil-motion-state-map (kbd "C-z") 'whisper-run))
+
+;; handle whisper commands with whisper-server
 (defun my-whisper-handle-commands (text)
-	(interactive (list (if (region-active-p)
-	 (buffer-substring (region-beginning) (region-end))
-	 (buffer-substring (line-beginning-position) (line-end-position)))))
-	(let (done entry func num-args)
-		(while (and text (not (string= text "")) (not done))
-			(setq entry
-                	(seq-find
-                	 (lambda (row)
-                		 (string-match (format "^\\(?:%s\\)\\>" (car row)) text))
-                	 my-whisper-commands))
-			(if (null entry)
-					(setq done t)
-				(setq func (cdr entry))
-				(setq num-args (and func (func-arity func)))
-				(cond
-				 ((commandp func)
-					(setq text (replace-match "" nil nil text))
-					(call-interactively func))
-				 ((and (functionp func) (>= (cdr num-args) 1))
-					(unless (match-string 1 text)
-						(setq text (replace-match "" nil nil text)))
-					(setq text (funcall func (or (match-string 1 text) text))))
-				 ((functionp func)
-					(setq text (replace-match "" nil nil text))
-					(funcall func))))
-			(when (string-match "^[ \\.?,]+\\(?:and \\)?" text)
-				(setq text (replace-match "" nil nil text))))
-		(when (string= text "") (setq text nil))
-                (or text "")))
+  (interactive (list (if (region-active-p)
+                         (buffer-substring (region-beginning) (region-end))
+                       (buffer-substring (line-beginning-position) (line-end-position)))))
+  ;; Clean up leading spaces, quotes, or punctuation returned by the server
+  (setq text (replace-regexp-in-string "^[[:space:]\"',.!?]+" "" text))
+  (let (done entry func num-args)
+    (while (and text (not (string= text "")) (not done))
+      (setq entry
+            (seq-find
+             (lambda (row)
+               (string-match (format "^\\(?:%s\\)\\>" (car row)) (downcase text)))
+             my-whisper-commands))
+      (if (null entry)
+          (setq done t)
+        (setq func (cdr entry))
+        (setq num-args (and func (func-arity func)))
+        (cond
+         ((commandp func)
+          (setq text (replace-match "" nil nil text))
+          (call-interactively func))
+         ((and (functionp func) (>= (cdr num-args) 1))
+          (unless (match-string 1 text)
+            (setq text (replace-match "" nil nil text)))
+          (setq text (funcall func (or (match-string 1 text) text))))
+         ((functionp func)
+          (setq text (replace-match "" nil nil text))
+          (funcall func))))
+      (when (string-match "^[[:space:]\\.?,]+\\(?:and \\)?" text)
+        (setq text (replace-match "" nil nil text))))
+    (when (string= text "") (setq text nil))
+    (or text "")))
+
+;; Load default bookmarks so bookmark-alist is populated
+(bookmark-maybe-load-default-file)
 
 ;; my whisper commands
 (defvar my-whisper-commands
@@ -1748,8 +1761,16 @@ After reading, if the user requested a specific section or steps, output that se
     ("mark buffer" . mark-whole-buffer)
     ("run buffer" . eval-buffer)
     ("mark paragraph" . mark-paragraph)
+    ("screenshot" . mpv-screenshot)
+    ("control mpv" . hydra-mpv/body)
+    ("open video" . dired-find-file-mpv)
     ("expand" . expand-region)))
 
+;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
+(dolist (bm bookmark-alist)
+  (let ((bm-name (car bm)))
+    (add-to-list 'my-whisper-commands
+                 (cons bm-name (lambda () (interactive) (bookmark-jump bm-name))))))
 
 ;; ----------------------------------------------------------------------------------
 ;; emamux
@@ -1789,7 +1810,7 @@ After reading, if the user requested a specific section or steps, output that se
  '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((whisper :url "https://github.com/sachac/whisper.el" :branch
-              "whisper-insert-text-at-point-function"))))
+              "master"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
