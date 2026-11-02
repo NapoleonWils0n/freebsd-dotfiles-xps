@@ -1624,6 +1624,130 @@ After reading, if the user requested a specific section or steps, output that se
   (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
 
 ;; ----------------------------------------------------------------------------------
+;; whisper-cpp
+;; ----------------------------------------------------------------------------------
+
+;; note: run the following command to install the package
+;; M-x package-vc-install RET https://github.com/sachac/whisper.el RET
+
+(use-package whisper
+  ;; Leverage the built-in package-vc features to clone the exact fork branch
+  :vc (:url "https://github.com/sachac/whisper.el"
+       :branch "whisper-insert-text-at-point-function")
+  :ensure t
+  :bind ("C-c w" . whisper-run)
+  :config
+  (setq whisper-install-whispercpp nil)
+  (setq whisper-model "small")
+  (setq whisper-language "en")
+  (setq whisper-return-cursor-to-start nil)
+  ;; Explicitly tell ffmpeg to use the Open Sound System driver for FreeBSD
+  (setq whisper--ffmpeg-input-format "oss")
+  ;; Point to your primary system microphone device (usually /dev/dsp)
+  (setq whisper--ffmpeg-input-device "/dev/dsp3")
+
+  ;; set the recording directory
+  (defvar my-whisper-dir (expand-file-name "~/video/whisper/"))
+  
+  (defun my-whisper-set-temp-filename ()
+    "Generate a unique timestamped filename inside the custom archive folder."
+    ;; Create the directory dynamically if it doesn't exist yet
+    (unless (file-directory-p my-whisper-dir)
+      (make-directory my-whisper-dir t))
+    (setq whisper--temp-file (expand-file-name
+                              (format-time-string "%Y-%m-%d-%H-%M-%S.wav")
+                              my-whisper-dir)))
+
+  ;; execute whisper-before-transcription-hook with with-eval-after-load
+  (setq whisper-before-transcription-hook nil)
+
+  ;; ffmpeg wth rnnoise, noise gate, compressor and limiter
+  (defun whisper--record-command (output-file)
+      "Produces FFmpeg command to run with RNNoise and audio enhancement filters."
+      (unless (executable-find "ffmpeg")
+        (error "Needs FFmpeg to record audio"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-format)
+        (error "Set a suitable value for whisper--ffmpeg-input-format"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        (error "Set a suitable value for whisper--ffmpeg-input-device"))
+  
+      `("ffmpeg"
+        "-hide_banner"
+        ,@(unless whisper--ffmpeg-input-file
+            (list "-f" whisper--ffmpeg-input-format))
+        "-i" ,(or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        ,@(when (and (not whisper--ffmpeg-input-file) whisper-recording-timeout)
+            (list "-t" (number-to-string whisper-recording-timeout)))
+        "-af" ,(concat "arnndn=m=" (expand-file-name "~/.local/share/rnnoise/sh.rnnn") 
+                       ",agate=threshold=0.05:range=0.03:attack=25:release=150"
+                       ",acompressor=threshold=0.125:ratio=10:attack=6:release=60"
+                       ",volume=7.5dB"
+                       ",alimiter=level_out=0.79:release=60")
+        "-ar" "16000"
+        "-y" ,output-file))
+
+  (defun whisper-command (file)
+      (list "whisper-cli"
+            "-m" (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin")
+            "-l" whisper-language
+            "-np"
+            "-nt"
+            "-f" file)))
+
+;; set whisper output directory
+(with-eval-after-load 'whisper
+  (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
+
+(with-eval-after-load 'whisper
+  (setq whisper-insert-text-at-point
+        '(my-whisper-handle-commands)))
+
+(defun my-whisper-handle-commands (text)
+	(interactive (list (if (region-active-p)
+	 (buffer-substring (region-beginning) (region-end))
+	 (buffer-substring (line-beginning-position) (line-end-position)))))
+	(let (done entry func num-args)
+		(while (and text (not (string= text "")) (not done))
+			(setq entry
+                	(seq-find
+                	 (lambda (row)
+                		 (string-match (format "^\\(?:%s\\)\\>" (car row)) text))
+                	 my-whisper-commands))
+			(if (null entry)
+					(setq done t)
+				(setq func (cdr entry))
+				(setq num-args (and func (func-arity func)))
+				(cond
+				 ((commandp func)
+					(setq text (replace-match "" nil nil text))
+					(call-interactively func))
+				 ((and (functionp func) (>= (cdr num-args) 1))
+					(unless (match-string 1 text)
+						(setq text (replace-match "" nil nil text)))
+					(setq text (funcall func (or (match-string 1 text) text))))
+				 ((functionp func)
+					(setq text (replace-match "" nil nil text))
+					(funcall func))))
+			(when (string-match "^[ \\.?,]+\\(?:and \\)?" text)
+				(setq text (replace-match "" nil nil text))))
+		(when (string= text "") (setq text nil))
+		text))
+
+(defvar my-whisper-commands
+  `(("scroll up" . scroll-down-command)
+    ("scrolling up" . scroll-down-command)
+    ("page up" . scroll-down-command)
+    ("scroll down" . scroll-up-command)
+    ("page down" . scroll-up-command)
+    ("next page" . scroll-up-command)
+    ("run the buffer" . eval-buffer)
+    ("mark buffer" . mark-whole-buffer)
+    ("run buffer" . eval-buffer)
+    ("mark paragraph" . mark-paragraph)
+    ("expand" . expand-region)))
+
+
+;; ----------------------------------------------------------------------------------
 ;; emamux
 ;; ----------------------------------------------------------------------------------
 

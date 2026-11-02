@@ -2270,13 +2270,16 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
 #+end_src
 
-***** COMMENT whisper-cpp
+***** whisper-cpp
 
 #+NAME: emacs-whisper-cpp
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; whisper-cpp
 ;; ----------------------------------------------------------------------------------
+
+;; note: run the following command to install the package
+;; M-x package-vc-install RET https://github.com/sachac/whisper.el RET
 
 (use-package whisper
   ;; Leverage the built-in package-vc features to clone the exact fork branch
@@ -2305,9 +2308,6 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     (setq whisper--temp-file (expand-file-name
                               (format-time-string "%Y-%m-%d-%H-%M-%S.wav")
                               my-whisper-dir)))
-
-  ;; Use the correct hook name evaluated right before recording starts
-  ;;(add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename)
 
   ;; execute whisper-before-transcription-hook with with-eval-after-load
   (setq whisper-before-transcription-hook nil)
@@ -2345,25 +2345,15 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
             "-nt"
             "-f" file)))
 
-;;  (setq whisper-insert-text-at-point-function #'insert))
-
 ;; set whisper output directory
 (with-eval-after-load 'whisper
   (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
 
-
-;; note
-;; when i say mark buffer its output into the buffer
-;; and the command isnt run to the mark the buffer
-;; but if i select the text and run M-x sacha-whisper-handle-commands it works and selects the buffer
-
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
-        '(sacha-whisper-handle-commands)))
+        '(my-whisper-handle-commands)))
 
-
-;;;###autoload
-(defun sacha-whisper-handle-commands (text)
+(defun my-whisper-handle-commands (text)
 	(interactive (list (if (region-active-p)
 	 (buffer-substring (region-beginning) (region-end))
 	 (buffer-substring (line-beginning-position) (line-end-position)))))
@@ -2373,7 +2363,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
                 	(seq-find
                 	 (lambda (row)
                 		 (string-match (format "^\\(?:%s\\)\\>" (car row)) text))
-                	 sacha-whisper-commands))
+                	 my-whisper-commands))
 			(if (null entry)
 					(setq done t)
 				(setq func (cdr entry))
@@ -2394,7 +2384,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 		(when (string= text "") (setq text nil))
 		text))
 
-(defvar sacha-whisper-commands
+(defvar my-whisper-commands
   `(("scroll up" . scroll-down-command)
     ("scrolling up" . scroll-down-command)
     ("page up" . scroll-down-command)
@@ -2408,6 +2398,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("expand" . expand-region)))
 
 #+end_src
+
+#+RESULTS: emacs-whisper-cpp
+: sacha-whisper-commands
 
 ***** emamux
 
