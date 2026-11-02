@@ -2270,7 +2270,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
 #+end_src
 
-***** whisper-cpp
+***** COMMENT whisper-cpp
 
 #+NAME: emacs-whisper-cpp
 #+begin_src emacs-lisp
@@ -2403,8 +2403,6 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("next page" . scroll-up-command)
     ("run the buffer" . eval-buffer)
     ("mark buffer" . mark-whole-buffer)
-    ("Foo" . mark-whole-buffer)
-    ("Foo." . mark-whole-buffer)
     ("run buffer" . eval-buffer)
     ("mark paragraph" . mark-paragraph)
     ("expand" . expand-region)))
