@@ -2349,10 +2349,13 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 (with-eval-after-load 'whisper
   (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
 
+;; run commands or insert text
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
-        '(my-whisper-handle-commands)))
+        '(my-whisper-handle-commands
+          insert)))
 
+;; handle whisper commands
 (defun my-whisper-handle-commands (text)
 	(interactive (list (if (region-active-p)
 	 (buffer-substring (region-beginning) (region-end))
@@ -2382,8 +2385,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 			(when (string-match "^[ \\.?,]+\\(?:and \\)?" text)
 				(setq text (replace-match "" nil nil text))))
 		(when (string= text "") (setq text nil))
-		text))
+                (or text "")))
 
+;; my whisper commands
 (defvar my-whisper-commands
   `(("scroll up" . scroll-down-command)
     ("scrolling up" . scroll-down-command)
@@ -3536,6 +3540,8 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/init.el"
 <<init.el>>
 #+END_SRC
+
+#+RESULTS: emacs-init.el-home-dir
 
 ***** current dir
 

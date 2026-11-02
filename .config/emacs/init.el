@@ -1698,10 +1698,13 @@ After reading, if the user requested a specific section or steps, output that se
 (with-eval-after-load 'whisper
   (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
 
+;; run commands or insert text
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
-        '(my-whisper-handle-commands)))
+        '(my-whisper-handle-commands
+          insert)))
 
+;; handle whisper commands
 (defun my-whisper-handle-commands (text)
 	(interactive (list (if (region-active-p)
 	 (buffer-substring (region-beginning) (region-end))
@@ -1731,8 +1734,9 @@ After reading, if the user requested a specific section or steps, output that se
 			(when (string-match "^[ \\.?,]+\\(?:and \\)?" text)
 				(setq text (replace-match "" nil nil text))))
 		(when (string= text "") (setq text nil))
-		text))
+                (or text "")))
 
+;; my whisper commands
 (defvar my-whisper-commands
   `(("scroll up" . scroll-down-command)
     ("scrolling up" . scroll-down-command)
