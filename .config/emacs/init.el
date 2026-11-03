@@ -1772,7 +1772,9 @@ After reading, if the user requested a specific section or steps, output that se
 ;; fix common voice errors
 (defvar my-common-edits
   '(
-    ("dotfiles" "dot files"))
+    ("dotfiles" "dot files")
+    ("changelog" "change log")
+    )
   "Commonly-misrecognized words or words that need special capitalization.")
 
 (defun my-find-next-fix-point ()

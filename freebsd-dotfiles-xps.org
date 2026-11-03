@@ -2423,7 +2423,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 ;; fix common voice errors
 (defvar my-common-edits
   '(
-    ("dotfiles" "dot files"))
+    ("dotfiles" "dot files")
+    ("changelog" "change log")
+    )
   "Commonly-misrecognized words or words that need special capitalization.")
 
 (defun my-find-next-fix-point ()
@@ -3615,6 +3617,7 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/init.el"
 <<init.el>>
 #+END_SRC
+
 
 **** early-init.el
 ***** home dir
