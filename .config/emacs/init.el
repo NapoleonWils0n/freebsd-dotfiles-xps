@@ -1773,7 +1773,7 @@ After reading, if the user requested a specific section or steps, output that se
 ;;----------------------------------------------------------------------------------
 
 (defvar my-whisper-commands
-  `(("commands" . my-show-whisper-commands-sidebar)
+  `(("commands" . commands-sidebar)
     ("scroll up" . scroll-down-command)
     ("scroll down" . scroll-up-command)
     ("mark buffer" . mark-whole-buffer)
@@ -1790,7 +1790,7 @@ After reading, if the user requested a specific section or steps, output that se
 ;; open side window and list voice commands and actions
 ;;----------------------------------------------------------------------------------
 
-(defun my-show-whisper-commands-sidebar ()
+(defun commands-sidebar ()
   "Display available Whisper voice commands in a neat side window on the right."
   (interactive)
   (let ((buf (get-buffer-create "*Whisper Commands*")))
