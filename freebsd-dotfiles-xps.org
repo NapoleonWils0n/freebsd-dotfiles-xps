@@ -2413,7 +2413,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("run buffer" . eval-buffer)
     ("mark paragraph" . mark-paragraph)
     ("screenshot" . mpv-screenshot)
-    ("control mpv" . hydra-mpv/body)
+    ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
     ("status" . magit-status)
     ("expand" . expand-region)))

@@ -1762,7 +1762,7 @@ After reading, if the user requested a specific section or steps, output that se
     ("run buffer" . eval-buffer)
     ("mark paragraph" . mark-paragraph)
     ("screenshot" . mpv-screenshot)
-    ("control mpv" . hydra-mpv/body)
+    ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
     ("status" . magit-status)
     ("expand" . expand-region)))
