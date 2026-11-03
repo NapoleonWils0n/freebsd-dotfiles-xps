@@ -2,30 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("make"
-  (filename . "~/make/")
-  (front-context-string . "invidious\n  drwx")
-  (rear-context-string . " 3 Jun 13 19:09 ")
-  (position . 74)
-  (last-modified 27181 40415 296295 175000))
-("containers"
- (filename . "~/podman/freebsd-cuda/containers/")
- (front-context-string . "ai\n  drwxr-xr-x ")
- (rear-context-string . " 3 May 27 13:25 ")
- (position . 98)
- (last-modified 27177 61886 814468 676000))
-("changelog"
- (filename . "~/git/changelog/README.org")
- (front-context-string . "#+STARTUP: show2")
- (rear-context-string)
- (position . 1)
- (last-modified 27113 5071 634918 262000))
-("video"
- (filename . "~/git/personal/bookmarks/video.org")
- (front-context-string . "* links\n** [[vid")
- (rear-context-string . "ARTUP: overview\n")
- (position . 42)
- (last-modified 26024 3044 81012 2000))
+(("changelog"
+  (filename . "~/git/changelog/README.org")
+  (front-context-string . "#+STARTUP: show2")
+  (rear-context-string)
+  (position . 1)
+  (last-modified 27113 5071 634918 262000))
 ("dotfiles"
  (filename . "~/git/freebsd/freebsd-dotfiles-xps/freebsd-dotfiles-xps.org")
  (front-context-string . "#+TITLE: Freebsd")
@@ -44,22 +26,6 @@
  (rear-context-string)
  (position . 1)
  (last-modified 25703 35089 410375 479000))
-("feeds"
- (filename . "~/git/personal/feeds/feeds.org")
- (front-context-string . "* elfeed :elfeed")
- (rear-context-string . "TARTUP: content\n")
- (position . 20)
- (last-modified 25692 54791 894815 365000))
-("org-refile-last-stored"
- (filename . "~/git/personal/org/web.org")
- (front-context-string . "** [[https://its")
- (rear-context-string . "lview\" program.\n")
- (position . 173198))
-("root"
- (filename . "/")
- (front-context-string . "bin -> usr/bin\n ")
- (rear-context-string . " 7 Oct 30 23:23 ")
- (position . 197))
 ("home"
  (filename . "~/")
  (front-context-string . "..\n  drwxr-xr-x ")
