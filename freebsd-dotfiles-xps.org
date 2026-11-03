@@ -37,9 +37,9 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 #+NAME: emacs-startup-hook
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t; -*-
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; emacs init.el - also using early-init.el
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Use a hook so the message doesn't get clobbered by other messages.
 (add-hook 'emacs-startup-hook
@@ -55,9 +55,9 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 
 #+NAME: emacs-bootstrap-use-package
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; melpa packages
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Set the archives directly instead of using unless/assoc-default
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -68,9 +68,9 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 (package-initialize)
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Bootstrap use-package
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -86,16 +86,16 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 
 #+NAME: emacs-themes
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; doom-theme : use-package
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; doom themes
 (use-package doom-themes)
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; modus-vivendi-tinted : load-theme
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (load-theme 'modus-vivendi-tinted t)
 #+end_src
@@ -115,9 +115,9 @@ conforming with the highest standard for colour contrast between background and 
 
 #+NAME: emacs-setq
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; general settings : setq
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Save all tempfiles in ~/.config/emacs/backups
 (setq backup-directory-alist '(("." . "~/.config/emacs/backups")))
@@ -254,9 +254,9 @@ conforming with the highest standard for colour contrast between background and 
 
 #+NAME: emacs-tab-bar
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; TAB bar mode
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (setq tab-bar-show 1)                     ;; hide bar if <= 1 tabs open
 (setq tab-bar-close-button-show nil)      ;; hide close tab button
@@ -295,9 +295,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-buffer-list
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; buffer list
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; display Buffer List in same window
 (add-to-list 'display-buffer-alist
@@ -327,9 +327,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-functions
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; functions
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; clear the kill ring
 (defun clear-kill-ring ()
@@ -351,9 +351,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
     (start-process "pinch" nil "pinch" "-i" url)))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; wayland clipboard
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (setq wl-copy-process nil)
 (defun wl-copy (text)
@@ -376,9 +376,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-add-to-list
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; add-to-list
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; mutt
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
@@ -392,9 +392,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-add-hook
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; add-hook
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Make shebang (#!) file executable when saved
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
@@ -411,9 +411,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-keymap-global-set
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; keymap-global-set
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; org-capture
 (keymap-global-set "C-c c" 'org-capture)
@@ -432,9 +432,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-keymap-set
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; keymap-set
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (keymap-set global-map "C-c h" 'iedit-mode)
 ;;(keymap-set global-map "C-c l" 'org-store-link)
@@ -452,9 +452,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-fonts
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; fonts
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (defvar efs/default-font-size 180)
 (defvar efs/default-variable-font-size 180)
@@ -464,9 +464,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-set-face-attribute
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; set-face-attribute
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Set the default pitch face
 (set-face-attribute 'default nil :font "Fira Code" :height efs/default-font-size)
@@ -494,9 +494,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: doom-modeline-now-playing
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; doom-modeline now playing
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package doom-modeline-now-playing
   :after doom-modeline
@@ -545,9 +545,9 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 #+NAME: emacs-doom-modeline
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; doom-modeline
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package doom-modeline
   :init
@@ -565,7 +565,7 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
   (require 'doom-modeline-now-playing)
   (doom-modeline-mode 1)
   (doom-modeline-def-modeline 'main
-    '(bar matches buffer-info remote-host buffer-position selection-info now-playing)
+    '(matches buffer-info remote-host buffer-position selection-info now-playing)
     '(misc-info minor-modes input-method buffer-encoding major-mode process vcs check battery time)))
 #+end_src
 
@@ -784,9 +784,9 @@ The undo-tree-mode provided by this package replaces Emacs' undo system with a s
 
 #+NAME: emacs-vertico
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Vertico
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Improved bridge for Corfu/Vertico compatibility
 (unless (fboundp 'set-local)
@@ -823,9 +823,9 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 
 #+NAME: emacs-marginalia
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Marginalia
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package marginalia
   :init
@@ -846,9 +846,9 @@ This package provides marginalia-mode which adds marginalia to the minibuffer co
 
 #+NAME: emacs-consult
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Consult
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package consult
   :bind
@@ -874,9 +874,9 @@ Consult provides search and navigation commands based on the Emacs completion fu
 
 #+NAME: emacs-orderless
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Orderless
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package orderless
   :init
@@ -896,9 +896,9 @@ This package provides an orderless completion style that divides the pattern int
 
 #+NAME: emacs-embark
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Embark
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package embark
   :bind
@@ -962,9 +962,9 @@ Embark makes it easy to choose a command to run based on what is near point, bot
 
 #+NAME: emacs-dired
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; dired
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; dired hide long listing by default -- Define this function early and globally
 (defun my-dired-mode-setup ()
@@ -1000,9 +1000,9 @@ Embark makes it easy to choose a command to run based on what is near point, bot
   (define-key dired-mode-map (kbd "C-x m") 'media-thumbnail-dired-mode))
 
 
-;; ------------------------------------------------------------------------------------------------
+;;------------------------------------------------------------------------------------------------
 ;; side-windows
-;; ------------------------------------------------------------------------------------------------
+;;------------------------------------------------------------------------------------------------
 
 ;; dired-find-file-other-window 
 ;; bound to <S-return>, g O, <normal-state> <S-return>, <normal-state> g O
@@ -1021,9 +1021,9 @@ Embark makes it easy to choose a command to run based on what is near point, bot
                                  (mode-line-format . (""))))))))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; media-thumbnail
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; use ffmpegthumbnailer to create thumbnails for videos
 
@@ -1037,9 +1037,9 @@ Embark makes it easy to choose a command to run based on what is near point, bot
   (setq media-thumbnail-dired-should-hide-details-fn #'ignore))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; imv image viewer
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (defun dired-imv-marked-files ()
   "Open all marked files in a single instance of imv."
@@ -1054,18 +1054,18 @@ Embark makes it easy to choose a command to run based on what is near point, bot
   (define-key dired-mode-map (kbd "C-c i") 'dired-imv-marked-files))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; fd-dired
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package fd-dired
   :init
   (setq fd-dired-display-in-current-window nil))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; async and dired-async (dired-async is part of the async package)
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package async
   :config
@@ -1085,9 +1085,9 @@ Dired makes an Emacs buffer containing a listing of a directory, and optionally 
 
 #+NAME: emacs-ripgrep
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; rip-grep
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package rg
   :config
@@ -1109,9 +1109,9 @@ Ripgrep is a replacement for both grep like (search one file) and ag like (searc
 
 #+NAME: emacs-tramp
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; tramp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package tramp
   :init
@@ -1140,9 +1140,9 @@ TRAMP stands for “Transparent Remote (file) Access, Multiple Protocol”. This
 
 #+NAME: emacs-org-mode
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; org mode
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package org
   :defer t
@@ -1291,9 +1291,9 @@ A GNU Emacs major mode for keeping notes, authoring documents, computational not
 
 #+NAME: emacs-org-tree-slide
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; org tree slide
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package org-tree-slide
   :init
@@ -1361,9 +1361,9 @@ The main purpose of this elisp is to handle each tree in an org buffer as a slid
 
 #+NAME: emacs-mpv
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; mpv.el 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package mpv
   :init
@@ -1391,9 +1391,9 @@ The main purpose of this elisp is to handle each tree in an org buffer as a slid
   ;;   :description description))
   
 
-  ;; ----------------------------------------------------------------------------------
+  ;;----------------------------------------------------------------------------------
   ;; mpv-play-or-append-url
-  ;; ----------------------------------------------------------------------------------
+  ;;----------------------------------------------------------------------------------
   
 
   (defun mpv-play-or-append-url (url)
@@ -1408,9 +1408,9 @@ The main purpose of this elisp is to handle each tree in an org buffer as a slid
       (message "Added to MPV playlist: %s" url)))
 
   
-  ;; ----------------------------------------------------------------------------------
+  ;;----------------------------------------------------------------------------------
   ;; Playback Commands
-  ;; ----------------------------------------------------------------------------------
+  ;;----------------------------------------------------------------------------------
 
 
   ;; mpv-play-remote-video
@@ -1453,9 +1453,9 @@ The main purpose of this elisp is to handle each tree in an org buffer as a slid
         (message "No valid text found on the clipboard."))))
 
 
-  ;; ----------------------------------------------------------------------------------
+  ;;----------------------------------------------------------------------------------
   ;; File Links & Hooks
-  ;; ----------------------------------------------------------------------------------
+  ;;----------------------------------------------------------------------------------
 
   ;; create a mpv: link type that opens a file using mpv-play
   (defun org-mpv-complete-link (&optional arg)
@@ -1607,9 +1607,9 @@ This package is a potpourri of helper functions to control a mpv process via its
 
 #+NAME: emacs-ednc
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; emacs desktop notification center
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; start ednc-mode
 (use-package ednc
@@ -1656,9 +1656,9 @@ The Emacs Desktop Notification Center (EDNC) is an Emacs package written in pure
 
 #+NAME: emacs-hydra
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; hydra
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package hydra
   :after mpv 
@@ -1707,9 +1707,9 @@ This is a package for GNU Emacs that can be used to tie related commands into a 
 
 #+NAME: emacs-google-translate
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; google-translate
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package google-translate
   :config
@@ -1729,9 +1729,9 @@ This package allows to translate the strings using Google Translate service dire
 
 #+NAME: emacs-magit
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; magit
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package magit)
 
@@ -1751,9 +1751,9 @@ Magit is an interface to the version control system Git, implemented as an Emacs
 
 #+NAME: emacs-markdown-mode
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; markdown mode
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode) ; Define mode functions to autoload the package
@@ -1778,9 +1778,9 @@ markdown-mode is a major mode for editing Markdown-formatted text.
 
 #+NAME: emacs-treesitter
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; treesitter
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (require 'treesit)
 
@@ -1827,9 +1827,9 @@ Emacs 29 introduces tree-sitter support, a powerful parsing library that enhance
 
 #+NAME: emacs-yas-snippets
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Snippets (YASnippet)
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package yasnippet
   :init
@@ -1850,9 +1850,9 @@ Emacs 29 introduces tree-sitter support, a powerful parsing library that enhance
   :after yasnippet)
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; YASnippet Completion-At-Point Function (CAPF)
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package yasnippet-capf
   ;; Ensure it loads after YASnippet and Cape (if Cape is being used to combine CAPFs)
@@ -1874,9 +1874,9 @@ YASnippet is a template system for Emacs. It allows you to type an abbreviation 
 
 #+NAME: emacs-corfu
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; corfu
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package corfu
   ;; Install the package if not found
@@ -1914,9 +1914,9 @@ Corfu enhances in-buffer completion with a small completion popup. The current c
 
 #+NAME: emacs-cape
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; cape
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package cape
   :config
@@ -1939,9 +1939,9 @@ Cape provides Completion At Point Extensions which can be used in combination wi
 
 #+NAME: emacs-eglot
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; eglot
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Add local npm binaries to Emacs path
 (let ((local-npm-bin (expand-file-name "~/.local/bin")))
@@ -1975,9 +1975,9 @@ Emacs Polyglot is the Emacs LSP client that stays out of your way:
 
 #+NAME: rust-mode
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; Rust and LSP (Eglot)
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode)
@@ -1998,9 +1998,9 @@ rust-mode makes editing Rust code with Emacs enjoyable.
 
 #+NAME: emacs-auth-source
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; auth-source
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (require 'auth-source)
 (add-to-list 'auth-sources (expand-file-name ".authinfo" user-emacs-directory))
@@ -2018,9 +2018,9 @@ It is a way for multiple applications to share a single configuration (in Emacs 
 
 #+NAME: emacs-gptel
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; gptel
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package gptel
   :init
@@ -2053,16 +2053,16 @@ It is a way for multiple applications to share a single configuration (in Emacs 
                                   translategemma:4b)))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; display the Ollama buffer in same window
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
   (add-to-list 'display-buffer-alist
                '("^*Ollama*" display-buffer-same-window))
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; gptel set org source blocks to use sh and not bash
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
   (defun my/gptel-fix-src-header (beg end)
     (save-excursion
@@ -2073,9 +2073,9 @@ It is a way for multiple applications to share a single configuration (in Emacs 
   (add-hook 'gptel-post-response-functions #'my/gptel-fix-src-header)
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; gptel silence tool output
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
   ;; 1. Define the silence toggle
   (defvar my/gptel-is-busy nil "Flag to track if gptel is waiting for a tool/response.")
@@ -2096,9 +2096,9 @@ It is a way for multiple applications to share a single configuration (in Emacs 
   (add-hook 'gptel-post-response-functions (lambda (&rest _) (setq my/gptel-is-busy nil)))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; gptel mcp-searxng
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (with-eval-after-load 'gptel
   (dolist (directive '(
@@ -2111,9 +2111,9 @@ After reading, if the user requested a specific section or steps, output that se
     (add-to-list 'gptel-directives directive)))
 
 
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; gptel-custom-tools.el loaded from ~/.config/emacs/lisp/gptel-custom-tools.el
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
   (load "gptel-custom-tools")) ;; gptel use-package config closing parentheses
 
@@ -2131,9 +2131,9 @@ gptel is a simple Large Language Model chat client for Emacs, with support for m
 
 #+NAME: emacs-mcp-server
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; mcp server
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package mcp
   :after gptel
@@ -2161,9 +2161,9 @@ This is an Emacs client for interfacing with MCP, supporting connections to MCP 
 
 #+NAME: emacs-dockerfile-mode
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; dockerfile-mode
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package dockerfile-mode
   :custom
@@ -2184,9 +2184,9 @@ Adds syntax highlighting as well as the ability to build the image directly usin
 
 #+NAME: emacs-docker
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; docker
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (use-package docker
   :bind ("C-c d" . docker)
@@ -2209,9 +2209,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 #+NAME: emacs-kokoro
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; kokoro speak region
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (require 'json)
 (defun my/kokoro-speak-region (start end)
@@ -2231,9 +2231,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 #+NAME: emacs-compile
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; compile make files
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (setq compilation-scroll-output t)
 
@@ -2262,9 +2262,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 #+NAME: emacs-eww
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; eww - open links with mpv
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
@@ -2274,9 +2274,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 #+NAME: emacs-whisper-cpp
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; whisper-cpp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; note: run the following command to install the package
 ;; M-x package-vc-install RET https://github.com/sachac/whisper.el RET
@@ -2286,7 +2286,6 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   :vc (:url "https://github.com/sachac/whisper.el"
        :branch "master")
   :ensure t
-;;  :bind ("C-z" . whisper-run)
   :config
   (setq whisper-install-whispercpp nil)
   (setq whisper-model "small")
@@ -2346,24 +2345,39 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 (setq whisper-server-mode 'local)) ;; whisper use package end
 
 
+;;----------------------------------------------------------------------------------
 ;; set whisper output directory
+;;----------------------------------------------------------------------------------
+
 (with-eval-after-load 'whisper
   (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
 
+
+;;----------------------------------------------------------------------------------
 ;; run commands or insert text
+;;----------------------------------------------------------------------------------
+
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
         '(my-whisper-handle-commands
           insert)))
 
+
+;;----------------------------------------------------------------------------------
 ;; Bind C-z globally to whisper-run, overriding Evil mode's default binding
+;;----------------------------------------------------------------------------------
+
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd "C-z") 'whisper-run)
   (define-key evil-insert-state-map (kbd "C-z") 'whisper-run)
   (define-key evil-visual-state-map (kbd "C-z") 'whisper-run)
   (define-key evil-motion-state-map (kbd "C-z") 'whisper-run))
 
+
+;;----------------------------------------------------------------------------------
 ;; handle whisper commands with whisper-server
+;;----------------------------------------------------------------------------------
+
 (defun my-whisper-handle-commands (text)
   (interactive (list (if (region-active-p)
                          (buffer-substring (region-beginning) (region-end))
@@ -2397,10 +2411,18 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     (when (string= text "") (setq text nil))
     (or text "")))
 
+
+;;----------------------------------------------------------------------------------
 ;; Load default bookmarks so bookmark-alist is populated
+;;----------------------------------------------------------------------------------
+
 (bookmark-maybe-load-default-file)
 
+
+;;----------------------------------------------------------------------------------
 ;; my whisper commands
+;;----------------------------------------------------------------------------------
+
 (defvar my-whisper-commands
   `(("commands" . my-show-whisper-commands-sidebar)
     ("scroll up" . scroll-down-command)
@@ -2415,7 +2437,10 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("expand" . expand-region)))
 
 
+;;----------------------------------------------------------------------------------
 ;; open side window and list voice commands and actions
+;;----------------------------------------------------------------------------------
+
 (defun my-show-whisper-commands-sidebar ()
   "Display available Whisper voice commands in a neat side window on the right."
   (interactive)
@@ -2460,13 +2485,20 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
              (window-width . 0.45))))))
 
 
+;;----------------------------------------------------------------------------------
 ;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
+;;----------------------------------------------------------------------------------
+
 (dolist (bm bookmark-alist)
   (let ((bm-name (car bm)))
     (add-to-list 'my-whisper-commands
                  (cons bm-name (lambda () (interactive) (bookmark-jump bm-name))))))
 
+
+;;----------------------------------------------------------------------------------
 ;; fix common voice errors
+;;----------------------------------------------------------------------------------
+
 (defvar my-common-edits
   '(
     ("dotfiles" "dot files")
@@ -2517,18 +2549,54 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
                ((= c ?.) (setq done t))))
           (replace-match correction t t))))))
 
+
+;;----------------------------------------------------------------------------------
 ;; fix common errors
+;;----------------------------------------------------------------------------------
+
 (with-eval-after-load 'whisper
   (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
+
+
+;;----------------------------------------------------------------------------------
+;; display recording icons in the modeline
+;;----------------------------------------------------------------------------------
+
+(defvar-local whisper--mode-line-indicator-saved nil
+  "Saved mode line format before whisper indicator was added.")
+
+(advice-add 'whisper--setup-mode-line :override
+  (lambda (command phase)
+    (when whisper-show-progress-in-mode-line
+      (with-current-buffer (or whisper--point-buffer (current-buffer))
+        (if (eq command :show)
+            (let* ((ind (whisper--mode-line-indicator phase))
+                   (ind-string (cond
+                                 ((stringp ind) ind)
+                                 ((eq (car-safe ind) :eval) (eval (nth 1 ind)))
+                                 (t "")))
+                   ;; Propertize with a flat face and no box/borders
+                   (clean-indicator (propertize (concat " " ind-string " ")
+                                                'box nil
+                                                'face 'font-lock-warning-face)))
+              (unless whisper--mode-line-indicator-saved
+                (setq whisper--mode-line-indicator-saved mode-line-format))
+              ;; Use a list container to prevent box/border inheritance
+              (setq mode-line-format
+                    (list "" clean-indicator mode-line-format)))
+          (when whisper--mode-line-indicator-saved
+            (setq mode-line-format whisper--mode-line-indicator-saved)
+            (setq whisper--mode-line-indicator-saved nil)))
+        (force-mode-line-update t)))))
 #+end_src
 
 ***** emamux
 
 #+NAME: emacs-emamux
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; emamux
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 (defun my/emamux-smart-send ()
   "Send active visual selection, or the current line if no selection."
@@ -2558,9 +2626,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 #+NAME: emacs-garbage-collection
 #+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 ;; garbage collection
-;; ----------------------------------------------------------------------------------
+;;----------------------------------------------------------------------------------
 
 ;; Make gc pauses faster by decreasing the threshold.
 ;;(setq gc-cons-threshold (* 2 1000 1000))
