@@ -1751,13 +1751,13 @@ After reading, if the user requested a specific section or steps, output that se
 
 ;; my whisper commands
 (defvar my-whisper-commands
-  `(("scroll up" . scroll-down-command)
+  `(("commands" . my-show-whisper-commands-sidebar)
+    ("scroll up" . scroll-down-command)
     ("scroll down" . scroll-up-command)
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
-    ("screenshot" . mpv-screenshot)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
     ("status" . magit-status)

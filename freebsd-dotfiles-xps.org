@@ -2402,13 +2402,13 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 ;; my whisper commands
 (defvar my-whisper-commands
-  `(("scroll up" . scroll-down-command)
+  `(("commands" . my-show-whisper-commands-sidebar)
+    ("scroll up" . scroll-down-command)
     ("scroll down" . scroll-up-command)
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
-    ("screenshot" . mpv-screenshot)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
     ("status" . magit-status)
