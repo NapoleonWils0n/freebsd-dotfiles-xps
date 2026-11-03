@@ -2411,6 +2411,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("run the buffer" . eval-buffer)
     ("mark buffer" . mark-whole-buffer)
     ("run buffer" . eval-buffer)
+    ("save buffer" . save-buffer)
     ("mark paragraph" . mark-paragraph)
     ("screenshot" . mpv-screenshot)
     ("mpv" . hydra-mpv/body)
@@ -3619,6 +3620,8 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/init.el"
 <<init.el>>
 #+END_SRC
+
+#+RESULTS: emacs-init.el-current-dir
 
 **** early-init.el
 ***** home dir
