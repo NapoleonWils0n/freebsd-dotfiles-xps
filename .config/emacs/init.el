@@ -1763,6 +1763,52 @@ After reading, if the user requested a specific section or steps, output that se
     ("status" . magit-status)
     ("expand" . expand-region)))
 
+
+;; open side window and list voice commands and actions
+(defun my-show-whisper-commands-sidebar ()
+  "Display available Whisper voice commands in a neat side window on the right."
+  (interactive)
+  (let ((buf (get-buffer-create "*Whisper Commands*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert "╔════════════════════════════╦════════════════════════════╗\n")
+        (insert "║ Phrase                     ║ Action                     ║\n")
+        (insert "╠════════════════════════════╬════════════════════════════╣\n")
+        
+        ;; Sort commands so bookmarks appear at the very bottom
+        (let ((sorted-commands
+               (sort (copy-sequence my-whisper-commands)
+                     (lambda (a b)
+                       (let ((a-bm (assoc (car a) bookmark-alist))
+                             (b-bm (assoc (car b) bookmark-alist)))
+                         (and (not a-bm) b-bm))))))
+          
+          (dolist (cmd sorted-commands)
+            (let* ((phrase (car cmd))
+                   (action-fn (cdr cmd))
+                   (action-str
+                    (cond
+                     ((symbolp action-fn) (symbol-name action-fn))
+                     ((assoc phrase bookmark-alist) (format "bookmark-jump \"%s\"" phrase))
+                     (t "function")))
+                   (line (format "║ %-26s ║ %-26s ║\n" 
+                                 (truncate-string-to-width phrase 26 nil nil t)
+                                 (truncate-string-to-width action-str 26 nil nil t))))
+              (insert line))))
+        
+        (insert "╚════════════════════════════╩════════════════════════════╝\n")
+        
+        ;; Ensure it opens at the top of the buffer
+        (goto-char (point-min))
+        
+        (special-mode))
+      
+      (display-buffer-in-side-window
+       buf '((side . right)
+             (window-width . 0.45))))))
+
+
 ;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
 (dolist (bm bookmark-alist)
   (let ((bm-name (car bm)))
