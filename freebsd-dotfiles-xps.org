@@ -319,6 +319,13 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
                (body-function . select-window)))
 
 
+;; Whisper Commands side window (20% width)
+(add-to-list 'display-buffer-alist
+             '("^*Whisper Commands*" display-buffer-in-side-window
+               (side . right)
+               (window-width . 0.20)))
+
+
 ;; Man display in current buffer
 (setq Man-notify-method 'bully)
 #+end_src
@@ -2438,51 +2445,46 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 
 ;; ----------------------------------------------------------------------------------
-;; open side window and list voice commands and actions
+;; open side window and list voice commands
 ;; ----------------------------------------------------------------------------------
 
-(defun commands-sidebar ()
-  "Display available Whisper voice commands in a neat side window on the right."
-  (interactive)
-  (let ((buf (get-buffer-create "*Whisper Commands*")))
-    (with-current-buffer buf
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (insert "╔════════════════════════════╦════════════════════════════╗\n")
-        (insert "║ Phrase                     ║ Action                     ║\n")
-        (insert "╠════════════════════════════╬════════════════════════════╣\n")
-        
-        ;; Sort commands so bookmarks appear at the very bottom
-        (let ((sorted-commands
-               (sort (copy-sequence my-whisper-commands)
-                     (lambda (a b)
-                       (let ((a-bm (assoc (car a) bookmark-alist))
-                             (b-bm (assoc (car b) bookmark-alist)))
-                         (and (not a-bm) b-bm))))))
-          
-          (dolist (cmd sorted-commands)
-            (let* ((phrase (car cmd))
-                   (action-fn (cdr cmd))
-                   (action-str
-                    (cond
-                     ((symbolp action-fn) (symbol-name action-fn))
-                     ((assoc phrase bookmark-alist) (format "bookmark-jump \"%s\"" phrase))
-                     (t "function")))
-                   (line (format "║ %-26s ║ %-26s ║\n" 
-                                 (truncate-string-to-width phrase 26 nil nil t)
-                                 (truncate-string-to-width action-str 26 nil nil t))))
-              (insert line))))
-        
-        (insert "╚════════════════════════════╩════════════════════════════╝\n")
-        
-        ;; Ensure it opens at the top of the buffer
-        (goto-char (point-min))
-        
-        (special-mode))
-      
-      (display-buffer-in-side-window
-       buf '((side . right)
-             (window-width . 0.45))))))
+(defun my-whisper-handle-commands (text)
+  (interactive (list (if (region-active-p)
+                         (buffer-substring (region-beginning) (region-end))
+                       (buffer-substring (line-beginning-position) (line-end-position)))))
+  ;; Clean up leading spaces, quotes, or punctuation returned by the server
+  (setq text (replace-regexp-in-string "^[[:space:]\"',.!?]+" "" text))
+  
+  ;; Automatically close the whisper commands sidebar when executing a command
+  (when-let ((win (get-buffer-window "*Whisper Commands*")))
+    (delete-window win))
+
+  (let (done entry func num-args)
+    (while (and text (not (string= text "")) (not done))
+      (setq entry
+            (seq-find
+             (lambda (row)
+               (string-match (format "^\\(?:%s\\)\\>" (car row)) (downcase text)))
+             my-whisper-commands))
+      (if (null entry)
+          (setq done t)
+        (setq func (cdr entry))
+        (setq num-args (and func (func-arity func)))
+        (cond
+         ((commandp func)
+          (setq text (replace-match "" nil nil text))
+          (call-interactively func))
+         ((and (functionp func) (>= (cdr num-args) 1))
+          (unless (match-string 1 text)
+            (setq text (replace-match "" nil nil text)))
+          (setq text (funcall func (or (match-string 1 text) text))))
+         ((functionp func)
+          (setq text (replace-match "" nil nil text))
+          (funcall func))))
+      (when (string-match "^[[:space:]\\.?,]+\\(?:and \\)?" text)
+        (setq text (replace-match "" nil nil text))))
+    (when (string= text "") (setq text nil))
+    (or text "")))
 
 
 ;; ----------------------------------------------------------------------------------
