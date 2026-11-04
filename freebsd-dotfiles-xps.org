@@ -2440,7 +2440,6 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("undo" . undo-tree-visualize)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
-    ("git" . magit-status)
     ("expand" . expand-region)))
 
 

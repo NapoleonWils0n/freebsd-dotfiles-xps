@@ -1789,7 +1789,6 @@ After reading, if the user requested a specific section or steps, output that se
     ("undo" . undo-tree-visualize)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
-    ("git" . magit-status)
     ("expand" . expand-region)))
 
 
