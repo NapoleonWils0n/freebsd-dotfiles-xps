@@ -1796,44 +1796,32 @@ After reading, if the user requested a specific section or steps, output that se
 ;; open side window and list voice commands
 ;; ----------------------------------------------------------------------------------
 
-(defun my-whisper-handle-commands (text)
-  (interactive (list (if (region-active-p)
-                         (buffer-substring (region-beginning) (region-end))
-                       (buffer-substring (line-beginning-position) (line-end-position)))))
-  ;; Clean up leading spaces, quotes, or punctuation returned by the server
-  (setq text (replace-regexp-in-string "^[[:space:]\"',.!?]+" "" text))
-  
-  ;; Automatically close the whisper commands sidebar when executing a command
-  (when-let ((win (get-buffer-window "*Whisper Commands*")))
-    (delete-window win))
-
-  (let (done entry func num-args)
-    (while (and text (not (string= text "")) (not done))
-      (setq entry
-            (seq-find
-             (lambda (row)
-               (string-match (format "^\\(?:%s\\)\\>" (car row)) (downcase text)))
-             my-whisper-commands))
-      (if (null entry)
-          (setq done t)
-        (setq func (cdr entry))
-        (setq num-args (and func (func-arity func)))
-        (cond
-         ((commandp func)
-          (setq text (replace-match "" nil nil text))
-          (call-interactively func))
-         ((and (functionp func) (>= (cdr num-args) 1))
-          (unless (match-string 1 text)
-            (setq text (replace-match "" nil nil text)))
-          (setq text (funcall func (or (match-string 1 text) text))))
-         ((functionp func)
-          (setq text (replace-match "" nil nil text))
-          (funcall func))))
-      (when (string-match "^[[:space:]\\.?,]+\\(?:and \\)?" text)
-        (setq text (replace-match "" nil nil text))))
-    (when (string= text "") (setq text nil))
-    (or text "")))
-
+(defun commands-sidebar ()
+  "Display available Whisper voice commands in a simple side window on the right."
+  (interactive)
+  (let ((buf (get-buffer-create "*Whisper Commands*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert "Voice Commands\n")
+        (insert "--------------\n")
+        
+        ;; Sort commands so bookmarks appear at the bottom
+        (let ((sorted-commands
+               (sort (copy-sequence my-whisper-commands)
+                     (lambda (a b)
+                       (let ((a-bm (assoc (car a) bookmark-alist))
+                             (b-bm (assoc (car b) bookmark-alist)))
+                         (and (not a-bm) b-bm))))))
+          
+          (dolist (cmd sorted-commands)
+            (insert (car cmd) "\n")))
+        
+        (goto-char (point-min))
+        (special-mode)))
+      
+      ;; Open via display-buffer so display-buffer-alist handles the 20% width rule
+      (display-buffer buf)))
 
 ;; ----------------------------------------------------------------------------------
 ;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
