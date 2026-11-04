@@ -1783,6 +1783,7 @@ After reading, if the user requested a specific section or steps, output that se
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
+    ("quit window" . quit-window)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
