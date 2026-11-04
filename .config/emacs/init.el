@@ -1776,6 +1776,14 @@ After reading, if the user requested a specific section or steps, output that se
 ;; my whisper commands
 ;; ----------------------------------------------------------------------------------
 
+(defun my-quit-current-window ()
+  "Safely close the active window without buffer errors."
+  (interactive)
+  (ignore-errors
+    (let ((win (get-buffer-window "*Whisper Commands*")))
+      (when win (delete-window win)))
+    (quit-window t)))
+
 (defvar my-whisper-commands
   `(("commands" . commands-sidebar)
     ("scroll up" . scroll-down-command)
@@ -1783,7 +1791,7 @@ After reading, if the user requested a specific section or steps, output that se
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
-    ("quit window" . quit-window)
+    ("quit window" . my-quit-current-window)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
