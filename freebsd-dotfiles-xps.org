@@ -2428,9 +2428,12 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
+    ("dictionary" . dictionary-lookup-definition)
+    ("spelling" . ispell)
+    ("undo" . undo-tree-visualize)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
-    ("status" . magit-status)
+    ("git" . magit-status)
     ("expand" . expand-region)))
 
 

@@ -1777,9 +1777,12 @@ After reading, if the user requested a specific section or steps, output that se
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
+    ("dictionary" . dictionary-lookup-definition)
+    ("spelling" . ispell)
+    ("undo" . undo-tree-visualize)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
-    ("status" . magit-status)
+    ("git" . magit-status)
     ("expand" . expand-region)))
 
 
