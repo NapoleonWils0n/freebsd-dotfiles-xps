@@ -93,9 +93,6 @@ Add this to `whisper-insert-text-at-point'."
 ;; dictionary
 (phony-defun dictionary-lookup-definition ("dictionary") (dictionary-lookup-definition))
 
-;; ispell
-(phony-defun ispell ("spelling") (ispell))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; provide sacha-phony
