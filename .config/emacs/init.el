@@ -237,13 +237,6 @@
                (body-function . select-window)))
 
 
-;; Whisper Commands side window (20% width)
-(add-to-list 'display-buffer-alist
-             '("^*Whisper Commands*" display-buffer-in-side-window
-               (side . right)
-               (window-width . 0.20)))
-
-
 ;; Man display in current buffer
 (setq Man-notify-method 'bully)
 
@@ -1791,37 +1784,6 @@ After reading, if the user requested a specific section or steps, output that se
     ("open video" . dired-find-file-mpv)
     ("expand" . expand-region)))
 
-
-;; ----------------------------------------------------------------------------------
-;; open side window and list voice commands
-;; ----------------------------------------------------------------------------------
-
-(defun commands-sidebar ()
-  "Display available Whisper voice commands in a simple side window on the right."
-  (interactive)
-  (let ((buf (get-buffer-create "*Whisper Commands*")))
-    (with-current-buffer buf
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (insert "Voice Commands\n")
-        (insert "--------------\n")
-        
-        ;; Sort commands so bookmarks appear at the bottom
-        (let ((sorted-commands
-               (sort (copy-sequence my-whisper-commands)
-                     (lambda (a b)
-                       (let ((a-bm (assoc (car a) bookmark-alist))
-                             (b-bm (assoc (car b) bookmark-alist)))
-                         (and (not a-bm) b-bm))))))
-          
-          (dolist (cmd sorted-commands)
-            (insert (car cmd) "\n")))
-        
-        (goto-char (point-min))
-        (special-mode)))
-      
-      ;; Open via display-buffer so display-buffer-alist handles the 20% width rule
-      (display-buffer buf)))
 
 ;; ----------------------------------------------------------------------------------
 ;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
