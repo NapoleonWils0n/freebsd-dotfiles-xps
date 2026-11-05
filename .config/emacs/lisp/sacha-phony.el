@@ -89,9 +89,6 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun undo ("undo") (undo))
 (phony-defun redo ("redo") (undo-redo))
 
-;; dictionary
-(phony-defun dictionary-lookup-definition ("dictionary") (dictionary-lookup-definition))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; provide sacha-phony

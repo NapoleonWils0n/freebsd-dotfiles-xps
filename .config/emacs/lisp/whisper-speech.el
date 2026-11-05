@@ -18,8 +18,8 @@
 
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
-        '(speech-input-phony-process
-          my-whisper-handle-commands
+        '(my-whisper-handle-commands
+          speech-input-phony-process
           insert)))
 
 
@@ -90,6 +90,8 @@
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
+    ("dictionary" . dictionary-lookup-definition)
+    ("spelling" . ispell)
     ("expand" . expand-region)))
 
 

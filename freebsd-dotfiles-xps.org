@@ -1803,13 +1803,14 @@ markdown-mode is a major mode for editing Markdown-formatted text.
       '((sh-mode . bash-ts-mode)
         (rust-mode . rust-ts-mode)
         (c-mode . c-ts-mode)
+        (emacs-lisp-mode . lisp-mode)
         (c++-mode . c++-ts-mode)))
 
 ;; treesitter explore open in side window
 (add-to-list 'display-buffer-alist
              '("^*tree-sitter explorer *" display-buffer-in-side-window
                (side . right)
-               (window-width . 0.50)))
+               (window-width . 0.40)))
 #+end_src
 
 ****** info
@@ -2519,8 +2520,8 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
-        '(speech-input-phony-process
-          my-whisper-handle-commands
+        '(my-whisper-handle-commands
+          speech-input-phony-process
           insert)))
 
 
@@ -2591,6 +2592,8 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
+    ("dictionary" . dictionary-lookup-definition)
+    ("spelling" . ispell)
     ("expand" . expand-region)))
 
 
@@ -2803,9 +2806,6 @@ Add this to `whisper-insert-text-at-point'."
 ;; undo - redo
 (phony-defun undo ("undo") (undo))
 (phony-defun redo ("redo") (undo-redo))
-
-;; dictionary
-(phony-defun dictionary-lookup-definition ("dictionary") (dictionary-lookup-definition))
 
 
 ;; ----------------------------------------------------------------------------------
