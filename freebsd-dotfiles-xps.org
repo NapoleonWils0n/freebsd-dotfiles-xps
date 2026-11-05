@@ -2267,6 +2267,34 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   (define-key eww-mode-map (kbd "C-c l") #'mpv-eww))
 #+end_src
 
+***** phony
+
+#+NAME: emacs-phony
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; phony
+;; ----------------------------------------------------------------------------------
+
+;; clone the phony repository
+;; mkdir -p ~/git/sacha
+;; cd ~/git/sacha
+;; git clone https://github.com/sachac/phony.el.git
+
+(use-package phony
+  :load-path "~/git/sacha/phony.el"
+  :init
+  (server-mode 1)
+	(setq phony-export-function #'ignore)  ; don't actually use Talon for the recognition
+	(setq phony-parser-literal-comparator #'sacha-phony-compare-literal)
+  :config
+  (phony-mode 1))
+
+
+;; phony additional commands
+;; ~/.config/emacs/lisp/sacha-phony.el
+(require 'sacha-phony) 
+#+end_src
+
 ***** whisper-cpp
 
 #+NAME: emacs-whisper-cpp
@@ -2275,13 +2303,14 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 ;; whisper-cpp
 ;; ----------------------------------------------------------------------------------
 
-;; note: run the following command to install the package
-;; M-x package-vc-install RET https://github.com/sachac/whisper.el RET
+;; clone the whisper repository
+;; mkdir -p ~/git/sacha
+;; cd ~/git/sacha
+;; git clone https://github.com/sachac/whisper.el.git
 
 (use-package whisper
   ;; Leverage the built-in package-vc features to clone the exact fork branch
-  :vc (:url "https://github.com/sachac/whisper.el"
-       :branch "master")
+  :load-path "~/git/sacha/whisper.el"
   :ensure t
   :config
   (setq whisper-install-whispercpp nil)
@@ -2341,6 +2370,140 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 (setq whisper-server-mode 'local)) ;; whisper use package end
 
+;; whisper additional commands
+;; ~/.config/emacs/lisp/speech.el
+(require 'whisper-speech) 
+#+end_src
+
+***** emamux
+
+#+NAME: emacs-emamux
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emamux
+;; ----------------------------------------------------------------------------------
+
+(defun my/emamux-smart-send ()
+  "Send active visual selection, or the current line if no selection."
+  (interactive)
+  (if (and (bound-and-true-p evil-mode) (evil-visual-state-p))
+      (progn
+        (emamux:send-region (region-beginning) (region-end))
+        (evil-exit-visual-state))
+    (emamux:send-region (line-beginning-position) (line-end-position))))
+
+(use-package emamux
+  :demand t
+  :config
+  ;; Global binding for normal/insert modes
+  (global-set-key (kbd "C-`") 'my/emamux-smart-send)
+
+  ;; Explicitly bind in Evil visual state so visual selections work
+  (with-eval-after-load 'evil
+    (define-key evil-visual-state-map (kbd "C-`") 'my/emamux-smart-send)))
+#+end_src
+
+****** info
+
+[[https://github.com/emacsorphanage/emamux]]
+
+***** garbage collection
+
+#+NAME: emacs-garbage-collection
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; garbage collection
+;; ----------------------------------------------------------------------------------
+
+;; Make gc pauses faster by decreasing the threshold.
+;;(setq gc-cons-threshold (* 2 1000 1000))
+(setq gc-cons-threshold (* 64 1000 1000)) ;; 64 MB for images
+(custom-set-variables
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-link ((t (:inherit link :underline nil)))))
+#+end_src
+
+**** early-init.el
+
+#+NAME: early-init.el
+#+begin_src emacs-lisp
+;;; early-init.el -*- lexical-binding: t; -*-
+
+;; ----------------------------------------------------------------------------------
+;; early-init.el
+;; ----------------------------------------------------------------------------------
+
+;; ----------------------------------------------------------------------------------
+;;; Garbage collection
+;; ----------------------------------------------------------------------------------
+
+;; Increase the GC threshold for faster startup
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq gc-cons-threshold (* 50 1000 1000))
+
+;; Don’t compact font caches during GC.
+(setq inhibit-compacting-font-caches t)
+
+
+;; ----------------------------------------------------------------------------------
+;; ui configuration
+;; ----------------------------------------------------------------------------------
+
+;; Remove some unneeded UI elements (the user can turn back on anything they wish)
+(setq inhibit-startup-message t)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;; start the initial frame maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+;; start every frame maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; no title bar
+(add-to-list 'default-frame-alist '(undecorated . t))
+
+
+;; ----------------------------------------------------------------------------------
+;; scratch buffer
+;; ----------------------------------------------------------------------------------
+
+;; general settings
+(setq initial-scratch-message nil)
+
+;; Make the initial buffer load faster by setting its mode to fundamental-mode
+(customize-set-variable 'initial-major-mode 'fundamental-mode)
+
+
+;; ----------------------------------------------------------------------------------
+;; personal elisp lib dir
+;; ----------------------------------------------------------------------------------
+
+;;Tell emacs where is your personal elisp lib dir
+(add-to-list 'load-path "~/.config/emacs/lisp/")
+
+#+end_src
+
+**** lisp
+***** whisper-speech.el
+:PROPERTIES:
+:header-args: :noweb-ref whisper-speech.el :noweb-sep "\n\n"
+:END:
+
+****** whisper-speech.el
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
+;; ----------------------------------------------------------------------------------
+;; whisper-speech
+;; ----------------------------------------------------------------------------------
+
 
 ;; ----------------------------------------------------------------------------------
 ;; set whisper output directory
@@ -2356,7 +2519,8 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
-        '(my-whisper-handle-commands
+        '(speech-input-phony-process
+          my-whisper-handle-commands
           insert)))
 
 
@@ -2421,18 +2585,12 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 ;; ----------------------------------------------------------------------------------
 
 (defvar my-whisper-commands
-  `(("commands" . commands-sidebar)
-    ("scroll up" . scroll-down-command)
+  `(("scroll up" . scroll-down-command)
     ("scroll down" . scroll-up-command)
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
-    ("dictionary" . dictionary-lookup-definition)
-    ("spelling" . ispell)
-    ("undo" . undo-tree-visualize)
-    ("mpv" . hydra-mpv/body)
-    ("open video" . dired-find-file-mpv)
     ("expand" . expand-region)))
 
 
@@ -2537,131 +2695,130 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
           (when whisper--current-overlay
             (delete-overlay whisper--current-overlay)
             (setq whisper--current-overlay nil)))))))
+
+
+
+;; ----------------------------------------------------------------------------------
+;; provide whisper speech
+;; ----------------------------------------------------------------------------------
+
+(provide 'whisper-speech)
 #+end_src
 
-***** emamux
+***** sacha-phony.el
+:PROPERTIES:
+:header-args: :noweb-ref sacha-phony.el :noweb-sep "\n\n"
+:END:
 
-#+NAME: emacs-emamux
+****** sacha-phony.el
+
 #+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
 ;; ----------------------------------------------------------------------------------
-;; emamux
+;; sacha-phony
 ;; ----------------------------------------------------------------------------------
 
-(defun my/emamux-smart-send ()
-  "Send active visual selection, or the current line if no selection."
-  (interactive)
-  (if (and (bound-and-true-p evil-mode) (evil-visual-state-p))
+
+;; ----------------------------------------------------------------------------------
+;; require phony-parser
+;; ----------------------------------------------------------------------------------
+
+(require 'phony-parser)
+(define-error 'sacha-phony-not-parsed "Sentence not parsed." 'error)
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-parser--sanitize
+;; ----------------------------------------------------------------------------------
+
+(defun sacha-phony-parser--sanitize (s)
+  "Lowercase and remove punctuation."
+  (string-trim (replace-regexp-in-string "[,\\.!?:]" "" (downcase s))))
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-compare-literal
+;; ----------------------------------------------------------------------------------
+
+;;;###autoload
+(defun sacha-phony-compare-literal (a b)
+  "Ignore case and ending punctuation."
+  (string= (sacha-phony-parser--sanitize a)
+           (sacha-phony-parser--sanitize b)))
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-evaluate
+;; ----------------------------------------------------------------------------------
+
+;;;###autoload
+(defun sacha-phony-evaluate (sentence)
+  "Evaluate SENTENCE using phony.el definitions.
+Throw 'not-parsed if not parsed."
+  (let ((parses (phony-parser--parse-utterance sentence)))
+    (unless parses
+      (signal 'sacha-phony-not-parsed sentence))
+    (phony--evaluate-ast (caar parses))))
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-whisper-phony
+;; ----------------------------------------------------------------------------------
+
+;;;###autoload
+(defun sacha-whisper-phony (text)
+  "Evaluate TEXT using phony.el definitions.
+Lower-case the first letter of TEXT to match command definitions.
+Useful in `speech-input-commands'."
+  (sacha-phony-evaluate
+	 (concat (downcase (substring text 0 1))
+					 (if (> (length text) 1) (substring text 1) "")))
+  "")
+
+
+;; ----------------------------------------------------------------------------------
+;; speech-input-phony-process
+;; ----------------------------------------------------------------------------------
+
+(defun speech-input-phony-process (text)
+  "Evaluate TEXT via phony. Pass TEXT through if not parsed.
+Add this to `whisper-insert-text-at-point'."
+  (condition-case nil
       (progn
-        (emamux:send-region (region-beginning) (region-end))
-        (evil-exit-visual-state))
-    (emamux:send-region (line-beginning-position) (line-end-position))))
+        ;; Lowercase the first letter to match command definitions
+        (sacha-phony-evaluate
+         (concat (downcase (substring text 0 1))
+                 (if (> (length text) 1) (substring text 1) "")))
+        ;; Return empty string if successfully parsed & executed (stops further processing)
+        "")
+    (error
+     ;; If not parsed or an error occurs, pass text through
+     text)))
 
-(use-package emamux
-  :demand t
-  :config
-  ;; Global binding for normal/insert modes
-  (global-set-key (kbd "C-`") 'my/emamux-smart-send)
 
-  ;; Explicitly bind in Evil visual state so visual selections work
-  (with-eval-after-load 'evil
-    (define-key evil-visual-state-map (kbd "C-`") 'my/emamux-smart-send)))
+;; ----------------------------------------------------------------------------------
+;; phony defun
+;; ----------------------------------------------------------------------------------
+
+;; undo - redo
+(phony-defun undo ("undo") (undo))
+(phony-defun redo ("redo") (undo-redo))
+(phony-defun undo-tree-visualize ("undo tree") (undo-tree-visualize))
+
+;; dictionary
+(phony-defun dictionary-lookup-definition ("dictionary") (dictionary-lookup-definition))
+
+;; ispell
+(phony-defun ispell ("spelling") (ispell))
+
+
+;; ----------------------------------------------------------------------------------
+;; provide sacha-phony
+;; ----------------------------------------------------------------------------------
+
+(provide 'sacha-phony)
 #+end_src
 
-****** info
-
-[[https://github.com/emacsorphanage/emamux]]
-
-***** garbage collection
-
-#+NAME: emacs-garbage-collection
-#+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
-;; garbage collection
-;; ----------------------------------------------------------------------------------
-
-;; Make gc pauses faster by decreasing the threshold.
-;;(setq gc-cons-threshold (* 2 1000 1000))
-(setq gc-cons-threshold (* 64 1000 1000)) ;; 64 MB for images
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages nil)
- '(package-vc-selected-packages
-   '((whisper :url "https://github.com/sachac/whisper.el" :branch
-              "master"))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-link ((t (:inherit link :underline nil)))))
-#+end_src
-
-**** early-init.el
-
-#+NAME: early-init.el
-#+begin_src emacs-lisp
-;;; early-init.el -*- lexical-binding: t; -*-
-
-;; ----------------------------------------------------------------------------------
-;; early-init.el
-;; ----------------------------------------------------------------------------------
-
-;; ----------------------------------------------------------------------------------
-;;; Garbage collection
-;; ----------------------------------------------------------------------------------
-
-;; Increase the GC threshold for faster startup
-;; The default is 800 kilobytes.  Measured in bytes.
-(setq gc-cons-threshold (* 50 1000 1000))
-
-;; Don’t compact font caches during GC.
-(setq inhibit-compacting-font-caches t)
-
-
-;; ----------------------------------------------------------------------------------
-;; ui configuration
-;; ----------------------------------------------------------------------------------
-
-;; Remove some unneeded UI elements (the user can turn back on anything they wish)
-(setq inhibit-startup-message t)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-
-;; start the initial frame maximized
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-;; start every frame maximized
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; no title bar
-(add-to-list 'default-frame-alist '(undecorated . t))
-
-
-;; ----------------------------------------------------------------------------------
-;; scratch buffer
-;; ----------------------------------------------------------------------------------
-
-;; general settings
-(setq initial-scratch-message nil)
-
-;; Make the initial buffer load faster by setting its mode to fundamental-mode
-(customize-set-variable 'initial-major-mode 'fundamental-mode)
-
-
-;; ----------------------------------------------------------------------------------
-;; personal elisp lib dir
-;; ----------------------------------------------------------------------------------
-
-;;Tell emacs where is your personal elisp lib dir
-(add-to-list 'load-path "~/.config/emacs/lisp/")
-
-#+end_src
-
-**** lisp
 ***** gptel-custom-tools.el
 :PROPERTIES:
 :header-args: :noweb-ref gptel-custom-tools.el :noweb-sep "\n\n"
@@ -3663,6 +3820,36 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+END_SRC
 
 **** lisp
+***** whisper-speech.el
+****** home dir
+
+#+NAME: whisper-speech.el-home-dir
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/lisp/whisper-speech.el"
+<<whisper-speech.el>>
+#+END_SRC
+
+****** current dir
+
+#+NAME: whisper-speech.el-current-dir
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/lisp/whisper-speech.el"
+<<whisper-speech.el>>
+#+END_SRC
+
+***** sacha-phony.el
+****** home dir
+
+#+NAME: sacha-phony.el-home-dir
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/lisp/sacha-phony.el"
+<<sacha-phony.el>>
+#+END_SRC
+
+****** current dir
+
+#+NAME: sacha-phony.el-current-dir
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/lisp/sacha-phony.el"
+<<sacha-phony.el>>
+#+END_SRC
+
 ***** gptel-custom-tools.el
 ****** home dir
 
