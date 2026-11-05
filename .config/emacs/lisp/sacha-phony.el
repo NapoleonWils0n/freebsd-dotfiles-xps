@@ -88,7 +88,6 @@ Add this to `whisper-insert-text-at-point'."
 ;; undo - redo
 (phony-defun undo ("undo") (undo))
 (phony-defun redo ("redo") (undo-redo))
-(phony-defun undo-tree-visualize ("undo tree") (undo-tree-visualize))
 
 ;; dictionary
 (phony-defun dictionary-lookup-definition ("dictionary") (dictionary-lookup-definition))
