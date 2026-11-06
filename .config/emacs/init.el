@@ -1319,7 +1319,6 @@
       '((sh-mode . bash-ts-mode)
         (rust-mode . rust-ts-mode)
         (c-mode . c-ts-mode)
-        (emacs-lisp-mode . lisp-mode)
         (c++-mode . c++-ts-mode)))
 
 ;; treesitter explore open in side window

@@ -1803,7 +1803,6 @@ markdown-mode is a major mode for editing Markdown-formatted text.
       '((sh-mode . bash-ts-mode)
         (rust-mode . rust-ts-mode)
         (c-mode . c-ts-mode)
-        (emacs-lisp-mode . lisp-mode)
         (c++-mode . c++-ts-mode)))
 
 ;; treesitter explore open in side window
@@ -2591,9 +2590,12 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
+    ("switch buffer" . consult-buffer)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
+    ("narrow" . org-narrow-to-subtree)
+    ("widen" . widen)
     ("expand" . expand-region)))
 
 
@@ -2615,6 +2617,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   '(
     ("dotfiles" "dot files")
     ("changelog" "change log")
+    ("widen" "wyden")
     )
   "Commonly-misrecognized words or words that need special capitalization.")
 

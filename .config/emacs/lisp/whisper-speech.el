@@ -89,9 +89,12 @@
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
+    ("switch buffer" . consult-buffer)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
+    ("narrow" . org-narrow-to-subtree)
+    ("widen" . widen)
     ("expand" . expand-region)))
 
 
@@ -113,6 +116,7 @@
   '(
     ("dotfiles" "dot files")
     ("changelog" "change log")
+    ("widen" "wyden")
     )
   "Commonly-misrecognized words or words that need special capitalization.")
 
