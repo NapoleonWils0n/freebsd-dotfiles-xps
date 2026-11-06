@@ -1321,6 +1321,12 @@
         (c-mode . c-ts-mode)
         (c++-mode . c++-ts-mode)))
 
+;; org mode hook for tree-sitter-org
+(add-hook 'org-mode-hook
+          (lambda ()
+            (when (treesit-ready-p 'org)
+              (treesit-parser-create 'org))))
+
 ;; treesitter explore open in side window
 (add-to-list 'display-buffer-alist
              '("^*tree-sitter explorer *" display-buffer-in-side-window

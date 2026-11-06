@@ -1805,6 +1805,12 @@ markdown-mode is a major mode for editing Markdown-formatted text.
         (c-mode . c-ts-mode)
         (c++-mode . c++-ts-mode)))
 
+;; org mode hook for tree-sitter-org
+(add-hook 'org-mode-hook
+          (lambda ()
+            (when (treesit-ready-p 'org)
+              (treesit-parser-create 'org))))
+
 ;; treesitter explore open in side window
 (add-to-list 'display-buffer-alist
              '("^*tree-sitter explorer *" display-buffer-in-side-window
@@ -7750,6 +7756,7 @@ pkg prime-list
 - translate-shell
 - tree
 - tree-sitter
+- tree-sitter-cli
 - ts
 - unbound
 - vm-bhyve-devel
