@@ -94,8 +94,7 @@
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
     ("narrow" . org-narrow-to-subtree)
-    ("widen" . widen)
-    ("expand" . expand-region)))
+    ("widen" . widen)))
 
 
 ;; ----------------------------------------------------------------------------------
