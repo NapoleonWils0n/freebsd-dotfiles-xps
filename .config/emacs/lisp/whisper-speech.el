@@ -100,6 +100,7 @@
     ("first tab" . (lambda () (tab-bar-select-tab 1)))
     ("last tab" . tab-bar-switch-to-last-tab)
     ("other window" . other-window)
+    ("toggle side window" . window-toggle-side-windows)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
