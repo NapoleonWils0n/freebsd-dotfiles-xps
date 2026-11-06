@@ -88,7 +88,7 @@
     ("scroll down" . scroll-up-command)
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
-    ("kill buffer" . kill-buffer)
+    ("kill buffer" . kill-current-buffer)
     ("switch buffer" . consult-buffer)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
