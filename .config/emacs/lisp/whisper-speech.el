@@ -84,7 +84,8 @@
 ;; ----------------------------------------------------------------------------------
 
 (defvar my-whisper-commands
-  `(("scroll up" . scroll-down-command)
+  `(("voice commands" . commands-sidebar)
+    ("scroll up" . scroll-down-command)
     ("scroll down" . scroll-up-command)
     ("mark buffer" . mark-whole-buffer)
     ("save buffer" . save-buffer)
@@ -98,6 +99,7 @@
     ("previous tab" . tab-bar-switch-to-prev-tab)
     ("first tab" . (lambda () (tab-bar-select-tab 1)))
     ("last tab" . tab-bar-switch-to-last-tab)
+    ("other window" . other-window)
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
@@ -216,6 +218,44 @@
             (delete-overlay whisper--current-overlay)
             (setq whisper--current-overlay nil)))))))
 
+
+;; ----------------------------------------------------------------------------------
+;; open side window and list voice commands
+;; ----------------------------------------------------------------------------------
+
+(defun commands-sidebar ()
+  "Display available Whisper voice commands in a simple side window on the right."
+  (interactive)
+  (let ((buf (get-buffer-create "*Whisper Commands*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert "Voice Commands\n")
+        (insert "--------------\n")
+        
+        ;; Sort commands so bookmarks appear at the bottom
+        (let ((sorted-commands
+               (sort (copy-sequence my-whisper-commands)
+                     (lambda (a b)
+                       (let ((a-bm (assoc (car a) bookmark-alist))
+                             (b-bm (assoc (car b) bookmark-alist)))
+                         (and (not a-bm) b-bm))))))
+          
+          (dolist (cmd sorted-commands)
+            (insert (car cmd) "\n")))
+        
+        (goto-char (point-min))
+        (special-mode)))
+      
+      ;; Open via display-buffer so display-buffer-alist handles the 20% width rule
+      (display-buffer buf)))
+
+
+;; Whisper Commands side window (20% width)
+(add-to-list 'display-buffer-alist
+             '("^*Whisper Commands*" display-buffer-in-side-window
+               (side . right)
+               (window-width . 0.20)))
 
 
 ;; ----------------------------------------------------------------------------------
