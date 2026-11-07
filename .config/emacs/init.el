@@ -1631,12 +1631,12 @@ After reading, if the user requested a specific section or steps, output that se
 ;; ----------------------------------------------------------------------------------
 
 ;; clone the phony repository
-;; mkdir -p ~/git/sacha
-;; cd ~/git/sacha
+;; mkdir -p ~/git/emacs
+;; cd ~/git/emacs
 ;; git clone https://github.com/sachac/phony.el.git
 
 (use-package phony
-  :load-path "~/git/sacha/phony.el"
+  :load-path "~/git/emacs/phony.el"
   :init
   (server-mode 1)
 	(setq phony-export-function #'ignore)  ; don't actually use Talon for the recognition
@@ -1654,13 +1654,13 @@ After reading, if the user requested a specific section or steps, output that se
 ;; ----------------------------------------------------------------------------------
 
 ;; clone the whisper repository
-;; mkdir -p ~/git/sacha
-;; cd ~/git/sacha
+;; mkdir -p ~/git/emacs
+;; cd ~/git/emacs
 ;; git clone https://github.com/sachac/whisper.el.git
 
 (use-package whisper
   ;; Leverage the built-in package-vc features to clone the exact fork branch
-  :load-path "~/git/sacha/whisper.el"
+  :load-path "~/git/emacs/whisper.el"
   :ensure t
   :config
   (setq whisper-install-whispercpp nil)
