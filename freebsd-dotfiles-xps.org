@@ -2709,16 +2709,8 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun move-tab-backwards ("move tab backwards") (tab-bar-move-tab-backward))
 (phony-defun next-tab ("next tab") (tab-bar-switch-to-next-tab))
 (phony-defun previous-tab ("previous tab") (tab-bar-switch-to-prev-tab))
-
-;; first tab
 (phony-defun first-tab ("first tab") (tab-bar-select-tab 1))
-(phony-defun first-tab-tap ("first tap") (tab-bar-select-tab 1))
-(phony-defun first-tab-time ("first time") (tab-bar-select-tab 1))
-
-;; last tab
 (phony-defun last-tab ("last tab") (tab-bar-switch-to-last-tab))
-(phony-defun last-tab-tap ("last tap") (tab-bar-switch-to-last-tab))
-(phony-defun last-tab-time ("last time") (tab-bar-switch-to-last-tab))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -2812,8 +2804,94 @@ Add this to `whisper-insert-text-at-point'."
 	:contributes-to target
 	(bounds-of-thing-at-point 'buffer))
 
+
 ;; ----------------------------------------------------------------------------------
-;; provide sacha-phony
+;; bookmarks
+;; ----------------------------------------------------------------------------------
+
+(bookmark-maybe-load-default-file)
+
+(dolist (bm bookmark-alist)
+  (let* ((bm-name (car bm))
+         ;; Convert the bookmark name into a valid symbol name for the function identifier
+         (sym-name (intern (format "bookmark-%s" (string-replace " " "-" (downcase bm-name)))))
+         (docstring (format "Jump to bookmark %s." bm-name)))
+    (eval `(phony-defun ,sym-name (,bm-name)
+             (bookmark-jump ,bm-name)))))
+
+;; ----------------------------------------------------------------------------------
+;; fix common voice errors
+;; ----------------------------------------------------------------------------------
+
+(defvar my-common-edits
+  '(
+    ("dotfiles" "dot files")
+    ("changelog" "change log")
+    ("widen" "wyden")
+    ("previous tab" "previous time")
+    ("next tab" "next time")
+    ("new tab" "new time")
+    ("new tab" "new tap")
+    ("move tab" "move tap")
+    ("last tab" "last time")
+    ("first tab" "first time")
+    )
+  "Commonly-misrecognized words or words that need special capitalization.")
+
+
+(defun my-find-next-fix-point ()
+  (when (re-search-forward
+         (format "\\_<\\(%s\\)\\_>"
+                 (downcase
+                  (string-join
+                   (seq-mapcat
+                    (lambda (o)
+                      (if (listp o)
+                          (if (string= (car o) "") (cdr o) o)
+                        (list o)))
+                    my-common-edits)
+                   "\\|")))
+         nil t)
+    (goto-char (match-beginning 0))
+    (seq-find
+     (lambda (o)
+       (if (listp o)
+           (seq-find (lambda (s)
+                       (save-match-data
+                         (string-match
+                          (format "\\_<%s\\>" (downcase s))
+                          (downcase (match-string 0))))) o)
+         (string= (downcase o) (downcase (match-string 0)))))
+     my-common-edits)))
+
+(defun my-fix-common-errors ()
+  (interactive)
+  (let (done entry correction)
+    (while (and
+            (not done)
+            (setq entry (my-find-next-fix-point)))
+      (setq correction (if (listp entry) (car entry) entry))
+      (if (let ((case-fold-search nil))
+            (looking-at (regexp-quote correction)))
+          (forward-word 1)
+        (if (called-interactively-p 'any)
+            (let* ((c (read-char (format "%s (yn.): " correction))))
+              (cond
+               ((= c ?y) (replace-match correction t t))
+               ((= c ?n) (goto-char (match-end 0)))
+               ((= c ?.) (setq done t))))
+          (replace-match correction t t))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; fix common errors
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'whisper
+  (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
+
+;; ----------------------------------------------------------------------------------
+;; provide phony-speech-commands
 ;; ----------------------------------------------------------------------------------
 
 (provide 'phony-speech-commands)
