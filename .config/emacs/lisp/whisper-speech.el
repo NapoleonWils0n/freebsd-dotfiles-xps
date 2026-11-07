@@ -104,6 +104,7 @@
     ("mark paragraph" . mark-paragraph)
     ("dictionary" . dictionary-lookup-definition)
     ("spelling" . ispell)
+    ("tree sitter" . treesit-explore-mode)
     ("narrow" . org-narrow-to-subtree)
     ("widen" . widen)))
 
