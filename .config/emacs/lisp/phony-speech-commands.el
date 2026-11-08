@@ -71,7 +71,7 @@ Useful in `speech-input-commands'."
 ;; ----------------------------------------------------------------------------------
 
 (defun speech-input-phony-process (text)
-  "Evaluate TEXT via phony. Pass TEXT through if not parsed.
+  "Evaluate TEXT via phony. Pass cleaned text through if not parsed.
 Add this to `whisper-insert-text-at-point'."
   (message "Phony received raw text: %S" text)
   (condition-case nil
@@ -83,8 +83,8 @@ Add this to `whisper-insert-text-at-point'."
         ;; Return empty string if successfully parsed & executed (stops further processing)
         "")
     (error
-     ;; If not parsed or an error occurs, pass text through
-     text)))
+     ;; If not parsed, trim only leading whitespace using built-in string-trim
+     (string-trim text "[ \t\n\r]+" nil))))
 
 
 ;; ----------------------------------------------------------------------------------
