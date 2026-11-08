@@ -111,7 +111,7 @@ Add this to `whisper-insert-text-at-point'."
 ;; open rule target
 (phony-define-open-rule target)
 
-;; selected region
+;; region
 (phony-defun target-region "region"
 	:contributes-to target
 	(when (region-active-p)
@@ -271,7 +271,7 @@ Add this to `whisper-insert-text-at-point'."
 	(org-end-of-subtree)
 	(activate-mark))
 
-;; select content
+;; select element
 (phony-defun select-element ("select" "element") (org-mark-element))
 
 ;; select element contents
@@ -305,10 +305,8 @@ Add this to `whisper-insert-text-at-point'."
 	(org-toggle-item nil))
 
 
-
-
 ;; ----------------------------------------------------------------------------------
-;; bookmarks
+;; bookmarks voice commands
 ;; ----------------------------------------------------------------------------------
 
 (bookmark-maybe-load-default-file)
@@ -320,6 +318,7 @@ Add this to `whisper-insert-text-at-point'."
          (docstring (format "Jump to bookmark %s." bm-name)))
     (eval `(phony-defun ,sym-name (,bm-name)
              (bookmark-jump ,bm-name)))))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
