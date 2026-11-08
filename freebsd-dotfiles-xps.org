@@ -2736,14 +2736,18 @@ Add this to `whisper-insert-text-at-point'."
 ;; copy + paste
 ;; ----------------------------------------------------------------------------------
 
-;; evil yank (copy)
-(phony-defun copy ("copy") (evil-yank))
+;; Copy current line or active region
+(phony-defun copy ("copy")
+  (if (region-active-p)
+      (kill-ring-save (region-beginning) (region-end))
+    (kill-ring-save (line-beginning-position) (line-end-position))))
 
-;; evil yank line (copy)
-(phony-defun copy-line ("copy line") (evil-yank-line))
+;; Copy line specifically
+(phony-defun copy-line ("copy line")
+  (kill-ring-save (line-beginning-position) (line-end-position)))
 
-;; evil paste
-(phony-defun paste ("paste") (evil-paste-after))
+;; Paste
+(phony-defun paste ("paste") (yank))
 
 
 ;; ----------------------------------------------------------------------------------
