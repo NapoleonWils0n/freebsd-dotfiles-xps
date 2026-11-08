@@ -2832,7 +2832,7 @@ Add this to `whisper-insert-text-at-point'."
     (magit-with-toplevel
       (call-process "git" nil nil nil "add" "-A"))
     (magit-refresh)
-    (magit-commit))
+    (magit-commit-create))
 
 (phony-defun git-commit ("git" "commit")
   (magit-stage-and-commit))
