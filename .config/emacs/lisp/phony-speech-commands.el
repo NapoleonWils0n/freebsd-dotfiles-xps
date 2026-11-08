@@ -105,22 +105,58 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; phony defun commands
+;; phony-define-open-rule
 ;; ----------------------------------------------------------------------------------
 
-;; region
-(phony-define-open-rule region)
+;; open rule target
+(phony-define-open-rule target)
 
+;; selected region
+(phony-defun target-region "region"
+	:contributes-to target
+	(when (region-active-p)
+	  (cons (region-beginning) (region-end))))
+
+;; sentence
+(phony-defun target-sentence "sentence"
+	:contributes-to target
+	(bounds-of-thing-at-point 'sentence))
+
+;; buffer
+(phony-defun target-buffer "buffer"
+	:contributes-to target
+	(bounds-of-thing-at-point 'buffer))
+
+;; current line
 (phony-defun current-line "line"
-  :contributes-to region
+  :contributes-to target
   (bounds-of-thing-at-point 'line))
 
-(phony-defun current-sentence "sentence"
-  :contributes-to region
-  (bounds-of-thing-at-point 'sentence))
 
-(phony-defun delete-current ("delete" (bounds region))
+;; ----------------------------------------------------------------------------------
+;; delete commands
+;; ----------------------------------------------------------------------------------
+
+;; delete x number of lines
+(phony-defun delete-lines ("delete" (n number) "lines")
+  (dotimes (i n)
+    (delete-line)))
+
+;; delete target
+(phony-defun delete-current ("delete" (bounds target))
   (delete-region (car bounds) (cdr bounds)))
+
+;; delete x number of words
+(phony-defun delete-words ("delete" (n number) "words")
+  (let ((start (point)))
+    (forward-word n)
+    (delete-region start (point))))
+
+;; delete a single word
+(phony-defun delete-single-word ("delete" "word")
+  (let ((start (point)))
+    (forward-word 1)
+    (delete-region start (point))))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -210,22 +246,28 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; paragraph commands
+;; selection commands
 ;; ----------------------------------------------------------------------------------
 
 (phony-defun pick-paragraph ("pick" "paragraph") (mark-paragraph))
+
 (phony-defun pick-subtree ("pick" "subtree") (org-mark-subtree))
+
 (phony-defun pick-sub-tree ("pick" "sub tree") (org-mark-subtree))
+
 (phony-defun pick-function ("pick" "function")
 	(mark-defun)
 	(activate-mark))
+
 (phony-defun pick-contents ("pick" "contents")
 	(org-back-to-heading)
 	(org-end-of-meta-data)
 	(push-mark)
 	(org-end-of-subtree)
 	(activate-mark))
+
 (phony-defun pick-element ("pick" "element") (org-mark-element))
+
 (phony-defun pick-line ("pick" "line")
 	(goto-char (line-beginning-position))
 	(push-mark)
@@ -259,21 +301,6 @@ Add this to `whisper-insert-text-at-point'."
 			(mark-paragraph)))
 	(org-toggle-item nil))
 
-
-(phony-define-open-rule target)
-(phony-defun region "region"
-	:contributes-to target
-	(car (region-beginning)
-			 (region-end)))
-(phony-defun function "function"
-	:contributes-to target
-	(bounds-of-thing-at-point 'defun))
-(phony-defun function "sentence"
-	:contributes-to target
-	(bounds-of-thing-at-point 'sentence))
-(phony-defun function "buffer"
-	:contributes-to target
-	(bounds-of-thing-at-point 'buffer))
 
 
 ;; ----------------------------------------------------------------------------------

@@ -2693,6 +2693,11 @@ Add this to `whisper-insert-text-at-point'."
   :contributes-to target
   (bounds-of-thing-at-point 'line))
 
+
+;; ----------------------------------------------------------------------------------
+;; delete commands
+;; ----------------------------------------------------------------------------------
+
 ;; delete x number of lines
 (phony-defun delete-lines ("delete" (n number) "lines")
   (dotimes (i n)
@@ -2702,10 +2707,18 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun delete-current ("delete" (bounds target))
   (delete-region (car bounds) (cdr bounds)))
 
+;; delete x number of words
+(phony-defun delete-words ("delete" (n number) "words")
+  (let ((start (point)))
+    (forward-word n)
+    (delete-region start (point))))
 
-;; ----------------------------------------------------------------------------------
-;; phony defun commands
-;; ----------------------------------------------------------------------------------
+;; delete a single word
+(phony-defun delete-single-word ("delete" "word")
+  (let ((start (point)))
+    (forward-word 1)
+    (delete-region start (point))))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; undo - redo
@@ -2794,22 +2807,28 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; paragraph commands
+;; selection commands
 ;; ----------------------------------------------------------------------------------
 
 (phony-defun pick-paragraph ("pick" "paragraph") (mark-paragraph))
+
 (phony-defun pick-subtree ("pick" "subtree") (org-mark-subtree))
+
 (phony-defun pick-sub-tree ("pick" "sub tree") (org-mark-subtree))
+
 (phony-defun pick-function ("pick" "function")
 	(mark-defun)
 	(activate-mark))
+
 (phony-defun pick-contents ("pick" "contents")
 	(org-back-to-heading)
 	(org-end-of-meta-data)
 	(push-mark)
 	(org-end-of-subtree)
 	(activate-mark))
+
 (phony-defun pick-element ("pick" "element") (org-mark-element))
+
 (phony-defun pick-line ("pick" "line")
 	(goto-char (line-beginning-position))
 	(push-mark)
