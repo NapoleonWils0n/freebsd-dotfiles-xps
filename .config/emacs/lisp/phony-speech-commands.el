@@ -249,31 +249,43 @@ Add this to `whisper-insert-text-at-point'."
 ;; selection commands
 ;; ----------------------------------------------------------------------------------
 
-(phony-defun pick-paragraph ("pick" "paragraph") (mark-paragraph))
+;; select paragraph
+(phony-defun select-paragraph ("select" "paragraph") (mark-paragraph))
 
-(phony-defun pick-subtree ("pick" "subtree") (org-mark-subtree))
+;; select subtree
+(phony-defun select-subtree ("select" "subtree") (org-mark-subtree))
+(phony-defun select-sub-tree ("select" "sub tree") (org-mark-subtree))
 
-(phony-defun pick-sub-tree ("pick" "sub tree") (org-mark-subtree))
-
-(phony-defun pick-function ("pick" "function")
-	(mark-defun)
+;; select line
+(phony-defun select-line ("select" "line")
+	(goto-char (line-beginning-position))
+	(push-mark)
+	(goto-char (line-end-position))
 	(activate-mark))
 
-(phony-defun pick-contents ("pick" "contents")
+;; select contents
+(phony-defun select-contents ("select" "contents")
 	(org-back-to-heading)
 	(org-end-of-meta-data)
 	(push-mark)
 	(org-end-of-subtree)
 	(activate-mark))
 
-(phony-defun pick-element ("pick" "element") (org-mark-element))
+;; select content
+(phony-defun select-element ("select" "element") (org-mark-element))
 
-(phony-defun pick-line ("pick" "line")
-	(goto-char (line-beginning-position))
-	(push-mark)
-	(goto-char (line-end-position))
-	(activate-mark))
+;; select element contents
+(phony-defun select-element-contents ("select" "element" "contents")
+	(let ((elem (org-element-context)))
+		(goto-char (or (org-element-contents-begin elem)
+		 (org-element-begin elem)))
+		(push-mark)
+		(goto-char (or (org-element-contents-end elem)
+		 (org-element-end elem)))
+		(activate-mark)))
 
+
+;; toggle text to a list
 (defun sacha-mark-list ()
 	"Mark the current list."
 	(let ((list (org-list-struct)))
@@ -285,21 +297,13 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun pick-list ("pick" "list")
 	(sacha-mark-list))
 
-(phony-defun pick-element-contents ("pick" "element" "contents")
-	(let ((elem (org-element-context)))
-		(goto-char (or (org-element-contents-begin elem)
-									 (org-element-begin elem)))
-		(push-mark)
-		(goto-char (or (org-element-contents-end elem)
-									 (org-element-end elem)))
-		(activate-mark)))
-
 (phony-defun toggle-list ("toggle" "list")
 	(unless (region-active-p)
 		(if (org-list-struct)
 				(sacha-mark-list)
 			(mark-paragraph)))
 	(org-toggle-item nil))
+
 
 
 
@@ -321,11 +325,9 @@ Add this to `whisper-insert-text-at-point'."
 ;; fix common voice errors
 ;; ----------------------------------------------------------------------------------
 
+;; fix miss spoken commands
 (defvar my-common-edits
   '(
-    ("dotfiles" "dot files")
-    ("changelog" "change log")
-    ("widen" "wyden")
     ("previous tab" "previous time")
     ("next tab" "next time")
     ("new tab" "new time")
@@ -333,6 +335,11 @@ Add this to `whisper-insert-text-at-point'."
     ("move tab" "move tap")
     ("last tab" "last time")
     ("first tab" "first time")
+    ("save buffer" "safe buffer")
+    ("element" "elements")
+    ("widen" "wyden")
+    ("dotfiles" "dot files")
+    ("changelog" "change log")
     )
   "Commonly-misrecognized words or words that need special capitalization.")
 
