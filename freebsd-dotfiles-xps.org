@@ -2722,11 +2722,28 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; undo - redo
+;; undo + redo
 ;; ----------------------------------------------------------------------------------
 
 (phony-defun undo ("undo") (undo))
 (phony-defun redo ("redo") (undo-redo))
+
+;; undo tree
+(phony-defun undo ("undo tree") (undo-tree-visualize))
+
+
+;; ----------------------------------------------------------------------------------
+;; copy + paste
+;; ----------------------------------------------------------------------------------
+
+;; evil yank (copy)
+(phony-defun copy ("copy") (evil-yank))
+
+;; evil yank line (copy)
+(phony-defun copy-line ("copy line") (evil-yank-line))
+
+;; evil paste
+(phony-defun paste ("paste") (evil-paste-after))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -2806,8 +2823,26 @@ Add this to `whisper-insert-text-at-point'."
 
 (phony-defun treesitter ("tree sitter") (treesit-explore-mode))
 
+
 ;; ----------------------------------------------------------------------------------
-;; org mode
+;; org mode headings
+;; ----------------------------------------------------------------------------------
+
+;; org-next-visible-heading
+(phony-defun next-heading ("next heading") (org-next-visible-heading))
+
+;; org-previous-visible-heading
+(phony-defun previous-heading ("previous heading") (org-previous-visible-heading))
+
+;; org-insert-heading
+(phony-defun insert-heading ("insert heading") (org-insert-heading))
+
+;; org-insert-subheading
+(phony-defun insert-subheading ("insert sub heading") (org-insert-subheading))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode source blocks
 ;; ----------------------------------------------------------------------------------
 
 ;; org edit source block
@@ -2815,6 +2850,12 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; org source block exit
 (phony-defun exit-block ("block exit") (org-edit-src-exit))
+
+;; org next source block
+(phony-defun next-src-block ("next source block") (org-babel-next-src-block))
+
+;; org previous source block
+(phony-defun previous-src-block ("previous source block") (org-babel-previous-src-block))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -2866,6 +2907,14 @@ Add this to `whisper-insert-text-at-point'."
 	(push-mark)
 	(goto-char (line-end-position))
 	(activate-mark))
+
+;; select x number of lines
+(phony-defun select-lines ("select" (n number) "lines")
+  (goto-char (line-beginning-position))
+  (push-mark)
+  (forward-line (1- n))
+  (goto-char (line-end-position))
+  (activate-mark))
 
 ;; select contents
 (phony-defun select-contents ("select" "contents")
