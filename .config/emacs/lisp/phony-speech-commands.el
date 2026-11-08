@@ -267,9 +267,11 @@ Add this to `whisper-insert-text-at-point'."
 (defun magit-stage-and-commit ()
   "Stage all modified and untracked changes silently, then open the commit message buffer."
   (interactive)
-  (magit-with-toplevel
+  (magit-status)
+    (magit-with-toplevel
       (call-process "git" nil nil nil "add" "-A"))
-    (magit-commit-create))
+    (magit-refresh)
+    (magit-commit))
 
 (phony-defun git-commit ("git" "commit")
   (magit-stage-and-commit))
