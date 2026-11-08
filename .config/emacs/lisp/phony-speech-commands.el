@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 ;; ----------------------------------------------------------------------------------
 ;; phony-speech-commands.el
+;; https://github.com/sachac/phony.el
 ;; ----------------------------------------------------------------------------------
 
 
@@ -87,7 +88,7 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; phony-define-dictionary
+;; phony-define-dictionary - numbers
 ;; ----------------------------------------------------------------------------------
 
 ;; define numbers
@@ -243,6 +244,35 @@ Add this to `whisper-insert-text-at-point'."
 ;; ----------------------------------------------------------------------------------
 
 (phony-defun treesitter ("tree sitter") (treesit-explore-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; org babel tangle
+;; ----------------------------------------------------------------------------------
+
+;; org babel tangle block
+(phony-defun tangle-block ("tangle block")
+  (let ((current-prefix-arg '(4)))
+    (call-interactively #'org-babel-tangle)))
+
+;; org babel tangle file
+(phony-defun tangle-file ("tangle file")
+  (when buffer-file-name
+    (org-babel-tangle-file buffer-file-name)))
+
+;; ----------------------------------------------------------------------------------
+;; magit stage and commit
+;; ----------------------------------------------------------------------------------
+
+(defun magit-stage-and-commit ()
+  "Stage all modified and untracked changes silently, then open the commit message buffer."
+  (interactive)
+  (magit-with-toplevel
+      (call-process "git" nil nil nil "add" "-A"))
+    (magit-commit-create))
+
+(phony-defun git-commit ("git" "commit")
+  (magit-stage-and-commit))
 
 
 ;; ----------------------------------------------------------------------------------
