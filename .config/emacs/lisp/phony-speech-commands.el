@@ -87,8 +87,41 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
+;; phony-define-dictionary
+;; ----------------------------------------------------------------------------------
+
+;; define numbers
+(phony-define-dictionary number
+  '(("one" . 1)
+    ("two" . 2)
+    ("three" . 3)
+    ("four" . 4)
+    ("five" . 5)
+    ("six" . 6)
+    ("seven" . 7)
+    ("eight" . 8)
+    ("nine" . 9)
+    ("ten" . 10)))
+
+
+;; ----------------------------------------------------------------------------------
 ;; phony defun commands
 ;; ----------------------------------------------------------------------------------
+
+;; region
+(phony-define-open-rule region)
+
+(phony-defun current-line "line"
+  :contributes-to region
+  (bounds-of-thing-at-point 'line))
+
+(phony-defun current-sentence "sentence"
+  :contributes-to region
+  (bounds-of-thing-at-point 'sentence))
+
+(phony-defun delete-current ("delete" (bounds region))
+  (delete-region (car bounds) (cdr bounds)))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; undo - redo
@@ -102,7 +135,7 @@ Add this to `whisper-insert-text-at-point'."
 ;; check spelling
 ;; ----------------------------------------------------------------------------------
 
-(phony-defun ispell ("spelling") (ispell))
+(phony-defun ispell ("spell check") (ispell-buffer))
 
 
 ;; ----------------------------------------------------------------------------------
