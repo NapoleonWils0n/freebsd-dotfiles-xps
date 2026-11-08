@@ -255,6 +255,7 @@ Add this to `whisper-insert-text-at-point'."
 ;; org source block exit
 (phony-defun exit-block ("block exit") (org-edit-src-exit))
 
+
 ;; ----------------------------------------------------------------------------------
 ;; org babel tangle
 ;; ----------------------------------------------------------------------------------
@@ -268,6 +269,7 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun tangle-file ("tangle file")
   (when buffer-file-name
     (org-babel-tangle-file buffer-file-name)))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; magit stage and commit
