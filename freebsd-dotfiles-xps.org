@@ -2666,23 +2666,46 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; phony defun commands
+;; phony-define-open-rule
 ;; ----------------------------------------------------------------------------------
 
-;; region
-(phony-define-open-rule region)
+;; open rule target
+(phony-define-open-rule target)
 
+;; selected region
+(phony-defun target-region "region"
+	:contributes-to target
+	(when (region-active-p)
+	  (cons (region-beginning) (region-end))))
+
+;; sentence
+(phony-defun target-sentence "sentence"
+	:contributes-to target
+	(bounds-of-thing-at-point 'sentence))
+
+;; buffer
+(phony-defun target-buffer "buffer"
+	:contributes-to target
+	(bounds-of-thing-at-point 'buffer))
+
+;; current line
 (phony-defun current-line "line"
-  :contributes-to region
+  :contributes-to target
   (bounds-of-thing-at-point 'line))
 
-(phony-defun current-sentence "sentence"
-  :contributes-to region
-  (bounds-of-thing-at-point 'sentence))
+;; delete x number of lines
+(phony-defun delete-lines ("delete" (n number) "lines")
+  (dotimes (i n)
+    (delete-line)))
 
-(phony-defun delete-current ("delete" (bounds region))
+;; delete target
+(phony-defun delete-current ("delete" (bounds target))
   (delete-region (car bounds) (cdr bounds)))
 
+
+;; ----------------------------------------------------------------------------------
+;; phony defun commands
+;; ----------------------------------------------------------------------------------
 
 ;; ----------------------------------------------------------------------------------
 ;; undo - redo
@@ -2820,21 +2843,6 @@ Add this to `whisper-insert-text-at-point'."
 			(mark-paragraph)))
 	(org-toggle-item nil))
 
-
-(phony-define-open-rule target)
-(phony-defun region "region"
-	:contributes-to target
-	(car (region-beginning)
-			 (region-end)))
-(phony-defun function "function"
-	:contributes-to target
-	(bounds-of-thing-at-point 'defun))
-(phony-defun function "sentence"
-	:contributes-to target
-	(bounds-of-thing-at-point 'sentence))
-(phony-defun function "buffer"
-	:contributes-to target
-	(bounds-of-thing-at-point 'buffer))
 
 
 ;; ----------------------------------------------------------------------------------
