@@ -245,6 +245,15 @@ Add this to `whisper-insert-text-at-point'."
 
 (phony-defun treesitter ("tree sitter") (treesit-explore-mode))
 
+;; ----------------------------------------------------------------------------------
+;; org mode
+;; ----------------------------------------------------------------------------------
+
+;; org edit source block
+(phony-defun edit-block ("edit block") (org-edit-special))
+
+;; org source block exit
+(phony-defun exit-block ("block exit") (org-edit-src-exit))
 
 ;; ----------------------------------------------------------------------------------
 ;; org babel tangle
