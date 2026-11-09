@@ -134,10 +134,28 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
+;; cursor commands
+;; ----------------------------------------------------------------------------------
+
+;; cursor move N number of lines up
+(phony-defun sacha-phony-cursor-up-lines ("cursor" "up" (n number))
+  "Cursor up N lines"
+  (dotimes (i n)
+    (evil-previous-line)))
+
+;; cursor move N number of lines down
+(phony-defun sacha-phony-cursor-down-lines ("cursor" "down" (n number))
+  "Cursor down N lines"
+  (dotimes (i n)
+    (evil-next-line)))
+
+
+
+;; ----------------------------------------------------------------------------------
 ;; delete commands
 ;; ----------------------------------------------------------------------------------
 
-;; delete x number of lines
+;; delete N number of lines
 (phony-defun sacha-phony-delete-lines ("delete" (n number) "lines")
   "Delete N lines"
   (dotimes (i n)
@@ -148,7 +166,7 @@ Add this to `whisper-insert-text-at-point'."
   "Delete bounds target"
   (delete-region (car bounds) (cdr bounds)))
 
-;; delete x number of words
+;; delete N number of words
 (phony-defun sacha-phony-delete-words ("delete" (n number) "words")
   "Delete N words"
   (let ((start (point)))
