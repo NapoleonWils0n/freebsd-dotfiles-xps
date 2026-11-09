@@ -150,7 +150,6 @@ Add this to `whisper-insert-text-at-point'."
     (evil-next-line)))
 
 
-
 ;; ----------------------------------------------------------------------------------
 ;; delete commands
 ;; ----------------------------------------------------------------------------------
@@ -567,17 +566,6 @@ Add this to `whisper-insert-text-at-point'."
 				(sacha-mark-list)
 			(mark-paragraph)))
 	(org-toggle-item nil))
-
-
-
-;; ----------------------------------------------------------------------------------
-;; send command to tmux buffer
-;; ----------------------------------------------------------------------------------
-
-;; send command to tmux buffer
-(phony-defun sacha-phony-tmux-send ("send command")
-  "send command to tmux"
-  (my/emamux-smart-send))
 
 
 ;; ----------------------------------------------------------------------------------
