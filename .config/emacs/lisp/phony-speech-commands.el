@@ -281,6 +281,11 @@ Add this to `whisper-insert-text-at-point'."
   "kill buffer"
   (kill-current-buffer))
 
+;; list buffers
+(phony-defun sacha-phony-list-buffers ("list buffers")
+  "list buffers"
+  (list-buffers))
+
 ;; switch buffer
 (phony-defun sacha-phony-switch-buffer ("switch buffer")
   "consult switch buffer"
