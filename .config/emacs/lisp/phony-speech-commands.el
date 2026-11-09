@@ -151,6 +151,21 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
+;; paragraph commands
+;; ----------------------------------------------------------------------------------
+
+;; forward paragraph
+(phony-defun sacha-phony-forward-paragraph ("forward paragraph")
+  "forward paragraph"
+  (forward-paragraph))
+
+;; forward paragraph
+(phony-defun sacha-phony-backwards-paragraph ("backwards paragraph")
+  "backwards paragraph"
+  (backward-paragraph))
+
+
+;; ----------------------------------------------------------------------------------
 ;; delete commands
 ;; ----------------------------------------------------------------------------------
 
@@ -605,8 +620,10 @@ Add this to `whisper-insert-text-at-point'."
     ("save buffer" "safe buffer")
     ("element" "elements")
     ("widen" "wyden")
+    ("widen" "biden")
     ("edit block" "edit lock")
     ("exit block" "edit lock")
+    ("git commit" "get commit")
     ("dotfiles" "dot files")
     ("changelog" "change log")
     )
