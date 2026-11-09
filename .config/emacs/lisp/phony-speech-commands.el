@@ -266,7 +266,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; move tab forwards
 (phony-defun move-tab-forwards ("move tab forwards")
-  (tab-bar-move-tab))
+  (tab-bar-move-tab 1))
 
 ;; move tab backwards
 (phony-defun move-tab-backwards ("move tab backwards")
@@ -539,6 +539,8 @@ Add this to `whisper-insert-text-at-point'."
     ("save buffer" "safe buffer")
     ("element" "elements")
     ("widen" "wyden")
+    ("edit block" "edit lock")
+    ("exit block" "edit lock")
     ("dotfiles" "dot files")
     ("changelog" "change log")
     )
