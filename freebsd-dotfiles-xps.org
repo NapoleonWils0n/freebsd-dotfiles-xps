@@ -321,6 +321,13 @@ On graphical displays and on text terminals, Emacs can optionally display a Tab 
 
 ;; Man display in current buffer
 (setq Man-notify-method 'bully)
+
+;; Display help buffers in the current window instead of splitting
+(setq help-window-select t)
+
+(add-to-list 'display-buffer-alist
+             '("\\*Help\\*"
+               (display-buffer-same-window)))
 #+end_src
 
 ***** functions

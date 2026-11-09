@@ -240,6 +240,13 @@
 ;; Man display in current buffer
 (setq Man-notify-method 'bully)
 
+;; Display help buffers in the current window instead of splitting
+(setq help-window-select t)
+
+(add-to-list 'display-buffer-alist
+             '("\\*Help\\*"
+               (display-buffer-same-window)))
+
 ;; ----------------------------------------------------------------------------------
 ;; functions
 ;; ----------------------------------------------------------------------------------
