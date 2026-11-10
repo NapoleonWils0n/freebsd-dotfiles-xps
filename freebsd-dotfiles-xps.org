@@ -2578,6 +2578,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 ;; ----------------------------------------------------------------------------------
 
 (require 'phony-parser)
+(require 'phony-stdlib)
 (define-error 'sacha-phony-not-parsed "Sentence not parsed." 'error)
 
 
@@ -2662,21 +2663,27 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
-;; phony-define-dictionary - numbers
+;; phony numbers
 ;; ----------------------------------------------------------------------------------
 
-;; define numbers
-(phony-define-dictionary number
-  '(("one" . 1)
-    ("two" . 2)
-    ("three" . 3)
-    ("four" . 4)
-    ("five" . 5)
-    ("six" . 6)
-    ("seven" . 7)
-    ("eight" . 8)
-    ("nine" . 9)
-    ("ten" . 10)))
+;; phony numbers
+(phony-define-interface number
+  "A number."
+  :default phony-stdlib-number)
+
+;; Define a custom number parser that handles both words and raw digits
+(phony-defun sacha-phony-flexible-number ((w word))
+  "Parse either a raw numeric digit string or fall back to word-based numbers."
+  :interactive nil
+  (if (and (stringp w) (string-match-p "^[0-9]+$" w))
+      (string-to-number w)
+    ;; Fall back to the standard stdlib number parser
+    (phony--evaluate-ast w)))
+
+;; Alternatively, override the default rule for the number interface:
+(phony-define-interface number
+  "A number supporting words and digits."
+  :default sacha-phony-flexible-number)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -2772,11 +2779,12 @@ unless the buffer is read-only."
 ;; delete commands
 ;; ----------------------------------------------------------------------------------
 
-;; delete N number of lines
+;; delete N number of lines 
 (phony-defun sacha-phony-delete-lines ("delete" (n number) "lines")
   "Delete N lines"
-  (dotimes (i n)
-    (delete-line)))
+  (when (numberp n)
+    (dotimes (i n)
+      (delete-line))))
 
 ;; delete target
 (phony-defun sacha-phony-delete-current ("delete" (bounds target))
