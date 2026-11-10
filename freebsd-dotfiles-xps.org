@@ -3259,8 +3259,18 @@ Add this to `whisper-insert-text-at-point'."
 ;; phony speech commands help
 (defun phony-speech-commands--get-help-content ()
   "Parse source buffer and return the formatted help text string."
-  (let ((source-content (buffer-string))
-        results)
+  (let* ((source-buf (or (get-buffer "phony-speech-commands.el")
+                         (find-buffer-visiting (locate-library "phony-speech-commands"))))
+         (source-content (if source-buf
+                             (with-current-buffer source-buf (buffer-string))
+                           (let ((file-path (or (locate-library "phony-speech-commands")
+                                                (expand-file-name "phony-speech-commands.el" default-directory))))
+                             (if (file-exists-p file-path)
+                                 (with-temp-buffer
+                                   (insert-file-contents file-path)
+                                   (buffer-string))
+                               ""))))
+         results)
     (with-temp-buffer
       (insert source-content)
       (goto-char (point-min))
