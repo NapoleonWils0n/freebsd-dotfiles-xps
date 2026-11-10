@@ -2877,6 +2877,16 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; control c control c
+;; ----------------------------------------------------------------------------------
+
+;; control c control c
+(phony-defun sacha-phony-ctrl-c-ctrl-c ("execute")
+  "Run org-ctrl-c-ctrl-c"
+  (call-interactively #'org-ctrl-c-ctrl-c))
+
+
+;; ----------------------------------------------------------------------------------
 ;; paragraph commands
 ;; ----------------------------------------------------------------------------------
 
@@ -3037,6 +3047,16 @@ unless the buffer is read-only."
   "Tangle current file"
   (when buffer-file-name
     (org-babel-tangle-file buffer-file-name)))
+
+
+;; ----------------------------------------------------------------------------------
+;; org todo state
+;; ----------------------------------------------------------------------------------
+
+;; org to do state
+(phony-defun sacha-phony-org-todo-states ("org to do state")
+  "Change TODO state of an item."
+  (org-todo))
 
 
 ;; ----------------------------------------------------------------------------------

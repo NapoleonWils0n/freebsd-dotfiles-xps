@@ -74,46 +74,12 @@ Useful in `speech-input-commands'."
 (defun speech-input-phony-process (text)
   "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
 unless the buffer is read-only."
-  (condition-case err
-      (progn
-        ;; Lowercase the first letter to match command definitions
-        (sacha-phony-evaluate
-         (concat (downcase (substring text 0 1))
-                 (if (> (length text) 1) (substring text 1) "")))
-        ;; Return empty string if successfully parsed & executed (stops further processing)
-        "")
-    (sacha-phony-not-parsed
-     ;; If it's not a recognized command (i.e. normal speech/dictation)
-     (if buffer-read-only
-         (progn
-           (message "Buffer is read-only; suppressing text insertion.")
-           "")
-       (string-trim text "[ \t\n\r]+" nil)))
-    (error
-     ;; Let actual command execution errors bubble up normally
-     (signal (car err) (cdr err)))))
-
-
-;; ----------------------------------------------------------------------------------
-;; phony numbers
-;; ----------------------------------------------------------------------------------
-
-(defun speech-input-phony-process (text)
-  "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
-unless the buffer is read-only."
   (let* ((processed-text 
-          ;; Convert numeric digits like "10" to words if they appear in commands like "delete X lines"
+          ;; Dynamically convert any numeric digits to words
           (replace-regexp-in-string 
-           "\\b\\([0-9]+\\)\\b" 
+           "\\b[0-9]+\\b" 
            (lambda (match)
-             (pcase (string-to-number match)
-               (1 "one") (2 "two") (3 "three") (4 "four") (5 "five")
-               (6 "six") (7 "seven") (8 "eight") (9 "nine") (10 "ten")
-               (11 "eleven") (12 "twelve") (13 "thirteen") (14 "fourteen") (15 "fifteen")
-               (16 "sixteen") (17 "seventeen") (18 "eighteen") (19 "nineteen") (20 "twenty")
-               (30 "thirty") (40 "forty") (50 "fifty") (60 "sixty") 
-               (70 "seventy") (80 "eighty") (90 "ninety") (100 "hundred")
-               (_ match)))
+             (sacha-number-to-words (string-to-number match)))
            text)))
     (condition-case err
         (progn
@@ -131,6 +97,33 @@ unless the buffer is read-only."
          (string-trim text "[ \t\n\r]+" nil)))
       (error
        (signal (car err) (cdr err))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; phony numbers
+;; ----------------------------------------------------------------------------------
+
+(defun sacha-number-to-words (n)
+  "Convert integer N to English words for phony-stdlib parsing."
+  (cond
+   ((< n 10)
+    (nth n '("zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine")))
+   ((< n 20)
+    (nth (- n 10) '("ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" "seventeen" "eighteen" "nineteen")))
+   ((< n 100)
+    (let ((tens (floor n 10))
+          (rem (% n 10))
+          (tens-words '("" "" "twenty" "thirty" "forty" "fifty" "sixty" "seventy" "eighty" "ninety")))
+      (if (= rem 0)
+          (nth tens tens-words)
+        (concat (nth tens tens-words) " " (sacha-number-to-words rem)))))
+   ((< n 1000)
+    (let ((hundreds (floor n 100))
+          (rem (% n 100)))
+      (if (= rem 0)
+          (concat (sacha-number-to-words hundreds) " hundred")
+        (concat (sacha-number-to-words hundreds) " hundred and " (sacha-number-to-words rem)))))
+   (t (number-to-string n))))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -175,6 +168,15 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-open-file ("open file")
   "Open file under cursor"
   (dired-find-file))
+
+;; ----------------------------------------------------------------------------------
+;; go to line number
+;; ----------------------------------------------------------------------------------
+
+;; go to line N
+(phony-defun sacha-phony-goto-line ("go to line" (n number))
+  "Go to line N"
+  (goto-line n))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -304,6 +306,16 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-paste ("paste")
   "Paste from kill ring"
   (yank))
+
+
+;; ----------------------------------------------------------------------------------
+;; control c control c
+;; ----------------------------------------------------------------------------------
+
+;; control c control c
+(phony-defun sacha-phony-ctrl-c-ctrl-c ("execute")
+  "Run org-ctrl-c-ctrl-c"
+  (call-interactively #'org-ctrl-c-ctrl-c))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -467,6 +479,16 @@ unless the buffer is read-only."
   "Tangle current file"
   (when buffer-file-name
     (org-babel-tangle-file buffer-file-name)))
+
+
+;; ----------------------------------------------------------------------------------
+;; org todo state
+;; ----------------------------------------------------------------------------------
+
+;; org to do state
+(phony-defun sacha-phony-org-todo-states ("org to do state")
+  "Change TODO state of an item."
+  (org-todo))
 
 
 ;; ----------------------------------------------------------------------------------
