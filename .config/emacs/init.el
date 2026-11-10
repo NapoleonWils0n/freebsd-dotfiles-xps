@@ -1487,6 +1487,13 @@
                                   gemma4-unsloth:latest
                                   translategemma:4b)))
 
+  ;; gemini free tier
+  (setq gptel-backend (gptel-make-gemini "Gemini"
+                          :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                          :stream t
+                          :models '(gemini-3.8-flash
+                                    gemini-3.6-flash)))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; display the Ollama buffer in same window
@@ -1494,6 +1501,13 @@
 
   (add-to-list 'display-buffer-alist
                '("^*Ollama*" display-buffer-same-window))
+
+;; ----------------------------------------------------------------------------------
+;; display the Gemini buffer in same window
+;; ----------------------------------------------------------------------------------
+
+  (add-to-list 'display-buffer-alist
+               '("^*Gemini*" display-buffer-same-window))
 
 ;; ----------------------------------------------------------------------------------
 ;; gptel set org source blocks to use sh and not bash
