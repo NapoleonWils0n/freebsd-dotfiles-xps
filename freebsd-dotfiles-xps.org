@@ -2724,12 +2724,12 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; forward paragraph
 (phony-defun sacha-phony-forward-paragraph ("forward paragraph")
-  "forward paragraph"
+  "Go to next paragraph"
   (forward-paragraph))
 
 ;; forward paragraph
 (phony-defun sacha-phony-backwards-paragraph ("backwards paragraph")
-  "backwards paragraph"
+  "Go to prev paragraph"
   (backward-paragraph))
 
 
@@ -2745,7 +2745,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; delete target
 (phony-defun sacha-phony-delete-current ("delete" (bounds target))
-  "Delete bounds target"
+  "Delete target bounds"
   (delete-region (car bounds) (cdr bounds)))
 
 ;; delete N number of words
@@ -2757,7 +2757,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; delete a single word
 (phony-defun sacha-phony-delete-single-word ("delete" "word")
-  "Delete word"
+  "Delete single word"
   (let ((start (point)))
     (forward-word 1)
     (delete-region start (point))))
@@ -2769,17 +2769,17 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; undo
 (phony-defun sacha-phony-undo ("undo")
-  "undo"
+  "Undo last action"
   (undo))
 
 ;; redo
 (phony-defun sacha-phony-redo ("redo")
-  "redo"
+  "Redo action"
   (undo-redo))
 
 ;; undo tree
 (phony-defun sacha-phony-undo-tree ("undo tree")
-  "undo tree"
+  "Show undo tree"
   (undo-tree-visualize))
 
 
@@ -2789,20 +2789,20 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; Copy current line or active region
 (phony-defun sacha-phony-yank ("yank")
-  "yank line or region"
+  "Yank line or region"
   (if (region-active-p)
       (kill-ring-save (region-beginning) (region-end))
     (kill-ring-save (line-beginning-position) (line-end-position))))
 
 ;; Copy line specifically
 (phony-defun sacha-phony-yank-line ("yank line")
-  "yank line"
+  "Yank current line"
   (kill-ring-save (line-beginning-position)
                   (line-end-position)))
 
 ;; Paste
 (phony-defun sacha-phony-paste ("paste")
-  "paste"
+  "Paste from kill ring"
   (yank))
 
 
@@ -2812,12 +2812,12 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; spell check word
 (phony-defun sacha-phony-ispell-word ("spell check word")
-  "spell check word"
+  "Spell check word"
   (ispell-word))
 
 ;; spell check buffer
 (phony-defun sacha-phony-ispell-buffer ("spell check buffer")
-  "spell check buffer"
+  "Spell check buffer"
   (ispell-buffer))
 
 
@@ -2826,7 +2826,7 @@ Add this to `whisper-insert-text-at-point'."
 ;; ----------------------------------------------------------------------------------
 
 (phony-defun sacha-phony-dictionary ("dictionary")
-  "look up dictionary definition"
+  "Look up definition"
   (dictionary-lookup-definition))
 
 
@@ -2836,12 +2836,12 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; scroll up
 (phony-defun sacha-phony-scroll-up ("scroll up")
-  "scroll up"
-  (scroll-up-command))
+ "Scroll page up"
+ (scroll-up-command))
 
 ;; scroll down
 (phony-defun sacha-phony-scroll-down ("scroll down")
-  "scroll down"
+  "Scroll page down"
   (scroll-down-command))
 
 
@@ -2851,27 +2851,27 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; mark buffer
 (phony-defun sacha-phony-mark-buffer ("mark buffer")
-  "mark buffer"
+  "Select full buffer"
   (mark-whole-buffer))
 
 ;; save buffer
 (phony-defun sacha-phony-save-buffer ("save buffer")
-  "save buffer"
+  "Save current buffer"
   (save-buffer))
 
 ;; kill buffer
 (phony-defun sacha-phony-kill-buffer ("kill buffer")
-  "kill buffer"
+  "Close current buffer"
   (kill-current-buffer))
 
 ;; list buffers
 (phony-defun sacha-phony-list-buffers ("list buffers")
-  "list buffers"
+  "List open buffers"
   (list-buffers))
 
 ;; switch buffer
 (phony-defun sacha-phony-switch-buffer ("switch buffer")
-  "consult switch buffer"
+  "Switch active buffer"
   (consult-buffer))
 
 
@@ -2881,42 +2881,42 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; new tab
 (phony-defun sacha-phony-new-tab ("new tab")
-  "new tab"
+  "Open new tab"
   (tab-bar-new-tab))
 
 ;; close tab
 (phony-defun sacha-phony-close-tab ("close tab")
-  "close tab"
+  "Close current tab"
   (tab-bar-close-tab))
 
 ;; move tab forwards
 (phony-defun sacha-phony-move-tab-forwards ("move tab forwards")
-  "move tab forwards"
+  "Move tab right"
   (tab-bar-move-tab 1))
 
 ;; move tab backwards
 (phony-defun sacha-phony-move-tab-backwards ("move tab backwards")
-  "move tab backwards"
+  "Move tab left"
   (tab-bar-move-tab-backward))
 
 ;; next tab
 (phony-defun sacha-phony-next-tab ("next tab")
-  "next tab"
+  "Switch to next tab"
   (tab-bar-switch-to-next-tab))
 
 ;; previous tab
 (phony-defun sacha-phony-previous-tab ("previous tab")
-  "previous tab"
+  "Switch to prev tab"
   (tab-bar-switch-to-prev-tab))
 
 ;; first tab
 (phony-defun sacha-phony-first-tab ("first tab")
-  "first tab"
+  "Switch to first tab"
   (tab-bar-select-tab 1))
 
 ;; last tab
 (phony-defun sacha-phony-last-tab ("last tab")
-  "last tab"
+  "Switch to last tab"
   (tab-bar-switch-to-last-tab))
 
 
@@ -2926,22 +2926,22 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; switch to other window
 (phony-defun sacha-phony-other-window ("other window")
-  "other window"
+  "Switch window"
   (other-window))
 
 ;; delete window
 (phony-defun sacha-phony-delete-window ("delete window")
-  "delete window"
+  "Close window"
   (delete-window))
 
 ;; delete other window
 (phony-defun sacha-phony-delete-other-window ("delete other window")
-  "delete other window"
+  "Close other window"
   (delete-other-windows))
 
 ;; toggle side window
 (phony-defun sacha-phony-toggle-side-window ("toggle side window")
-  "toggle side window"
+  "Toggle side window"
   (window-toggle-side-windows))
 
 
@@ -2951,12 +2951,12 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; narrow org tree
 (phony-defun sacha-phony-narrow ("narrow")
-  "narrow subtree"
+  "Narrow subtree"
   (org-narrow-to-subtree))
 
 ;; widen org tree
 (phony-defun sacha-phony-widen ("widen")
-  "widen subtree"
+  "Widen subtree"
   (widen))
 
 
@@ -2966,7 +2966,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; treesitter explore mode
 (phony-defun sacha-phony-treesitter ("tree sitter")
-  "treesitter explore"
+  "Explore tree-sitter"
   (treesit-explore-mode))
 
 
@@ -2976,23 +2976,24 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; org-next-visible-heading
 (phony-defun sacha-phony-next-heading ("next heading")
-  "next heading"
+  "Jump to next heading"
   (org-next-visible-heading))
 
 ;; org-previous-visible-heading
 (phony-defun sacha-phony-previous-heading ("previous heading")
-  "previous heading"
+  "Jump to prev heading"
   (org-previous-visible-heading))
 
 ;; org-insert-heading
 (phony-defun sacha-phony-insert-heading ("insert heading")
-  "insert heading"
+  "Insert new heading"
   (org-insert-heading))
 
 ;; org-insert-subheading
 (phony-defun sacha-phony-insert-subheading ("insert subheading")
-  "insert subheading"
+  "Insert subheading"
   (call-interactively #'org-insert-subheading))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; org mode source blocks
@@ -3000,22 +3001,22 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; org edit source block
 (phony-defun sacha-phony-edit-block ("edit block")
-  "edit org source block"
+  "Edit source block"
   (org-edit-special))
 
 ;; org source block exit
 (phony-defun sacha-phony-exit-block ("exit block")
-  "exit org source block"
+  "Exit source block"
   (org-edit-src-exit))
 
 ;; org next source block
 (phony-defun sacha-phony-next-src-block ("next source block")
-  "next source block"
+  "Jump to next block"
   (org-babel-next-src-block))
 
 ;; org previous source block
 (phony-defun sacha-phony-previous-src-block ("previous source block")
-  "previous source block"
+  "Jump to prev block"
   (org-babel-previous-src-block))
 
 
@@ -3025,13 +3026,13 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; org babel tangle block
 (phony-defun sacha-phony-tangle-block ("tangle block")
-  "tangle babel source block"
+  "Tangle babel block"
   (let ((current-prefix-arg '(4)))
     (call-interactively #'org-babel-tangle)))
 
 ;; org babel tangle file
 (phony-defun sacha-phony-tangle-file ("tangle file")
-  "tangle file"
+  "Tangle current file"
   (when buffer-file-name
     (org-babel-tangle-file buffer-file-name)))
 
@@ -3051,7 +3052,7 @@ Add this to `whisper-insert-text-at-point'."
     (magit-commit-create))
 
 (phony-defun sacha-phony-git-commit ("git" "commit")
-  "magit stage and commit"
+  "Magit stage & commit"
   (sacha-phony-magit-stage-and-commit))
 
 
@@ -3061,7 +3062,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; toggle display line numbers
 (phony-defun sacha-phony-line-number ("line numbers")
-  "toggle line numbers"
+  "Toggle line numbers"
   (display-line-numbers-mode 'toggle))
 
 
@@ -3071,7 +3072,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; help buffer
 (phony-defun sacha-phony-help-buffer ("help")
-  "emacs help buffer"
+  "Open Emacs help"
   (help-for-help))
 
 
@@ -3081,7 +3082,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; select paragraph
 (phony-defun sacha-phony-select-paragraph ("select" "paragraph")
-  "mark paragraph"
+  "Select paragraph"
   (mark-paragraph))
 
 ;; select subtree
@@ -3090,12 +3091,12 @@ Add this to `whisper-insert-text-at-point'."
   (org-mark-subtree))
 
 (phony-defun sacha-phony-select-sub-tree ("select" "sub tree")
-  "select subtree"
+  "Select subtree"
   (org-mark-subtree))
 
 ;; select line
 (phony-defun sacha-phony-select-line ("select" "line")
-  "select line"
+  "Select line"
 	(goto-char (line-beginning-position))
 	(push-mark)
 	(goto-char (line-end-position))
@@ -3103,7 +3104,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; select x number of lines
 (phony-defun sacha-phony-select-lines ("select" (n number) "lines")
-  "select N number of lines"
+  "Select N number of lines"
   (goto-char (line-beginning-position))
   (push-mark)
   (forward-line (1- n))
@@ -3112,7 +3113,7 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; select contents
 (phony-defun sacha-phony-select-contents ("select" "contents")
-  "select contents"
+  "Select contents"
 	(org-back-to-heading)
 	(org-end-of-meta-data)
 	(push-mark)
@@ -3121,12 +3122,12 @@ Add this to `whisper-insert-text-at-point'."
 
 ;; select element
 (phony-defun sacha-phony-select-element ("select" "element")
-  "select element"
+  "Select element"
   (org-mark-element))
 
 ;; select element contents
 (phony-defun sacha-phony-select-element-contents ("select" "element" "contents")
-  "select element contents"
+  "Select element contents"
 	(let ((elem (org-element-context)))
 		(goto-char (or (org-element-contents-begin elem)
 		 (org-element-begin elem)))
@@ -3191,6 +3192,7 @@ Add this to `whisper-insert-text-at-point'."
     ("widen" "biden")
     ("edit block" "edit lock")
     ("exit block" "edit lock")
+    ("exit block" "exit lock")
     ("git commit" "get commit")
     ("dotfiles" "dot files")
     ("changelog" "change log")
@@ -3249,6 +3251,81 @@ Add this to `whisper-insert-text-at-point'."
 (with-eval-after-load 'whisper
   (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
 
+
+;; ----------------------------------------------------------------------------------
+;; voice command help buffer
+;; ----------------------------------------------------------------------------------
+
+;; phony speech commands help
+(defun phony-speech-commands--get-help-content ()
+  "Parse source buffer and return the formatted help text string."
+  (let ((source-content (buffer-string))
+        results)
+    (with-temp-buffer
+      (insert source-content)
+      (goto-char (point-min))
+      (when (search-forward ";; cursor commands" nil t)
+        (while (< (point) (point-max))
+          (condition-case nil
+              (let* ((form (read (current-buffer)))
+                     (op (car-safe form)))
+                (when (eq op 'phony-defun)
+                  (let* ((pattern (nth 2 form))
+                         (body (nthcdr 3 form))
+                         (body (if (keywordp (car body)) (nthcdr 2 body) body))
+                         (docstring (when (stringp (car body)) (car body)))
+                         (pattern-str
+                          (cond
+                           ((stringp pattern) pattern)
+                           ((listp pattern)
+                            (mapconcat (lambda (item)
+                                         (cond
+                                          ((stringp item) item)
+                                          ((listp item) (format "<%s>" (car item)))
+                                          ((symbolp item) (symbol-name item))
+                                          (t "")))
+                                       pattern
+                                       " "))
+                           (t ""))))
+                    (when (and pattern-str (not (string-empty-p pattern-str)) docstring)
+                      (push (format "%s\n  %s\n\n" pattern-str docstring) results)))))
+            (end-of-file (goto-char (point-max)))
+            (error (forward-char 1))))))
+    (with-temp-buffer
+      (insert "Voice Commands Help\n\n")
+      (dolist (item (nreverse results))
+        (insert item))
+      (buffer-string))))
+
+;; phony speech commands help side window
+(defun phony-speech-commands-display-side-window (buf)
+  "Display BUF in a side window taking 15% on the right."
+  (display-buffer
+   buf
+   '(display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.20))))
+
+;; phony speech command help
+(defun phony-speech-commands-help ()
+  "Create a side window listing voice commands and their docstrings."
+  (interactive)
+  (let ((content (phony-speech-commands--get-help-content))
+        (buf (get-buffer-create "*Voice Commands Help*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert content)
+        (goto-char (point-min))))
+    (phony-speech-commands-display-side-window buf)))
+
+;; toggle voice command help side window
+(phony-defun sacha-phony-toggle-help-window ("voice")
+  "Toggle help side window"
+  (let ((win (get-buffer-window "*Voice Commands Help*" t)))
+    (if win
+        (delete-window win)
+      (phony-speech-commands-help))))
 
 
 ;; ----------------------------------------------------------------------------------
