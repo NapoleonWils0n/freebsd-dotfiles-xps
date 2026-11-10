@@ -3054,7 +3054,7 @@ unless the buffer is read-only."
 ;; ----------------------------------------------------------------------------------
 
 ;; org to do state
-(phony-defun sacha-phony-org-todo-states ("org to do state")
+(phony-defun sacha-phony-org-todo-state ("to do state")
   "Change TODO state of an item."
   (org-todo))
 
