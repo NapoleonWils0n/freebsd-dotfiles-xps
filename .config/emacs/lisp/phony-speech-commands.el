@@ -134,35 +134,63 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; cursor commands
+;; command definitions
 ;; ----------------------------------------------------------------------------------
-
-;; cursor move N number of lines up
-(phony-defun sacha-phony-cursor-up-lines ("cursor" "up" (n number))
-  "Cursor up N lines"
-  (dotimes (i n)
-    (evil-previous-line)))
-
-;; cursor move N number of lines down
-(phony-defun sacha-phony-cursor-down-lines ("cursor" "down" (n number))
-  "Cursor down N lines"
-  (dotimes (i n)
-    (evil-next-line)))
 
 
 ;; ----------------------------------------------------------------------------------
-;; paragraph commands
+;; buffer commands
 ;; ----------------------------------------------------------------------------------
 
-;; forward paragraph
-(phony-defun sacha-phony-forward-paragraph ("forward paragraph")
-  "Go to next paragraph"
-  (forward-paragraph))
+;; save buffer
+(phony-defun sacha-phony-save-buffer ("save buffer")
+  "Save current buffer"
+  (save-buffer))
 
-;; forward paragraph
-(phony-defun sacha-phony-backwards-paragraph ("backwards paragraph")
-  "Go to prev paragraph"
-  (backward-paragraph))
+;; kill buffer
+(phony-defun sacha-phony-kill-buffer ("kill buffer")
+  "Close current buffer"
+  (kill-current-buffer))
+
+;; mark buffer
+(phony-defun sacha-phony-mark-buffer ("mark buffer")
+  "Select full buffer"
+  (mark-whole-buffer))
+
+;; list buffers
+(phony-defun sacha-phony-list-buffers ("list buffers")
+  "List open buffers"
+  (list-buffers))
+
+;; switch buffer
+(phony-defun sacha-phony-switch-buffer ("switch buffer")
+  "Switch active buffer"
+  (consult-buffer))
+
+
+;; ----------------------------------------------------------------------------------
+;; window commands
+;; ----------------------------------------------------------------------------------
+
+;; switch to other window
+(phony-defun sacha-phony-other-window ("other window")
+  "Switch window"
+  (other-window))
+
+;; delete window
+(phony-defun sacha-phony-delete-window ("delete window")
+  "Close window"
+  (delete-window))
+
+;; delete other window
+(phony-defun sacha-phony-delete-other-window ("delete other window")
+  "Close other window"
+  (delete-other-windows))
+
+;; toggle side window
+(phony-defun sacha-phony-toggle-side-window ("toggle side window")
+  "Toggle side window"
+  (window-toggle-side-windows))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -239,27 +267,18 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; check spelling
+;; paragraph commands
 ;; ----------------------------------------------------------------------------------
 
-;; spell check word
-(phony-defun sacha-phony-ispell-word ("spell check word")
-  "Spell check word"
-  (ispell-word))
+;; forward paragraph
+(phony-defun sacha-phony-forward-paragraph ("next paragraph")
+  "Go to next paragraph"
+  (forward-paragraph))
 
-;; spell check buffer
-(phony-defun sacha-phony-ispell-buffer ("spell check buffer")
-  "Spell check buffer"
-  (ispell-buffer))
-
-
-;; ----------------------------------------------------------------------------------
-;; open dictionary
-;; ----------------------------------------------------------------------------------
-
-(phony-defun sacha-phony-dictionary ("dictionary")
-  "Look up definition"
-  (dictionary-lookup-definition))
+;; forward paragraph
+(phony-defun sacha-phony-backwards-paragraph ("previous paragraph")
+  "Go to prev paragraph"
+  (backward-paragraph))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -278,33 +297,126 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; buffer commands
+;; cursor commands
 ;; ----------------------------------------------------------------------------------
 
-;; mark buffer
-(phony-defun sacha-phony-mark-buffer ("mark buffer")
-  "Select full buffer"
-  (mark-whole-buffer))
+;; cursor move N number of lines up
+(phony-defun sacha-phony-cursor-up-lines ("cursor" "up" (n number))
+  "Cursor up N lines"
+  (dotimes (i n)
+    (evil-previous-line)))
 
-;; save buffer
-(phony-defun sacha-phony-save-buffer ("save buffer")
-  "Save current buffer"
-  (save-buffer))
+;; cursor move N number of lines down
+(phony-defun sacha-phony-cursor-down-lines ("cursor" "down" (n number))
+  "Cursor down N lines"
+  (dotimes (i n)
+    (evil-next-line)))
 
-;; kill buffer
-(phony-defun sacha-phony-kill-buffer ("kill buffer")
-  "Close current buffer"
-  (kill-current-buffer))
 
-;; list buffers
-(phony-defun sacha-phony-list-buffers ("list buffers")
-  "List open buffers"
-  (list-buffers))
+;; ----------------------------------------------------------------------------------
+;; check spelling
+;; ----------------------------------------------------------------------------------
 
-;; switch buffer
-(phony-defun sacha-phony-switch-buffer ("switch buffer")
-  "Switch active buffer"
-  (consult-buffer))
+;; spell check word
+(phony-defun sacha-phony-ispell-word ("spell check word")
+  "Spell check word"
+  (ispell-word))
+
+;; spell check buffer
+(phony-defun sacha-phony-ispell-buffer ("spell check buffer")
+  "Spell check buffer"
+  (ispell-buffer))
+
+
+;; ----------------------------------------------------------------------------------
+;; dictionary look up definition of current word
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-dictionary ("dictionary")
+  "Look up definition"
+  (dictionary-lookup-definition))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode headings
+;; ----------------------------------------------------------------------------------
+
+;; org-insert-heading
+(phony-defun sacha-phony-insert-heading ("insert heading")
+  "Insert new heading"
+  (org-insert-heading))
+
+;; org-insert-subheading
+(phony-defun sacha-phony-insert-subheading ("insert subheading")
+  "Insert subheading"
+  (call-interactively #'org-insert-subheading))
+
+;; org-next-visible-heading
+(phony-defun sacha-phony-next-heading ("next heading")
+  "Jump to next heading"
+  (org-next-visible-heading))
+
+;; org-previous-visible-heading
+(phony-defun sacha-phony-previous-heading ("previous heading")
+  "Jump to prev heading"
+  (org-previous-visible-heading))
+
+
+;; ----------------------------------------------------------------------------------
+;; narrow + widen commands
+;; ----------------------------------------------------------------------------------
+
+;; narrow org tree
+(phony-defun sacha-phony-narrow ("narrow")
+  "Narrow subtree"
+  (org-narrow-to-subtree))
+
+;; widen org tree
+(phony-defun sacha-phony-widen ("widen")
+  "Widen subtree"
+  (widen))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode source blocks
+;; ----------------------------------------------------------------------------------
+
+;; org edit source block
+(phony-defun sacha-phony-edit-block ("edit block")
+  "Edit source block"
+  (org-edit-special))
+
+;; org exit source block
+(phony-defun sacha-phony-exit-block ("exit block")
+  "Exit source block"
+  (org-edit-src-exit))
+
+;; org next source block
+(phony-defun sacha-phony-next-src-block ("next source block")
+  "Jump to next block"
+  (org-babel-next-src-block))
+
+;; org previous source block
+(phony-defun sacha-phony-previous-src-block ("previous source block")
+  "Jump to prev block"
+  (org-babel-previous-src-block))
+
+
+;; ----------------------------------------------------------------------------------
+;; org babel tangle
+;; ----------------------------------------------------------------------------------
+
+;; org babel tangle block
+(phony-defun sacha-phony-tangle-block ("tangle block")
+  "Tangle babel block"
+  (let ((current-prefix-arg '(4)))
+    (call-interactively #'org-babel-tangle)))
+
+;; org babel tangle file
+(phony-defun sacha-phony-tangle-file ("tangle file")
+  "Tangle current file"
+  (when buffer-file-name
+    (org-babel-tangle-file buffer-file-name)))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -350,123 +462,14 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun sacha-phony-last-tab ("last tab")
   "Switch to last tab"
   (tab-bar-switch-to-last-tab))
-
-
 ;; ----------------------------------------------------------------------------------
-;; window commands
+;; display-line-numbers-mode
 ;; ----------------------------------------------------------------------------------
 
-;; switch to other window
-(phony-defun sacha-phony-other-window ("other window")
-  "Switch window"
-  (other-window))
-
-;; delete window
-(phony-defun sacha-phony-delete-window ("delete window")
-  "Close window"
-  (delete-window))
-
-;; delete other window
-(phony-defun sacha-phony-delete-other-window ("delete other window")
-  "Close other window"
-  (delete-other-windows))
-
-;; toggle side window
-(phony-defun sacha-phony-toggle-side-window ("toggle side window")
-  "Toggle side window"
-  (window-toggle-side-windows))
-
-
-;; ----------------------------------------------------------------------------------
-;; narrow + widen commands
-;; ----------------------------------------------------------------------------------
-
-;; narrow org tree
-(phony-defun sacha-phony-narrow ("narrow")
-  "Narrow subtree"
-  (org-narrow-to-subtree))
-
-;; widen org tree
-(phony-defun sacha-phony-widen ("widen")
-  "Widen subtree"
-  (widen))
-
-
-;; ----------------------------------------------------------------------------------
-;; treesitter commands
-;; ----------------------------------------------------------------------------------
-
-;; treesitter explore mode
-(phony-defun sacha-phony-treesitter ("tree sitter")
-  "Explore tree-sitter"
-  (treesit-explore-mode))
-
-
-;; ----------------------------------------------------------------------------------
-;; org mode headings
-;; ----------------------------------------------------------------------------------
-
-;; org-next-visible-heading
-(phony-defun sacha-phony-next-heading ("next heading")
-  "Jump to next heading"
-  (org-next-visible-heading))
-
-;; org-previous-visible-heading
-(phony-defun sacha-phony-previous-heading ("previous heading")
-  "Jump to prev heading"
-  (org-previous-visible-heading))
-
-;; org-insert-heading
-(phony-defun sacha-phony-insert-heading ("insert heading")
-  "Insert new heading"
-  (org-insert-heading))
-
-;; org-insert-subheading
-(phony-defun sacha-phony-insert-subheading ("insert subheading")
-  "Insert subheading"
-  (call-interactively #'org-insert-subheading))
-
-
-;; ----------------------------------------------------------------------------------
-;; org mode source blocks
-;; ----------------------------------------------------------------------------------
-
-;; org edit source block
-(phony-defun sacha-phony-edit-block ("edit block")
-  "Edit source block"
-  (org-edit-special))
-
-;; org source block exit
-(phony-defun sacha-phony-exit-block ("exit block")
-  "Exit source block"
-  (org-edit-src-exit))
-
-;; org next source block
-(phony-defun sacha-phony-next-src-block ("next source block")
-  "Jump to next block"
-  (org-babel-next-src-block))
-
-;; org previous source block
-(phony-defun sacha-phony-previous-src-block ("previous source block")
-  "Jump to prev block"
-  (org-babel-previous-src-block))
-
-
-;; ----------------------------------------------------------------------------------
-;; org babel tangle
-;; ----------------------------------------------------------------------------------
-
-;; org babel tangle block
-(phony-defun sacha-phony-tangle-block ("tangle block")
-  "Tangle babel block"
-  (let ((current-prefix-arg '(4)))
-    (call-interactively #'org-babel-tangle)))
-
-;; org babel tangle file
-(phony-defun sacha-phony-tangle-file ("tangle file")
-  "Tangle current file"
-  (when buffer-file-name
-    (org-babel-tangle-file buffer-file-name)))
+;; toggle display line numbers
+(phony-defun sacha-phony-line-number ("line numbers")
+  "Toggle line numbers"
+  (display-line-numbers-mode 'toggle))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -489,23 +492,13 @@ Add this to `whisper-insert-text-at-point'."
 
 
 ;; ----------------------------------------------------------------------------------
-;; display-line-numbers-mode
+;; treesitter commands
 ;; ----------------------------------------------------------------------------------
 
-;; toggle display line numbers
-(phony-defun sacha-phony-line-number ("line numbers")
-  "Toggle line numbers"
-  (display-line-numbers-mode 'toggle))
-
-
-;; ----------------------------------------------------------------------------------
-;; help buffer
-;; ----------------------------------------------------------------------------------
-
-;; help buffer
-(phony-defun sacha-phony-help-buffer ("help")
-  "Open Emacs help"
-  (help-for-help))
+;; treesitter explore mode
+(phony-defun sacha-phony-treesitter ("tree sitter")
+  "Explore tree-sitter"
+  (treesit-explore-mode))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -587,6 +580,16 @@ Add this to `whisper-insert-text-at-point'."
 				(sacha-mark-list)
 			(mark-paragraph)))
 	(org-toggle-item nil))
+
+
+;; ----------------------------------------------------------------------------------
+;; help buffer
+;; ----------------------------------------------------------------------------------
+
+;; help buffer
+(phony-defun sacha-phony-help-buffer ("help")
+  "Open Emacs help"
+  (help-for-help))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -706,7 +709,7 @@ Add this to `whisper-insert-text-at-point'."
     (with-temp-buffer
       (insert source-content)
       (goto-char (point-min))
-      (when (search-forward ";; cursor commands" nil t)
+      (when (search-forward ";; command definitions" nil t)
         (while (< (point) (point-max))
           (condition-case nil
               (let* ((form (read (current-buffer)))
