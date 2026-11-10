@@ -71,9 +71,9 @@ Useful in `speech-input-commands'."
 ;; ----------------------------------------------------------------------------------
 
 (defun speech-input-phony-process (text)
-  "Evaluate TEXT via phony. Pass cleaned text through if not parsed.
-Add this to `whisper-insert-text-at-point'."
-  (condition-case nil
+  "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
+unless the buffer is read-only."
+  (condition-case err
       (progn
         ;; Lowercase the first letter to match command definitions
         (sacha-phony-evaluate
@@ -81,9 +81,16 @@ Add this to `whisper-insert-text-at-point'."
                  (if (> (length text) 1) (substring text 1) "")))
         ;; Return empty string if successfully parsed & executed (stops further processing)
         "")
+    (sacha-phony-not-parsed
+     ;; If it's not a recognized command (i.e. normal speech/dictation)
+     (if buffer-read-only
+         (progn
+           (message "Buffer is read-only; suppressing text insertion.")
+           "")
+       (string-trim text "[ \t\n\r]+" nil)))
     (error
-     ;; If not parsed, trim only leading whitespace using built-in string-trim
-     (string-trim text "[ \t\n\r]+" nil))))
+     ;; Let actual command execution errors bubble up normally
+     (signal (car err) (cdr err)))))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -175,7 +182,7 @@ Add this to `whisper-insert-text-at-point'."
 ;; switch to other window
 (phony-defun sacha-phony-other-window ("other window")
   "Switch window"
-  (other-window))
+  (other-window 1))
 
 ;; delete window
 (phony-defun sacha-phony-delete-window ("delete window")
@@ -294,6 +301,16 @@ Add this to `whisper-insert-text-at-point'."
 (phony-defun sacha-phony-scroll-down ("scroll down")
   "Scroll page down"
   (scroll-down-command))
+
+;; scroll to top of buffer
+(phony-defun sacha-phony-scroll-top ("scroll top")
+  "Go to the first line of the buffer"
+  (evil-goto-first-line))
+
+;; scroll to bottom of buffer
+(phony-defun sacha-phony-scroll-bottom ("scroll bottom")
+  "Go to the last line of the buffer"
+  (evil-goto-line))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -761,7 +778,13 @@ Add this to `whisper-insert-text-at-point'."
       (let ((inhibit-read-only t))
         (erase-buffer)
         (insert content)
-        (goto-char (point-min))))
+        (goto-char (point-min)))
+      ;; 1. Make the buffer read-only so text cannot be entered
+      (setq buffer-read-only t)
+      ;; 2. Bind 'q' to close the window (works in standard and Evil states)
+      (local-set-key (kbd "q") (lambda () (interactive) (quit-window t)))
+      (when (bound-and-true-p evil-mode)
+        (evil-local-set-key 'normal (kbd "q") (lambda () (interactive) (quit-window t)))))
     (phony-speech-commands-display-side-window buf)))
 
 ;; toggle voice command help side window
