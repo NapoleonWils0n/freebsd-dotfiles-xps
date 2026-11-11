@@ -8339,6 +8339,7 @@ pkg prime-list
 - sox
 - sudo
 - syncthing
+- telegram-desktop
 - tmux
 - tofi
 - translate-shell
