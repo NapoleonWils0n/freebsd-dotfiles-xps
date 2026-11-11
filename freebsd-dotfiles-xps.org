@@ -1665,7 +1665,7 @@ The Emacs Desktop Notification Center (EDNC) is an Emacs package written in pure
 ;; ----------------------------------------------------------------------------------
 
 (use-package hydra
-  :after mpv 
+  :after (mpv whisper) 
   :config
   ;; Define hydra-mpv
   (defhydra hydra-mpv (:hint nil)
@@ -1674,7 +1674,7 @@ The Emacs Desktop Notification Center (EDNC) is an Emacs package written in pure
     ^^^^^^^^-----------------------------------------------------------------------------------------------------------
     _h_: seek back -5       _,_: back frame         _i_: insert playback position   _n_: next item in playlist
     _j_: seek back -60      _._: forward frame      _m_: insert a newline           _p_: previous item in playlist
-    _k_: seek forward 60    _SPC_: pause            _s_: take a screenshot          _e_: jump to playlist entry
+    _k_: seek forward 60    _._: forward frame      _s_: take a screenshot          _e_: jump to playlist entry
     _l_: seek forward 5     _q_: quit mpv           _o_: show the osd               _r_: remove playlist entry
     ^
     "
@@ -1695,8 +1695,35 @@ The Emacs Desktop Notification Center (EDNC) is an Emacs package written in pure
     ("e" mpv-jump-to-playlist-entry)
     ("r" mpv-remove-playlist-entry))
 
-  ;; Set global keybinding
-  (global-set-key (kbd "C-a") 'hydra-mpv/body))
+  ;; Define hydra-whisper (:exit t dismisses menu immediately on choice)
+  (defhydra hydra-whisper (:hint nil :exit t)
+    "
+    ^Whisper Modes^
+    ^^^^^^^^--------------------
+    _z_: Command Mode
+    _x_: Dictation Mode
+    "
+    ("z" sacha-whisper-command-mode)
+    ("x" sacha-whisper-dictation-mode))
+
+  ;; Single toggle function for C-z
+  (defun sacha-whisper-toggle (arg)
+    "Stop Whisper if active, otherwise open hydra-whisper."
+    (interactive "P")
+    (if (or (whisper-recording-p) (whisper-transcribing-p))
+        (whisper-run)
+      (hydra-whisper/body)))
+
+  ;; Set global keybindings
+  (global-set-key (kbd "C-a") 'hydra-mpv/body)
+  (global-set-key (kbd "C-z") 'sacha-whisper-toggle))
+
+;; Override Evil mode keybindings for C-z across all states
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "C-z") 'sacha-whisper-toggle)
+  (define-key evil-insert-state-map (kbd "C-z") 'sacha-whisper-toggle)
+  (define-key evil-visual-state-map (kbd "C-z") 'sacha-whisper-toggle)
+  (define-key evil-motion-state-map (kbd "C-z") 'sacha-whisper-toggle))
 #+end_src
 
 ****** info
@@ -2407,24 +2434,40 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 
 
 ;; ----------------------------------------------------------------------------------
-;; run commands or insert text
+;; whisper dictation and command modes
 ;; ----------------------------------------------------------------------------------
 
 (with-eval-after-load 'whisper
-  (setq whisper-insert-text-at-point
-        '(speech-input-phony-process
-          insert)))
 
+  (defvar sacha-whisper-current-mode 'command
+    "Active whisper mode: either 'command or 'dictation.")
 
-;; ----------------------------------------------------------------------------------
-;; Bind C-z globally to whisper-run, overriding Evil mode's default binding
-;; ----------------------------------------------------------------------------------
+  (defun sacha-whisper-dictation-processor (text)
+    "Trim leading/trailing whitespace and explicitly insert the text."
+    (let ((clean-text (string-trim text "[ \t\n\r]+" nil)))
+      (when (> (length clean-text) 0)
+        (insert clean-text))))
 
-(with-eval-after-load 'evil
-  (define-key evil-normal-state-map (kbd "C-z") 'whisper-run)
-  (define-key evil-insert-state-map (kbd "C-z") 'whisper-run)
-  (define-key evil-visual-state-map (kbd "C-z") 'whisper-run)
-  (define-key evil-motion-state-map (kbd "C-z") 'whisper-run))
+  (defun sacha-whisper-dispatcher (text)
+    "Route TEXT based on `sacha-whisper-current-mode'."
+    (if (eq sacha-whisper-current-mode 'dictation)
+        (sacha-whisper-dictation-processor text)
+      (speech-input-phony-process text)))
+
+  ;; Set the global handler
+  (setq whisper-insert-text-at-point #'sacha-whisper-dispatcher)
+
+  (defun sacha-whisper-command-mode (arg)
+    "Run Whisper in command mode."
+    (interactive "P")
+    (setq sacha-whisper-current-mode 'command)
+    (whisper-run arg))
+
+  (defun sacha-whisper-dictation-mode (arg)
+    "Run Whisper in pure dictation mode."
+    (interactive "P")
+    (setq sacha-whisper-current-mode 'dictation)
+    (whisper-run arg)))
 
 
 ;; ----------------------------------------------------------------------------------
