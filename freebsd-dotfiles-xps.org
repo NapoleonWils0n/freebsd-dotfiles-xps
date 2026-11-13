@@ -2952,7 +2952,7 @@ unless the buffer is read-only."
   "Go to next paragraph"
   (forward-paragraph))
 
-;; forward paragraph
+;; previous paragraph
 (phony-defun sacha-phony-backwards-paragraph ("previous paragraph")
   "Go to prev paragraph"
   (backward-paragraph))
