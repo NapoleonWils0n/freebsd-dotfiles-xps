@@ -1502,6 +1502,14 @@
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
+
+  ;; gemini free tier
+  (setq gptel-backend (gptel-make-gemini "Gemini"
+                          :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                          :stream t
+                          :models '(gemini-3.8-flash
+                                    gemini-3.6-flash)))
+
   ;; ollama
   (setq-default gptel-model 'qwen3.5:4b)
   (setq gptel-backend (gptel-make-ollama "Ollama"
@@ -1513,13 +1521,6 @@
                                   huihui_ai/qwen3.5-abliterated:4b
                                   gemma4-unsloth:latest
                                   translategemma:4b)))
-
-  ;; gemini free tier
-  (setq gptel-backend (gptel-make-gemini "Gemini"
-                          :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
-                          :stream t
-                          :models '(gemini-3.8-flash
-                                    gemini-3.6-flash)))
 
 
 ;; ----------------------------------------------------------------------------------
