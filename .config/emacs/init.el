@@ -1502,16 +1502,7 @@
   ;; gptel temprature for factual accuracy
   (setq-default gptel-temperature 0.1)
 
-
-  ;; gemini free tier
-  (setq gptel-backend (gptel-make-gemini "Gemini"
-                          :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
-                          :stream t
-                          :models '(gemini-3.8-flash
-                                    gemini-3.6-flash)))
-
   ;; ollama
-  (setq-default gptel-model 'qwen3.5:4b)
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
@@ -1521,6 +1512,15 @@
                                   huihui_ai/qwen3.5-abliterated:4b
                                   gemma4-unsloth:latest
                                   translategemma:4b)))
+
+  ;; gemini free tier
+  (setq-default gptel-model 'gemini-3.6-flash)
+  (setq gptel-backend (gptel-make-gemini "Gemini"
+                          :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                          :stream t
+                          :models '(gemini-3.8-flash
+                                    gemini-3.6-flash)))
+
 
 
 ;; ----------------------------------------------------------------------------------
@@ -1593,6 +1593,54 @@ After reading, if the user requested a specific section or steps, output that se
 ;; ----------------------------------------------------------------------------------
 
   (load "gptel-custom-tools")) ;; gptel use-package config closing parentheses
+
+
+;; ----------------------------------------------------------------------------------
+;; Custom GPTEL & MCP Helpers
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'gptel-integrations
+  ;; Override interactive spec so M-x gptel-mcp-connect prompts for server selection
+  (put 'gptel-mcp-connect 'interactive-form '(interactive (list nil nil t t))))
+
+;; Functions to start each MCP server individually
+(defun my/gptel-mcp-connect-searxng ()
+  "Start and connect to the SearxNG MCP server."
+  (interactive)
+  (gptel-mcp-connect '("searxng")))
+
+(defun my/gptel-mcp-connect-org-mode ()
+  "Start and connect to the Org-mode MCP server."
+  (interactive)
+  (gptel-mcp-connect '("org-mode")))
+
+;; ----------------------------------------------------------------------------------
+;; Functions to enable specific tool categories
+;; ----------------------------------------------------------------------------------
+
+(defun my/gptel-enable-emacs-tools ()
+  "Enable tools in the 'emacs' category for gptel."
+  (interactive)
+  (let ((tools (gptel-get-tool "emacs")))
+    (setq gptel-tools (cl-union gptel-tools tools))
+    (message "Enabled %d Emacs tools." (length tools))))
+
+(defun my/gptel-enable-filesystem-tools ()
+  "Enable tools in the 'filesystem' category for gptel."
+  (interactive)
+  (let ((tools (gptel-get-tool "filesystem")))
+    (setq gptel-tools (cl-union gptel-tools tools))
+    (message "Enabled %d filesystem tools." (length tools))))
+
+(defun my/gptel-enable-tool-category (category)
+  "Prompt for a tool CATEGORY and add its tools to =gptel-tools=."
+  (interactive
+   (list (completing-read "Select tool category to enable: "
+                          (mapcar #'car gptel--known-tools)
+                          nil t)))
+  (let ((tools (gptel-get-tool category)))
+    (setq gptel-tools (cl-union gptel-tools tools))
+    (message "Enabled %d tools from category '%s'." (length tools) category)))
 
 
 ;; ----------------------------------------------------------------------------------
