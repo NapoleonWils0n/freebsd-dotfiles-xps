@@ -348,14 +348,14 @@ unless the buffer is read-only."
   (scroll-down-command))
 
 ;; scroll to top of buffer
-(phony-defun sacha-phony-scroll-top ("scroll top")
+(phony-defun sacha-phony-scroll-top ("top")
   "Go to the first line of the buffer"
-  (evil-goto-first-line))
+  (beginning-of-buffer))
 
 ;; scroll to bottom of buffer
-(phony-defun sacha-phony-scroll-bottom ("scroll bottom")
+(phony-defun sacha-phony-scroll-bottom ("bottom")
   "Go to the last line of the buffer"
-  (evil-goto-line))
+  (end-of-buffer))
 
 
 ;; ----------------------------------------------------------------------------------

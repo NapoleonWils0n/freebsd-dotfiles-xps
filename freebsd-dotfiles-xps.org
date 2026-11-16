@@ -1006,6 +1006,18 @@ Embark makes it easy to choose a command to run based on what is near point, bot
   (define-key dired-mode-map (kbd "C-x m") 'media-thumbnail-dired-mode))
 
 
+;; Mark all files with the same extension as the file at point without prompting.
+(defun my/dired-mark-same-extension ()
+  "Mark all files with the same extension as the file at point without prompting."
+  (interactive)
+  (if-let* ((file (dired-get-filename nil t))
+            (ext (file-name-extension file)))
+      (progn
+        (dired-mark-extension ext)
+        (message "Marked files with extension .%s" ext))
+    (user-error "No file with an extension under cursor")))
+
+
 ;; ------------------------------------------------------------------------------------------------
 ;; side-windows
 ;; ------------------------------------------------------------------------------------------------
@@ -3001,7 +3013,7 @@ unless the buffer is read-only."
   "Go to next paragraph"
   (forward-paragraph))
 
-;; previous paragraph
+;; forward paragraph
 (phony-defun sacha-phony-backwards-paragraph ("previous paragraph")
   "Go to prev paragraph"
   (backward-paragraph))
@@ -3022,14 +3034,14 @@ unless the buffer is read-only."
   (scroll-down-command))
 
 ;; scroll to top of buffer
-(phony-defun sacha-phony-scroll-top ("scroll top")
+(phony-defun sacha-phony-scroll-top ("top")
   "Go to the first line of the buffer"
-  (evil-goto-first-line))
+  (beginning-of-buffer))
 
 ;; scroll to bottom of buffer
-(phony-defun sacha-phony-scroll-bottom ("scroll bottom")
+(phony-defun sacha-phony-scroll-bottom ("bottom")
   "Go to the last line of the buffer"
-  (evil-goto-line))
+  (end-of-buffer))
 
 
 ;; ----------------------------------------------------------------------------------

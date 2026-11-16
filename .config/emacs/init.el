@@ -667,6 +667,18 @@
   (define-key dired-mode-map (kbd "C-x m") 'media-thumbnail-dired-mode))
 
 
+;; Mark all files with the same extension as the file at point without prompting.
+(defun my/dired-mark-same-extension ()
+  "Mark all files with the same extension as the file at point without prompting."
+  (interactive)
+  (if-let* ((file (dired-get-filename nil t))
+            (ext (file-name-extension file)))
+      (progn
+        (dired-mark-extension ext)
+        (message "Marked files with extension .%s" ext))
+    (user-error "No file with an extension under cursor")))
+
+
 ;; ------------------------------------------------------------------------------------------------
 ;; side-windows
 ;; ------------------------------------------------------------------------------------------------
