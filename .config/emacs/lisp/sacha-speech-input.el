@@ -26,8 +26,7 @@
   '((all . "✓")
     (commands . "📋")
     (dictation . "👂")
-    (dictation-focus . "💬")
-    (kebab . "-"))
+    (dictation-focus . "💬"))
   "Indicators.")
 
 (defvar sacha-whisper-sleep nil "Non-nil means ignore most of the input.")
@@ -46,24 +45,12 @@
        (setq sacha-whisper-mode 'all text nil
              sacha-whisper-sleep nil))
       ((or "commands" "drive")
-       (sacha-whisper-audio-feedback "command mode")
        (setq sacha-whisper-mode 'commands text nil
              sacha-whisper-sleep nil))
       ((or "only dictation" "dictation focus")
-       (sacha-whisper-audio-feedback "dictation focus")
        (setq sacha-whisper-mode 'dictation-focus text nil sacha-whisper-sleep nil))
-      ((or "kebab" "skewer")
-       (sacha-whisper-audio-feedback "kebab mode")
-       (setq sacha-whisper-mode 'kebab
-             sacha-whisper-sleep nil
-             text nil))
-      ("panic"
-       (sacha-obs-panic))
       ("over"
-       (setq sacha-whisper-sleep (not sacha-whisper-sleep) text nil)
-       (if sacha-whisper-sleep
-           (sacha-whisper-audio-feedback "bye")
-         (sacha-whisper-audio-feedback "hi")))
+       (setq sacha-whisper-sleep (not sacha-whisper-sleep) text nil))
       ((or "sleep" "all done")
        (setq sacha-whisper-sleep t text nil
              sacha-whisper-mode-indicator "💤"))
@@ -78,10 +65,7 @@
                text
                (if sacha-whisper-sleep
                    nil
-                 (replace-match "" nil nil text 1)))
-         (if sacha-whisper-sleep
-             (sacha-whisper-audio-feedback "bye")
-           (sacha-whisper-audio-feedback "hi")))
+                 (replace-match "" nil nil text 1))))
         (sacha-whisper-sleep
          (setq text nil))))))
   (setq sacha-whisper-mode-indicator
@@ -94,7 +78,6 @@
                      (speech-input-commands-find text)))
       (setq text nil)))
   text)
-
 
 ;;;###autoload
 (defun sacha-whisper-insert (text)
@@ -110,11 +93,6 @@
         (orig-point (point))
         (orig-buffer (current-buffer)))
     (when text
-      (when (eq sacha-whisper-mode 'kebab)
-        (setq text
-              (replace-regexp-in-string
-               "-$" ""
-               (downcase (replace-regexp-in-string "[,\\. ]+" "-" text)))))
       (mapcar (lambda (marker)
                 (with-current-buffer (or (and marker (marker-buffer marker)) (current-buffer))
                   (save-restriction
@@ -139,5 +117,4 @@
         (goto-char orig-point))
       nil)))
 
-;; provide
 (provide 'sacha-speech-input)
