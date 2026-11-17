@@ -1784,6 +1784,9 @@ After reading, if the user requested a specific section or steps, output that se
   ;; set the recording directory
   (defvar my-whisper-dir (expand-file-name "/tmp/whisper/"))
 
+  ;; whisper url format
+  (defvar my-whisper-url-format "http://127.0.0.1:8642/inference")
+
   (defun my-whisper-set-temp-filename ()
     "Generate a unique timestamped filename inside the custom archive folder."
     ;; Create the directory dynamically if it doesn't exist yet (nil parents=t)
@@ -1903,6 +1906,17 @@ After reading, if the user requested a specific section or steps, output that se
           (when whisper--current-overlay
             (delete-overlay whisper--current-overlay)
             (setq whisper--current-overlay nil)))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; speech detection - vad
+;; ----------------------------------------------------------------------------------
+
+;; speech-input-vad
+(require 'speech-input-vad)
+
+;; silero-vad
+(require 'silero-vad)
 
 ;; ----------------------------------------------------------------------------------
 ;; emamux

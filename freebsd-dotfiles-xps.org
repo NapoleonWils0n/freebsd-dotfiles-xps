@@ -2440,6 +2440,9 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   ;; set the recording directory
   (defvar my-whisper-dir (expand-file-name "/tmp/whisper/"))
 
+  ;; whisper url format
+  (defvar my-whisper-url-format "http://127.0.0.1:8642/inference")
+
   (defun my-whisper-set-temp-filename ()
     "Generate a unique timestamped filename inside the custom archive folder."
     ;; Create the directory dynamically if it doesn't exist yet (nil parents=t)
@@ -2559,6 +2562,17 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
           (when whisper--current-overlay
             (delete-overlay whisper--current-overlay)
             (setq whisper--current-overlay nil)))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; speech detection - vad
+;; ----------------------------------------------------------------------------------
+
+;; speech-input-vad
+(require 'speech-input-vad)
+
+;; silero-vad
+(require 'silero-vad)
 #+end_src
 
 ***** emamux
@@ -3542,6 +3556,517 @@ unless the buffer is read-only."
 ;; ----------------------------------------------------------------------------------
 
 (provide 'phony-speech-commands)
+#+end_src
+
+***** silero-vad.el
+:PROPERTIES:
+:header-args: :noweb-ref silero-vad.el :noweb-sep "\n\n"
+:END:
+
+****** silero-vad.el
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
+;;; silero-vad.el
+
+;; ----------------------------------------------------------------------------------
+;; VAD Handlers
+;; ----------------------------------------------------------------------------------
+
+(defun my-sacha-vad-start-handler ()
+  "Automatically start whisper recording when speech begins, unless already busy."
+  (unless (or (whisper-recording-p) 
+              (whisper-transcribing-p)
+              (get-process "whisper-recording"))
+    (when (fboundp 'my-whisper-set-temp-filename)
+      (my-whisper-set-temp-filename))
+    (setq sacha-whisper-current-mode 'command)
+    (whisper-run)))
+
+(defun my-sacha-vad-end-handler ()
+  "Automatically queue and continue when speech pauses."
+  (when (whisper-recording-p)
+    (my-whisper-continue)))
+
+(with-eval-after-load 'speech-input-vad
+  (add-hook 'speech-input-vad-on-start-functions #'my-sacha-vad-start-handler)
+  (add-hook 'speech-input-vad-on-end-functions #'my-sacha-vad-end-handler))
+
+
+;;(speech-input-vad-start)
+
+;; ----------------------------------------------------------------------------------
+;; Queue Core & Controls
+;; ----------------------------------------------------------------------------------
+
+(defvar my-whisper--queue nil)
+(defvar-local my-whisper--queue-item nil)
+
+(defun my-whisper-continue (&optional arg)
+  "Send what we've got so far for transcription and then continue recording."
+  (interactive "P")
+  (require 'whisper)
+  (if arg
+      (my-whisper-done)
+    (setq whisper--marker (point-marker) whisper--point-buffer (current-buffer))
+    (when (process-live-p whisper--recording-process)
+      (unless (string= (plist-get (car (last my-whisper--queue)) :file)
+                       whisper--temp-file)
+        (add-to-list 'my-whisper--queue
+                     (list :file whisper--temp-file
+                           :buffer (format "*result: %s*" (file-name-base whisper--temp-file)))
+                     t))
+      (set-process-sentinel whisper--recording-process
+                            (lambda (_process _event)
+                              (my-whisper-process-queue)))
+      (interrupt-process whisper--recording-process))
+    (run-hooks 'whisper-before-transcription-hook)
+    (whisper--setup-mode-line :show 'recording)
+    (whisper--record-audio)))
+
+(defun my-whisper-done ()
+  (interactive)
+  (when (process-live-p whisper--recording-process)
+    (add-to-list 'my-whisper--queue
+                 (list :file whisper--temp-file
+                       :buffer (format "*result: %s*" (file-name-base whisper--temp-file)))
+                 t)
+    (set-process-sentinel whisper--recording-process
+                          (lambda (_process _event)
+                            (my-whisper-process-queue)))
+    (whisper--setup-mode-line :hide 'recording)
+    (interrupt-process whisper--recording-process)))
+
+(defun my-whisper-discard ()
+  "Ignore the previous recording."
+  (interactive)
+  (when (process-live-p whisper--recording-process)
+    (set-process-sentinel whisper--recording-process
+                          (lambda (_process _event)
+                            (when (file-exists-p whisper--temp-file)
+                              (delete-file whisper--temp-file))
+                            (my-whisper-process-queue)))
+    (interrupt-process whisper--recording-process)))
+
+(defun my-whisper-discard-and-continue ()
+  "Ignore the previous recording and continue."
+  (interactive)
+  (if (process-live-p whisper--recording-process)
+      (progn
+        (set-process-sentinel whisper--recording-process
+                              (lambda (_process _event)
+                                (my-whisper-process-queue)
+                                (my-whisper-continue)))
+        (interrupt-process whisper--recording-process))
+    (my-whisper-continue)))
+
+
+;; ----------------------------------------------------------------------------------
+;; Queue Processing (Sacha Chua's Buffer-Native Pattern)
+;; ----------------------------------------------------------------------------------
+
+(defun my-whisper-process-queue-result ()
+  "Process items in queue that have completed results."
+  (while (and my-whisper--queue (plist-get (car my-whisper--queue) :results))
+    (let* ((o (pop my-whisper--queue))
+           (text (plist-get o :results)))
+      (unless (bound-and-true-p my-whisper-target-markers)
+        (setq whisper--marker (point-marker)
+              whisper--point-buffer (current-buffer)))
+      (when (get-buffer (plist-get o :buffer))
+        (with-current-buffer (plist-get o :buffer)
+          (erase-buffer)
+          (insert text)))
+      ;; Dispatch text to Phony / Dictation
+      (when (fboundp 'sacha-whisper-dispatcher)
+        (sacha-whisper-dispatcher text)))))
+
+(defun my-whisper-process-queue ()
+  "Process pending items in `my-whisper--queue` using curl."
+  (let (o)
+    (while (setq o (seq-find (lambda (item) 
+                               (and (plist-get item :file)
+                                    (not (plist-get item :process))
+                                    (not (plist-get item :results))))
+                             my-whisper--queue))
+      (let* ((headers (list "Content-Type: multipart/form-data"))
+             (params (list (concat "file=@" (plist-get o :file))
+                           "temperature=0.0"
+                           "temperature_inc=0.2"
+                           "response_format=json"
+                           (concat "model=" whisper-model)
+                           (concat "language=" whisper-language)))
+             (url my-whisper-url-format)
+             (command `("curl" "-s" ,url
+                        ,@(mapcan (lambda (h) (list "-H" h)) headers)
+                        ,@(mapcan (lambda (p) (list "-F" p)) params))))
+        
+        ;; Prepare process output buffer
+        (with-current-buffer (get-buffer-create (plist-get o :buffer))
+          (erase-buffer))
+        
+        ;; Start curl process
+        (plist-put
+         o :process
+         (make-process
+          :name "whisper-curl"
+          :command command
+          :buffer (plist-get o :buffer)
+          :coding 'utf-8
+          :sentinel
+          (lambda (process event)
+            (when (string-equal "finished\n" event)
+              (with-current-buffer (process-buffer process)
+                (let ((current my-whisper--queue-item))
+                  (when (and current (get-buffer (plist-get current :buffer)))
+                    (goto-char (point-min))
+                    (let ((parsed (condition-case nil
+                                      (json-parse-buffer)
+                                    (error nil))))
+                      (plist-put current :results
+                                 (or (and (hash-table-p parsed) (gethash "text" parsed))
+                                     (string-trim (buffer-string))
+                                     "(error)")))))))
+            (my-whisper-process-queue-result))))
+        
+        (plist-put o :command (string-join command " "))
+        
+        ;; Set buffer-local item so sentinel finds it in (process-buffer process)
+        (with-current-buffer (process-buffer (plist-get o :process))
+          (setq-local my-whisper--queue-item o))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; Queue Management & Maintenance
+;; ----------------------------------------------------------------------------------
+
+(defun my-whisper-reprocess-queue ()
+  (interactive)
+  (setq whisper--marker (point-marker) whisper--point-buffer (current-buffer))
+  (mapc (lambda (o)
+          (when (process-live-p (plist-get o :process))
+            (kill-process (plist-get o :process)))
+          (when (get-buffer (plist-get o :buffer))
+            (kill-buffer (plist-get o :buffer)))
+          (plist-put o :process nil)
+          (plist-put o :results nil))
+        my-whisper--queue)
+  (my-whisper-process-queue))
+
+(defun my-whisper-clear-queue ()
+  (interactive)
+  (mapc (lambda (o)
+          (when (process-live-p (plist-get o :process))
+            (kill-process (plist-get o :process)))
+          (when (get-buffer (plist-get o :buffer))
+            (kill-buffer (plist-get o :buffer)))
+          (plist-put o :process nil)
+          (plist-put o :results nil))
+        my-whisper--queue)
+  (setq my-whisper--queue nil))
+
+(provide 'silero-vad)
+#+end_src
+
+***** speech-input-vad.el
+:PROPERTIES:
+:header-args: :noweb-ref speech-input-vad.el :noweb-sep "\n\n"
+:END:
+
+****** speech-input-vad.el
+
+#+begin_src emacs-lisp
+;;; speech-input-vad.el --- Silero voice activity detection  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2026  Sacha Chua
+
+;; Author: Sacha Chua <sacha@sachachua.com>
+;; Keywords: multimedia
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;
+
+;;; Code:
+
+(defvar speech-input-vad-events-process nil)
+(defvar speech-input-vad-events-dir (file-name-directory (or load-file-name (buffer-file-name))))
+(defvar speech-input-vad-events-command
+  `("python3"
+    ,(expand-file-name "vad-events.py" speech-input-vad-events-dir)))
+
+(defvar speech-input-vad-on-end-functions nil)
+(defvar speech-input-vad-on-start-functions nil)
+(defvar speech-input-vad-debug nil "Non-nil means display a message on start and end.")
+
+(defun speech-input-vad-toggle-debug ()
+  "Toggle `speech-input-vad-debug'."
+  (interactive)
+  (setq speech-input-vad-debug (not speech-input-vad-debug))
+  (message (if speech-input-vad-debug
+               "Debugging VAD."
+             "Stopped debugging VAD.")))
+
+(defun speech-input-vad-events-filter (proc string)
+  (cond
+   ((string-match "^START" string)
+    (when speech-input-vad-debug (message "speech start"))
+    (run-hooks 'speech-input-vad-on-start-functions))
+   ((string-match "^END" string)
+    (when speech-input-vad-debug (message "speech stop"))
+    (run-hooks 'speech-input-vad-on-end-functions))))
+
+;;;###autoload
+(defun speech-input-vad-start ()
+  "Start the process if it's not already running."
+  (interactive)
+  (unless (process-live-p speech-input-vad-events-process)
+    (let ((process-environment
+           (cons "AUDIODEV=/dev/dsp3" process-environment)))
+      (setq speech-input-vad-events-process
+            (make-process
+             :name "vad-events"
+             :command speech-input-vad-events-command
+             :buffer (get-buffer-create "*vad-events*")
+             :stderr (get-buffer-create "*vad-events-err*")
+             :filter #'speech-input-vad-events-filter)))))
+
+(defun speech-input-vad-stop ()
+  (interactive)
+  (when (process-live-p speech-input-vad-events-process)
+    (kill-process speech-input-vad-events-process)))
+
+(defun speech-input-vad-stop-recording-once ()
+  (remove-hook 'speech-input-vad-on-end-functions 'speech-input-vad-stop-recording-once)
+  (speech-input-stop-recording))
+
+;;;###autoload
+(defun speech-input-vad-record-one-turn (callback &optional filename)
+  "Call CALLBACK with the filename of the recording."
+  (speech-input-vad-start)
+  (add-hook 'speech-input-vad-on-end-functions 'speech-input-vad-stop-recording-once)
+  (speech-input-start-recording callback filename))
+
+
+(provide 'speech-input-vad)
+;;; speech-input-vad.el ends here
+#+end_src
+
+***** vad-events.py
+:PROPERTIES:
+:header-args: :noweb-ref vad-events.py :noweb-sep "\n\n"
+:END:
+
+****** vad-events.py
+
+#+begin_src python
+#!/usr/local/bin/python3
+import sys
+import subprocess
+import numpy as np
+import onnxruntime as ort
+from datetime import datetime, timedelta
+import os
+
+class SileroVADONNX:
+    def __init__(self, model_path, sample_rate=16000):
+        self.sample_rate = sample_rate
+        opts = ort.SessionOptions()
+        opts.inter_op_num_threads = 1
+        opts.intra_op_num_threads = 1
+        opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        self.session = ort.InferenceSession(model_path, opts, providers=['CPUExecutionProvider'])
+        self.state = np.zeros((2, 1, 128), dtype=np.float32)
+        self.context = np.zeros((1, 64), dtype=np.float32)
+
+    def __call__(self, chunk_pcm32):
+        if len(chunk_pcm32.shape) == 1:
+            chunk_pcm32 = np.expand_dims(chunk_pcm32, axis=0)
+
+        model_input = np.hstack([self.context, chunk_pcm32])
+        sr = np.array(self.sample_rate, dtype=np.int64)
+        inputs = {
+            'input': model_input,
+            'state': self.state,
+            'sr': sr
+        }
+        out, self.state = self.session.run(None, inputs)
+        self.context = chunk_pcm32[:, -64:]
+        return out[0][0]
+
+def main():
+    model_path = os.path.expanduser("~/.local/share/silero/silero_vad.onnx")
+    if not os.path.exists(model_path):
+        print(f"Error: Silero ONNX model not found at {model_path}", file=sys.stderr)
+        sys.exit(1)
+
+    vad = SileroVADONNX(model_path)
+    
+    # Stream raw audio chunks from OSS device using ffmpeg with gain
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-hide_banner",
+        "-fflags", "nobuffer",
+        "-flags", "low_delay",
+        "-f", "oss",
+        "-i", "/dev/dsp3",
+        "-af", "volume=5dB",
+        "-ar", "16000",
+        "-ac", "1",
+        "-f", "s16le",
+        "pipe:1"
+    ]
+    
+    process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    stream_start_time = datetime.now()
+    
+    chunk_size_bytes = 1024  # 512 samples * 2 bytes per sample
+    triggered = False
+    silence_frames = 0
+    silence_threshold = 15  # ~500ms of consecutive low probability
+
+    def format_iso_with_offset(seconds):
+        event_time = stream_start_time + timedelta(seconds=seconds)
+        return event_time.astimezone().isoformat(timespec='milliseconds')
+
+    try:
+        while True:
+            raw_data = process.stdout.read(chunk_size_bytes)
+            if not raw_data:
+                break
+                
+            if len(raw_data) < chunk_size_bytes:
+                raw_data = raw_data + b'\x00' * (chunk_size_bytes - len(raw_data))
+
+            audio_chunk = np.frombuffer(raw_data, dtype=np.int16).astype(np.float32) / 32768.0
+            speech_prob = vad(audio_chunk[:512])
+            current_time_sec = (datetime.now() - stream_start_time).total_seconds()
+
+            if speech_prob > 0.5:
+                silence_frames = 0
+                if not triggered:
+                    triggered = True
+                    print(f"START {format_iso_with_offset(current_time_sec)}", flush=True)
+            else:
+                if triggered:
+                    silence_frames += 1
+                    if silence_frames >= silence_threshold:
+                        triggered = False
+                        silence_frames = 0
+                        print(f"END {format_iso_with_offset(current_time_sec)}", flush=True)
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        process.terminate()
+
+if __name__ == "__main__":
+    main()
+#+end_src
+
+***** vad_driver.py
+:PROPERTIES:
+:header-args: :noweb-ref vad_driver.py :noweb-sep "\n\n"
+:END:
+
+****** vad_driver.py
+
+#+begin_src python
+#!/usr/local/bin/python3
+import sys
+import numpy as np
+import onnxruntime as ort
+import os
+
+class SileroVADONNX:
+    def __init__(self, model_path, sample_rate=16000):
+        self.sample_rate = sample_rate
+        opts = ort.SessionOptions()
+        opts.inter_op_num_threads = 1
+        opts.intra_op_num_threads = 1
+        self.session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
+        
+        # Silero VAD state tensor: [2, 1, 128]
+        self.state = np.zeros((2, 1, 128), dtype=np.float32)
+        # Context buffer: last 64 samples of the previous frame (initialized to zeros)
+        self.context = np.zeros((1, 64), dtype=np.float32)
+
+    def __call__(self, chunk_pcm32):
+        if len(chunk_pcm32.shape) == 1:
+            chunk_pcm32 = np.expand_dims(chunk_pcm32, axis=0)
+
+        # Prepend 64-sample context to the 512-sample current frame -> total 576 samples
+        model_input = np.hstack([self.context, chunk_pcm32])
+
+        sr = np.array(self.sample_rate, dtype=np.int64)
+        inputs = {
+            'input': model_input,
+            'state': self.state,
+            'sr': sr
+        }
+        
+        out, self.state = self.session.run(None, inputs)
+        
+        # Save the last 64 samples of the current chunk as context for the next iteration
+        self.context = chunk_pcm32[:, -64:]
+        
+        return out[0][0]
+
+def main():
+    model_path = os.path.expanduser("~/.local/share/silero/silero_vad.onnx")
+    if not os.path.exists(model_path):
+        print(f"Error: Silero ONNX model not found at {model_path}", file=sys.stderr)
+        sys.exit(1)
+
+    vad = SileroVADONNX(model_path)
+    chunk_size_bytes = 1024  # 512 samples * 2 bytes per sample (16-bit int)
+
+    triggered = False
+    silence_frames = 0
+    silence_threshold = 15  # ~500ms of consecutive low probability before END
+
+    while True:
+        raw_data = sys.stdin.buffer.read(chunk_size_bytes)
+        if not raw_data:
+            break
+            
+        if len(raw_data) < chunk_size_bytes:
+            raw_data = raw_data + b'\x00' * (chunk_size_bytes - len(raw_data))
+
+        audio_chunk = np.frombuffer(raw_data, dtype=np.int16).astype(np.float32) / 32768.0
+        speech_prob = vad(audio_chunk[:512])
+
+        # Debug print to stderr to verify probabilities rise when speaking
+        print(f"Prob: {speech_prob:.4f}", file=sys.stderr, flush=True)
+
+        if speech_prob > 0.3:
+            silence_frames = 0
+            if not triggered:
+                triggered = True
+                print("START", flush=True)
+        else:
+            if triggered:
+                silence_frames += 1
+                if silence_frames >= silence_threshold:
+                    triggered = False
+                    silence_frames = 0
+                    print("END", flush=True)
+
+if __name__ == "__main__":
+    main()
 #+end_src
 
 ***** gptel-custom-tools.el
@@ -4558,6 +5083,66 @@ a old-string and a new-string, new-string will replace the old-string at the spe
 #+NAME: phony-speech-commands.el-current-dir
 #+BEGIN_SRC emacs-lisp :tangle ".config/emacs/lisp/phony-speech-commands.el"
 <<phony-speech-commands.el>>
+#+END_SRC
+
+***** silero-vad.el
+****** home dir
+
+#+NAME: silero-vad.el-home-dir
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/lisp/silero-vad.el"
+<<silero-vad.el>>
+#+END_SRC
+
+****** current dir
+
+#+NAME: silero-vad.el-current-dir
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/lisp/silero-vad.el"
+<<silero-vad.el>>
+#+END_SRC
+
+***** speech-input-vad.el
+****** home dir
+
+#+NAME: speech-input-vad.el-home-dir
+#+BEGIN_SRC emacs-lisp :tangle "~/.config/emacs/lisp/speech-input-vad.el"
+<<speech-input-vad.el>>
+#+END_SRC
+
+****** current dir
+
+#+NAME: speech-input-vad.el-current-dir
+#+BEGIN_SRC emacs-lisp :tangle ".config/emacs/lisp/speech-input-vad.el"
+<<speech-input-vad.el>>
+#+END_SRC
+
+***** vad-events.py
+****** home dir
+
+#+NAME: vad-events.py-home-dir
+#+BEGIN_SRC python :tangle "~/.config/emacs/lisp/vad-events.py"
+<<vad-events.py>>
+#+END_SRC
+
+****** current dir
+
+#+NAME: vad-events.py-current-dir
+#+BEGIN_SRC python :tangle ".config/emacs/lisp/vad-events.py"
+<<vad-events.py>>
+#+END_SRC
+
+***** vad_driver.py
+****** home dir
+
+#+NAME: vad_driver.py-home-dir
+#+BEGIN_SRC python :tangle "~/.config/emacs/lisp/vad_driver.py"
+<<vad_driver.py>>
+#+END_SRC
+
+****** current dir
+
+#+NAME: vad_driver.py-current-dir
+#+BEGIN_SRC python :tangle ".config/emacs/lisp/vad_driver.py"
+<<vad_driver.py>>
 #+END_SRC
 
 ***** gptel-custom-tools.el
