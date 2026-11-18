@@ -264,7 +264,17 @@ unless the buffer is read-only."
 ;; transpose-windows
 (phony-defun sacha-phony-transpose ("transpose")
 	"Transpose windows."
-	(transpose-windows))
+	(window-layout-transpose))
+
+;; split-window-below
+(phony-defun sacha-phony-split-window-below ("split below")
+	"Split window below."
+	(split-window-below))
+
+;; split-window-right
+(phony-defun sacha-phony-split-window-right ("split right")
+	"Split window right."
+	(split-window-right))
 
 
 ;; ----------------------------------------------------------------------------------
