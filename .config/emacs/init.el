@@ -1276,15 +1276,13 @@
     ("r" mpv-remove-playlist-entry))
 
   ;; Define hydra-whisper (:exit t dismisses menu immediately on choice)
-  (defhydra hydra-whisper (:hint nil :exit t)
+  (defhydra hydra-whisper (:hint nil :exit nil)
     "
-    ^Whisper Modes^
-    ^^^^^^^^--------------------
-    _z_: Command Mode
-    _x_: Dictation Mode
+    _z_: Command Mode  _x_: Dictation Mode  _q_: Quit Hydra
     "
     ("z" sacha-whisper-command-mode)
-    ("x" sacha-whisper-dictation-mode))
+    ("x" sacha-whisper-dictation-mode)
+    ("q" hydra-keyboard-quit :exit t))
 
   ;; Single toggle function for C-z
   (defun sacha-whisper-toggle (arg)
