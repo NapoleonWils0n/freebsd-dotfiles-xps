@@ -2787,6 +2787,7 @@ Useful in `speech-input-commands'."
 ;; speech-input-phony-process
 ;; ----------------------------------------------------------------------------------
 
+;; original code
 (defun speech-input-phony-process (text)
   "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
 unless the buffer is read-only."
@@ -2814,6 +2815,33 @@ unless the buffer is read-only."
       (error
        (signal (car err) (cdr err))))))
 
+;; fix not working
+;;(defun speech-input-phony-process (text)
+;;  "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
+;;unless the buffer is read-only."
+;;  (let* ((processed-text 
+;;          ;; Dynamically convert any numeric digits to words
+;;          (replace-regexp-in-string 
+;;           "\\b[0-9]+\\b" 
+;;           (lambda (match)
+;;             (sacha-number-to-words (string-to-number match)))
+;;           text)))
+;;    (condition-case err
+;;        (let ((inhibit-read-only t))
+;;          ;; Lowercase the first letter to match command definitions
+;;          (sacha-phony-evaluate
+;;           (concat (downcase (substring processed-text 0 1))
+;;                   (if (> (length processed-text) 1) (substring processed-text 1) "")))
+;;          ;; Return empty string if successfully parsed & executed
+;;          "")
+;;      (sacha-phony-not-parsed
+;;       (if buffer-read-only
+;;           (progn
+;;             (message "Buffer is read-only; suppressing text insertion.")
+;;             "")
+;;         (string-trim text "[ \t\n\r]+" nil)))
+;;      (error
+;;       (signal (car err) (cdr err))))))
 
 ;; ----------------------------------------------------------------------------------
 ;; phony numbers
@@ -2900,12 +2928,12 @@ unless the buffer is read-only."
 ;; ----------------------------------------------------------------------------------
 
 ;; save buffer
-(phony-defun sacha-phony-save-buffer ("save buffer")
+(phony-defun sacha-phony-save-buffer ("save")
   "Save current buffer"
   (save-buffer))
 
 ;; kill buffer
-(phony-defun sacha-phony-kill-buffer ("kill buffer")
+(phony-defun sacha-phony-kill-buffer ("close")
   "Close current buffer"
   (kill-current-buffer))
 
@@ -2948,6 +2976,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-toggle-side-window ("toggle side window")
   "Toggle side window"
   (window-toggle-side-windows))
+
+;; transpose-windows
+(phony-defun sacha-phony-transpose ("transpose")
+	"Transpose windows."
+	(transpose-windows))
 
 
 ;; ----------------------------------------------------------------------------------
