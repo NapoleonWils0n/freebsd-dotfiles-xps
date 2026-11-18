@@ -71,7 +71,6 @@ Useful in `speech-input-commands'."
 ;; speech-input-phony-process
 ;; ----------------------------------------------------------------------------------
 
-;; original code
 (defun speech-input-phony-process (text)
   "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
 unless the buffer is read-only."
