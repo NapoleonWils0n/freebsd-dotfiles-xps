@@ -1907,33 +1907,6 @@ After reading, if the user requested a specific section or steps, output that se
             (delete-overlay whisper--current-overlay)
             (setq whisper--current-overlay nil)))))))
 
-
-;; ----------------------------------------------------------------------------------
-;; speech detection - vad
-;; ----------------------------------------------------------------------------------
-
-;; speech-input-vad
-(require 'speech-input-vad)
-
-;; silero-vad
-(require 'silero-vad)
-
-;; whisper and vad start
-(defun my-start-voice-control ()
-  "Explicitly start the Whisper server and Silero VAD on demand."
-  (interactive)
-  (require 'whisper)
-  ;; 1. Ensure the whisper server process is running
-  (unless (process-live-p (get-process "whisper-server"))
-    (whisper--ensure-server))
-  ;; 2. Set default mode and temp filename
-  (setq sacha-whisper-current-mode 'command)
-  (when (fboundp 'my-whisper-set-temp-filename)
-    (my-whisper-set-temp-filename))
-  ;; 3. Start Silero VAD
-  (speech-input-vad-start)
-  (message "Whisper server and VAD started! Ready for voice commands."))
-
 ;; ----------------------------------------------------------------------------------
 ;; emamux
 ;; ----------------------------------------------------------------------------------
