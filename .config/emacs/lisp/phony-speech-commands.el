@@ -209,6 +209,11 @@ unless the buffer is read-only."
   "Switch active buffer"
   (consult-buffer))
 
+;; messages buffer
+(phony-defun sacha-phony-messages ("messages")
+  "Message buffer."
+  (switch-to-buffer "*Messages*"))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; window commands
