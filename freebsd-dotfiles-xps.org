@@ -2978,7 +2978,7 @@ unless the buffer is read-only."
   (window-toggle-side-windows))
 
 ;; transpose-windows
-(phony-defun sacha-phony-transpose ("transpose")
+(phony-defun sacha-phony-transpose ("transpose windows")
 	"Transpose windows."
 	(window-layout-transpose))
 
@@ -3213,12 +3213,12 @@ unless the buffer is read-only."
   (org-edit-src-exit))
 
 ;; org next source block
-(phony-defun sacha-phony-next-src-block ("next source block")
+(phony-defun sacha-phony-next-src-block ("next block")
   "Jump to next block"
   (org-babel-next-src-block))
 
 ;; org previous source block
-(phony-defun sacha-phony-previous-src-block ("previous source block")
+(phony-defun sacha-phony-previous-src-block ("previous block")
   "Jump to prev block"
   (org-babel-previous-src-block))
 
