@@ -99,33 +99,6 @@ unless the buffer is read-only."
       (error
        (signal (car err) (cdr err))))))
 
-;; fix not working
-;;(defun speech-input-phony-process (text)
-;;  "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
-;;unless the buffer is read-only."
-;;  (let* ((processed-text 
-;;          ;; Dynamically convert any numeric digits to words
-;;          (replace-regexp-in-string 
-;;           "\\b[0-9]+\\b" 
-;;           (lambda (match)
-;;             (sacha-number-to-words (string-to-number match)))
-;;           text)))
-;;    (condition-case err
-;;        (let ((inhibit-read-only t))
-;;          ;; Lowercase the first letter to match command definitions
-;;          (sacha-phony-evaluate
-;;           (concat (downcase (substring processed-text 0 1))
-;;                   (if (> (length processed-text) 1) (substring processed-text 1) "")))
-;;          ;; Return empty string if successfully parsed & executed
-;;          "")
-;;      (sacha-phony-not-parsed
-;;       (if buffer-read-only
-;;           (progn
-;;             (message "Buffer is read-only; suppressing text insertion.")
-;;             "")
-;;         (string-trim text "[ \t\n\r]+" nil)))
-;;      (error
-;;       (signal (car err) (cdr err))))))
 
 ;; ----------------------------------------------------------------------------------
 ;; phony numbers
