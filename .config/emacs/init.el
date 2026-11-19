@@ -1275,33 +1275,7 @@
     ("e" mpv-jump-to-playlist-entry)
     ("r" mpv-remove-playlist-entry))
 
-  ;; Define hydra-whisper (:exit t dismisses menu immediately on choice)
-  (defhydra hydra-whisper (:hint nil :exit t)
-    "
-    _z_: Command Mode  _x_: Dictation Mode  _q_: Quit Hydra
-    "
-    ("z" sacha-whisper-command-mode)
-    ("x" sacha-whisper-dictation-mode)
-    ("q" hydra-keyboard-quit :exit t))
-
-  ;; Single toggle function for C-z
-  (defun sacha-whisper-toggle (arg)
-    "Stop Whisper if active, otherwise open hydra-whisper."
-    (interactive "P")
-    (if (or (whisper-recording-p) (whisper-transcribing-p))
-        (whisper-run)
-      (hydra-whisper/body)))
-
-  ;; Set global keybindings
-  (global-set-key (kbd "C-a") 'hydra-mpv/body)
-  (global-set-key (kbd "C-z") 'sacha-whisper-toggle))
-
-;; Override Evil mode keybindings for C-z across all states
-(with-eval-after-load 'evil
-  (define-key evil-normal-state-map (kbd "C-z") 'sacha-whisper-toggle)
-  (define-key evil-insert-state-map (kbd "C-z") 'sacha-whisper-toggle)
-  (define-key evil-visual-state-map (kbd "C-z") 'sacha-whisper-toggle)
-  (define-key evil-motion-state-map (kbd "C-z") 'sacha-whisper-toggle))
+  (global-set-key (kbd "C-a") 'hydra-mpv/body))
 
 ;; ----------------------------------------------------------------------------------
 ;; google-translate
@@ -1782,9 +1756,6 @@ After reading, if the user requested a specific section or steps, output that se
   ;; set the recording directory
   (defvar my-whisper-dir (expand-file-name "/tmp/whisper/"))
 
-  ;; whisper url format
-  (defvar my-whisper-url-format "http://127.0.0.1:8642/inference")
-
   (defun my-whisper-set-temp-filename ()
     "Generate a unique timestamped filename inside the custom archive folder."
     ;; Create the directory dynamically if it doesn't exist yet (nil parents=t)
@@ -1875,6 +1846,16 @@ After reading, if the user requested a specific section or steps, output that se
     (setq sacha-whisper-current-mode 'dictation)
     (whisper-run arg)))
 
+;; Override Evil mode keybindings for C-z across all states for command mode
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "C-z") 'sacha-whisper-command-mode)
+  (define-key evil-insert-state-map (kbd "C-z") 'sacha-whisper-command-mode)
+  (define-key evil-visual-state-map (kbd "C-z") 'sacha-whisper-command-mode)
+  (define-key evil-motion-state-map (kbd "C-z") 'sacha-whisper-command-mode))
+
+;; dictation mode
+(global-set-key (kbd "C-`") 'sacha-whisper-dictation-mode)
+
 
 ;; ----------------------------------------------------------------------------------
 ;; display recording icons in the buffer
@@ -1918,15 +1899,7 @@ After reading, if the user requested a specific section or steps, output that se
         (evil-exit-visual-state))
     (emamux:send-region (line-beginning-position) (line-end-position))))
 
-(use-package emamux
-  :demand t
-  :config
-  ;; Global binding for normal/insert modes
-  (global-set-key (kbd "C-`") 'my/emamux-smart-send)
-
-  ;; Explicitly bind in Evil visual state so visual selections work
-  (with-eval-after-load 'evil
-    (define-key evil-visual-state-map (kbd "C-`") 'my/emamux-smart-send)))
+(use-package emamux)
 
 ;; ----------------------------------------------------------------------------------
 ;; garbage collection
