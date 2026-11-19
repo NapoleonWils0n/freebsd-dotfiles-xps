@@ -2893,6 +2893,16 @@ unless the buffer is read-only."
   "Window flip top down."
   (window-layout-flip-topdown))
 
+;; window-layout-rotate-clockwise
+(phony-defun sacha-phony-window-layout-rotate-clockwise ("window clockwise")
+  "Window rotate clockwise."
+  (window-layout-rotate-clockwise))
+
+;; window-layout-rotate-anticlockwise
+(phony-defun sacha-phony-window-layout-rotate-anticlockwise ("window anti-clockwise")
+  "Window rotate anticlockwise."
+  (window-layout-rotate-anticlockwise))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; delete commands
