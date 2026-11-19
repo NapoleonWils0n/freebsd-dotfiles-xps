@@ -470,7 +470,7 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
-;; org mode headings
+;; org mode
 ;; ----------------------------------------------------------------------------------
 
 ;; org-insert-heading
@@ -492,6 +492,12 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-previous-heading ("previous heading")
   "Jump to prev heading"
   (org-previous-visible-heading))
+
+;; Expand / Collapse current block or heading (toggles like TAB)
+(phony-defun sacha-phony-org-toggle ("toggle element")
+  "Toggle Org block or heading."
+  (when (derived-mode-p 'org-mode)
+    (org-cycle)))
 
 
 ;; ----------------------------------------------------------------------------------
