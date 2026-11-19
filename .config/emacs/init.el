@@ -1276,7 +1276,7 @@
     ("r" mpv-remove-playlist-entry))
 
   ;; Define hydra-whisper (:exit t dismisses menu immediately on choice)
-  (defhydra hydra-whisper (:hint nil :exit nil)
+  (defhydra hydra-whisper (:hint nil :exit t)
     "
     _z_: Command Mode  _x_: Dictation Mode  _q_: Quit Hydra
     "
