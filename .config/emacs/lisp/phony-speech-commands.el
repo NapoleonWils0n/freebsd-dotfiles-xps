@@ -349,6 +349,36 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; text commands
+;; ----------------------------------------------------------------------------------
+
+;; new line below function
+(defun my/new-line-below (&optional count)
+  "Insert COUNT (default 1) indented line(s) below current line without splitting text."
+  (interactive "p")
+  (let ((n (or count 1)))
+    (dotimes (_ n)
+      (end-of-line)
+      (newline-and-indent))))
+
+;; Single new line
+(phony-defun sacha-phony-new-line ("new line")
+  "Insert a new indented line below."
+  (my/new-line-below 1))
+
+;; N new lines
+(phony-defun sacha-phony-new-lines ((n number) "new lines")
+  "Insert N new indented lines below."
+  (when (numberp n)
+    (my/new-line-below n)))
+
+;; insert space
+(phony-defun sacha-phony-insert-space ("space")
+  "Insert space."
+  (call-interactively #'just-one-space))
+
+
+;; ----------------------------------------------------------------------------------
 ;; scroll commands
 ;; ----------------------------------------------------------------------------------
 
