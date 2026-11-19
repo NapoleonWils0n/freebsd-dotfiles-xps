@@ -1856,36 +1856,6 @@ After reading, if the user requested a specific section or steps, output that se
 ;; dictation mode
 (global-set-key (kbd "C-`") 'sacha-whisper-dictation-mode)
 
-
-;; ----------------------------------------------------------------------------------
-;; display recording icons in the buffer
-;; ----------------------------------------------------------------------------------
-
-(defvar whisper--current-overlay nil
-  "Overlay to show whisper status at point.")
-
-(advice-add 'whisper--setup-mode-line :override
-  (lambda (command phase)
-    (when whisper-show-progress-in-mode-line
-      (with-current-buffer (or whisper--point-buffer (current-buffer))
-        (if (eq command :show)
-            (let ((pos (point)))
-              (when (and whisper--current-overlay
-                         (overlay-buffer whisper--current-overlay))
-                (delete-overlay whisper--current-overlay))
-              (setq whisper--current-overlay (make-overlay pos pos))
-              (let* ((ind (whisper--mode-line-indicator phase))
-                     (ind-string (cond
-                                   ((stringp ind) ind)
-                                   ((eq (car-safe ind) :eval) (eval (nth 1 ind)))
-                                   (t ""))))
-                ;; Removed the leading space inside the concat
-                (overlay-put whisper--current-overlay 'after-string
-                             (concat ind-string " "))))
-          (when whisper--current-overlay
-            (delete-overlay whisper--current-overlay)
-            (setq whisper--current-overlay nil)))))))
-
 ;; ----------------------------------------------------------------------------------
 ;; emamux
 ;; ----------------------------------------------------------------------------------
