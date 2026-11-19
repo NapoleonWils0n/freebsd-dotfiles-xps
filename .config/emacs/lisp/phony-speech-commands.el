@@ -248,6 +248,21 @@ unless the buffer is read-only."
 	"Split window right."
 	(split-window-right))
 
+;; window-layout-transpose
+(phony-defun sacha-phony-window-layout-transpose ("window transpose")
+  "Window layout transpose."
+  (window-layout-transpose))
+
+;; window-layout-flip-leftright
+(phony-defun sacha-phony-window-layout-flip-leftright ("window left right")
+  "Window flip left right."
+  (window-layout-flip-leftright))
+
+;; window-layout-flip-leftright
+(phony-defun sacha-phony-window-layout-flip-topdown ("window top down")
+  "Window flip top down."
+  (window-layout-flip-topdown))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; delete commands
