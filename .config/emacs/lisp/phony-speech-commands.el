@@ -238,11 +238,6 @@ unless the buffer is read-only."
   "Toggle side window"
   (window-toggle-side-windows))
 
-;; transpose-windows
-(phony-defun sacha-phony-transpose ("transpose windows")
-	"Transpose windows."
-	(window-layout-transpose))
-
 ;; split-window-below
 (phony-defun sacha-phony-split-window-below ("split below")
 	"Split window below."
