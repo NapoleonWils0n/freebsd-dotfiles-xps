@@ -610,6 +610,20 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-last-tab ("last tab")
   "Switch to last tab"
   (tab-bar-switch-to-last-tab))
+
+;; switch to N tab
+(phony-defun sacha-phony-select-tab ("switch to tab" (n number))
+  "Switch to tab N"
+  (when (and (numberp n) (> n 0))
+    (tab-bar-select-tab n)))
+
+;; move tab to position N
+(phony-defun sacha-phony-move-tab-to ("move tab to" (n number))
+  "Move current tab to position N"
+  (when (numberp n)
+    (tab-bar-move-tab-to n)))
+
+
 ;; ----------------------------------------------------------------------------------
 ;; display-line-numbers-mode
 ;; ----------------------------------------------------------------------------------
