@@ -3129,6 +3129,24 @@ unless the buffer is read-only."
   (when (derived-mode-p 'org-mode)
     (org-cycle)))
 
+;; Cycle global visibility across all Org headings
+(phony-defun sacha-phony-org-cycle-global ("cycle headings")
+  "Cycle global visibility across OVERVIEW, CONTENTS, and SHOW ALL."
+  (when (derived-mode-p 'org-mode)
+    (pcase org-cycle-global-status
+      ('overview
+       (org-content)
+       (setq org-cycle-global-status 'contents)
+       (message "CONTENTS"))
+      ('contents
+       (org-fold-show-all)
+       (setq org-cycle-global-status 'all)
+       (message "SHOW ALL"))
+      (_
+       (org-overview)
+       (setq org-cycle-global-status 'overview)
+       (message "OVERVIEW")))))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; narrow + widen commands
