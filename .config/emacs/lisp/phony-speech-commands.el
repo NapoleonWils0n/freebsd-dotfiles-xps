@@ -788,6 +788,71 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; mangowm
+;; ----------------------------------------------------------------------------------
+
+(phony-define-dictionary sacha-mangowm-layout
+  "MangoWM layout names mapped to `mmsg dispatch setlayout' arguments."
+  '(("tile" . "tile")
+    ("scroller" . "scroller")
+    ("monocle" . "monocle")
+    ("grid" . "grid")
+    ("deck" . "deck")
+    ("center tile" . "center_tile")
+    ("vertical tile" . "vertical_tile")
+    ("right tile" . "right_tile")
+    ("vertical scroller" . "vertical_scroller")
+    ("vertical grid" . "vertical_grid")
+    ("vertical deck" . "vertical_deck")
+    ("dwindle" . "dwindle")
+    ("fair" . "fair")
+    ("vertical fair" . "vertical_fair")))
+
+(phony-defun sacha-phony-mangowm-layout ("layout" (layout sacha-mangowm-layout))
+  "Switch MangoWM layout using `mmsg dispatch setlayout'."
+  (call-process "mmsg" nil 0 nil "dispatch" "setlayout," layout))
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM workspace / tag commands (1..9)
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-mangowm-workspace ("workspace" (n number))
+  "Switch MangoWM tag (workspace) N for N in 1..9."
+  (when (and (integerp n) (<= 1 n 9))
+    (call-process "mmsg" nil 0 nil "dispatch" (format "view,%d" n))))
+
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM windows to monitor
+;; ----------------------------------------------------------------------------------
+
+;; move window to the left monitor
+(phony-defun sacha-phony-mango-monitor-left ("monitor left")
+  "Move window to the left monitor"
+  (call-process "mmsg" nil 0 nil "dispatch" "tagmon," "left"))
+
+;; move window to the right monitor
+(phony-defun sacha-phony-mango-monitor-right ("monitor right")
+  "Move window to the right monitor"
+  (call-process "mmsg" nil 0 nil "dispatch" "tagmon," "right"))
+
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM move cursor to monitor
+;; ----------------------------------------------------------------------------------
+
+;; move cursor to the left monitor
+(phony-defun sacha-phony-mango-cursor-left ("cursor left")
+  "Move cursor to the left monitor"
+  (call-process "mmsg" nil 0 nil "dispatch" "focusmon," "left"))
+
+;; move cursor to the right monitor
+(phony-defun sacha-phony-mango-cursor-right ("cursor right")
+  "Move cursor to the right monitor"
+  (call-process "mmsg" nil 0 nil "dispatch" "focusmon," "right"))
+
+
+;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
 ;; ----------------------------------------------------------------------------------
 
