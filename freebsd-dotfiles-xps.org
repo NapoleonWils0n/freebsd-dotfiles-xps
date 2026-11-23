@@ -3453,6 +3453,16 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; MangoWM move window to workspace / tag commands (1..9)
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-mangowm-move-to-workspace ("move to workspace" (n number))
+  "MangoWM move window to tag (workspace) N for N in 1..9."
+  (when (and (integerp n) (<= 1 n 9))
+    (call-process "mmsg" nil 0 nil "dispatch" (format "tag,%d" n))))
+
+
+;; ----------------------------------------------------------------------------------
 ;; MangoWM windows to monitor
 ;; ----------------------------------------------------------------------------------
 
