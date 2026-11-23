@@ -853,6 +853,49 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; MangoWM overview
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-mango-overview ("jump mode")
+  "Jump."
+  (call-process "mmsg" nil 0 nil "dispatch" "togglejump"))
+
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM focus windows
+;; ----------------------------------------------------------------------------------
+
+(phony-define-dictionary sacha-mangowm-focus-direction
+  "MangoWM window focus directions mapped to dispatcher and target."
+  '(("next"  . ("focusstack" . "next"))
+    ("left"  . ("focusdir"   . "left"))
+    ("right" . ("focusdir"   . "right"))
+    ("up"    . ("focusdir"   . "up"))
+    ("down"  . ("focusdir"   . "down"))))
+
+(phony-defun sacha-phony-mangowm-focus ("focus" (dir sacha-mangowm-focus-direction))
+  "Switch MangoWM window focus in direction DIR."
+  (pcase-let ((`(,dispatcher . ,arg) dir))
+    (call-process "mmsg" nil 0 nil "dispatch" (format "%s,%s" dispatcher arg))))
+
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM move window
+;; ----------------------------------------------------------------------------------
+
+(phony-define-dictionary sacha-mangowm-move-direction
+  "MangoWM window movement directions mapped to `mmsg dispatch move_client' arguments."
+  '(("up"    . "up")
+    ("down"  . "down")
+    ("left"  . "left")
+    ("right" . "right")))
+
+(phony-defun sacha-phony-mangowm-move ("move" (dir sacha-mangowm-move-direction))
+  "Move MangoWM window in direction DIR."
+  (call-process "mmsg" nil 0 nil "dispatch" (format "move_client,%s" dir)))
+
+
+;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
 ;; ----------------------------------------------------------------------------------
 
