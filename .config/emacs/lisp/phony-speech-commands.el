@@ -876,6 +876,24 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; MangoWM resize window
+;; ----------------------------------------------------------------------------------
+
+;; resize direction dictionary
+(phony-define-dictionary sacha-mangowm-resize-direction
+  "MangoWM window resize directions mapped to `mmsg dispatch resizewin' offsets."
+  '(("up"    . "+0,-50")
+    ("down"  . "+0,+50")
+    ("left"  . "-50,+0")
+    ("right" . "+50,+0")))
+
+;; resize window up, down, left, right
+(phony-defun sacha-phony-mangowm-resize ("resize" (dir sacha-mangowm-resize-direction))
+  "Resize MangoWM window in direction DIR."
+  (call-process "mmsg" nil 0 nil "dispatch" (format "resizewin,%s" dir)))
+
+
+;; ----------------------------------------------------------------------------------
 ;; MangoWM windows to monitor
 ;; ----------------------------------------------------------------------------------
 
