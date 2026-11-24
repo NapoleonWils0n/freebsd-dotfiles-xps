@@ -3592,6 +3592,11 @@ unless the buffer is read-only."
   "Minimize MangoWM window."
   (call-process "mmsg" nil 0 nil "dispatch" "togglemaximizescreen,"))
 
+;; close focused MangoWM window
+(phony-defun sacha-phony-mango-kill-window ("kill window")
+  "Close the focused MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "killclient,"))
+
 ;; focus the previously active window
 (phony-defun sacha-phony-mango-focus-last ("focus last")
   "Minimize MangoWM window."
