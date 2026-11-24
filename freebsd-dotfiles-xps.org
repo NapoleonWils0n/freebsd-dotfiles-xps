@@ -3599,6 +3599,48 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; MangoWM tag numbers (1..9) dictionary
+;; ----------------------------------------------------------------------------------
+
+(phony-define-dictionary sacha-mangowm-tag-num
+  "MangoWM tag numbers 1 through 9 mapped to string representations."
+  (cl-loop for i from 1 to 9
+           collect (cons (sacha-number-to-words i) i)))
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM comboview (view multiple tags simultaneously)
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-mangowm-comboview
+    ("combo" (n1 sacha-mangowm-tag-num)
+     (? (? "and") (n2 sacha-mangowm-tag-num))
+     (? (? "and") (n3 sacha-mangowm-tag-num))
+     (? (? "and") (n4 sacha-mangowm-tag-num)))
+  "View multiple MangoWM tags simultaneously using comboview."
+  (let* ((tags (delq nil (list n1 n2 n3 n4)))
+         (mask (string-join (mapcar #'number-to-string tags) "|")))
+    (call-process "mmsg" nil 0 nil "dispatch" (format "comboview,%s" mask))))
+
+
+;; ----------------------------------------------------------------------------------
+;; MangoWM exchange windows
+;; ----------------------------------------------------------------------------------
+
+;; exchange window dictionary
+(phony-define-dictionary sacha-mangowm-exchange-direction
+  "MangoWM swap the focused window with its neighbor in direction."
+  '(("left"  . "left")
+    ("right" . "right")
+    ("up"    . "up")
+    ("down"  . "down")))
+
+;; exchange window in direction
+(phony-defun sacha-phony-mangowm-exchange-window ("exchange" (dir sacha-mangowm-exchange-direction))
+  "MangoWM swap the focused window with its neighbor in direction."
+  (call-process "mmsg" nil 0 nil "dispatch" (format "exchange_client,%s" dir)))
+
+
+;; ----------------------------------------------------------------------------------
 ;; MangoWM jump mode
 ;; ----------------------------------------------------------------------------------
 
