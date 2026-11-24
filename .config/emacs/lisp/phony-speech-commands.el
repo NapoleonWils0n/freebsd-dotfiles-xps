@@ -993,6 +993,31 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; MangoWM tag navigation & master controls
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-mango-prev-tag ("previous workspace")
+  "View the previous MangoWM workspace."
+  (call-process "mmsg" nil 0 nil "dispatch" "viewtoleft,0"))
+
+(phony-defun sacha-phony-mango-next-tag ("next workspace")
+  "View the next MangoWM workspace."
+  (call-process "mmsg" nil 0 nil "dispatch" "viewtoright,0"))
+
+(phony-defun sacha-phony-mango-prev-occupied-tag ("previous occupied workspace")
+  "View the previous occupied MangoWM workspace."
+  (call-process "mmsg" nil 0 nil "dispatch" "viewtoleft_have_client,0"))
+
+(phony-defun sacha-phony-mango-next-occupied-tag ("next occupied workspace")
+  "View the next occupied MangoWM workspace."
+  (call-process "mmsg" nil 0 nil "dispatch" "viewtoright_have_client,0"))
+
+(phony-defun sacha-phony-mango-zoom ("zoom")
+  "Swap the focused MangoWM window with the master window."
+  (call-process "mmsg" nil 0 nil "dispatch" "zoom,"))
+
+
+;; ----------------------------------------------------------------------------------
 ;; MangoWM exchange windows
 ;; ----------------------------------------------------------------------------------
 
