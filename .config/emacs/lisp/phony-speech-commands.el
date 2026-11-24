@@ -816,6 +816,19 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; movement dictionary
+;; ----------------------------------------------------------------------------------
+
+;; movement dictionary
+(phony-define-dictionary sacha-mangowm-move-direction
+  "Window MangoWM movement directions."
+  '(("up"    . "up")
+    ("down"  . "down")
+    ("left"  . "left")
+    ("right" . "right")))
+
+
+;; ----------------------------------------------------------------------------------
 ;; MangoWM workspace / tag commands (1..9)
 ;; ----------------------------------------------------------------------------------
 
@@ -840,14 +853,6 @@ unless the buffer is read-only."
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move window
 ;; ----------------------------------------------------------------------------------
-
-;; movement dictionary
-(phony-define-dictionary sacha-mangowm-move-direction
-  "Window MangoWM movement directions."
-  '(("up"    . "up")
-    ("down"  . "down")
-    ("left"  . "left")
-    ("right" . "right")))
 
 ;; move window up, down, left, right
 (phony-defun sacha-phony-mangowm-move ("move" (dir sacha-mangowm-move-direction))
@@ -1021,16 +1026,8 @@ unless the buffer is read-only."
 ;; MangoWM exchange windows
 ;; ----------------------------------------------------------------------------------
 
-;; exchange window dictionary
-(phony-define-dictionary sacha-mangowm-exchange-direction
-  "MangoWM swap the focused window with its neighbor in direction."
-  '(("left"  . "left")
-    ("right" . "right")
-    ("up"    . "up")
-    ("down"  . "down")))
-
 ;; exchange window in direction
-(phony-defun sacha-phony-mangowm-exchange-window ("exchange" (dir sacha-mangowm-exchange-direction))
+(phony-defun sacha-phony-mangowm-exchange-window ("exchange" (dir sacha-mangowm-move-direction))
   "MangoWM swap the focused window with its neighbor in direction."
   (call-process "mmsg" nil 0 nil "dispatch" (format "exchange_client,%s" dir)))
 
