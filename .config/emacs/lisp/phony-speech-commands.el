@@ -924,6 +924,51 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
+;; MangoWM window commands
+;; ----------------------------------------------------------------------------------
+
+;; toggle fullscreen
+(phony-defun sacha-phony-mango-toggle-fullscreen ("full screen")
+  "Toggle fullscreen state of the focused MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "togglefullscreen,"))
+
+;; toggle floating window
+(phony-defun sacha-phony-mango-toggle-floating ("floating")
+  "Toggle floating state of the focused MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "togglefloating,"))
+
+;; toggle global - Pin window to all workspaces.
+(phony-defun sacha-phony-mango-toggle-global ("global")
+  "Toggle pinning MangoWM window to all workspaces."
+  (call-process "mmsg" nil 0 nil "dispatch" "toggleglobal,"))
+
+;; minimize window
+(phony-defun sacha-phony-mango-toggle-minimize ("minimize")
+  "Minimize MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "minimized,"))
+
+;; restore minimize window
+(phony-defun sacha-phony-mango-toggle-restore ("restore")
+  "Restore minimized MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "restore_minimized,"))
+
+;; toggle maximize window
+(phony-defun sacha-phony-mango-toggle-maximize ("maximize")
+  "Minimize MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "togglemaximizescreen,"))
+
+;; focus the previously active window
+(phony-defun sacha-phony-mango-focus-last ("focus last")
+  "Minimize MangoWM window."
+  (call-process "mmsg" nil 0 nil "dispatch" "focuslast,"))
+
+;; toggle_scratchpad
+(phony-defun sacha-phony-mango-toggle-scratchpad ("scratch pad")
+  "Toggle scratchpad."
+  (call-process "mmsg" nil 0 nil "dispatch" "toggle_scratchpad,"))
+
+
+;; ----------------------------------------------------------------------------------
 ;; MangoWM jump mode
 ;; ----------------------------------------------------------------------------------
 
