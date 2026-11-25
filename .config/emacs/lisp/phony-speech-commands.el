@@ -154,24 +154,6 @@ unless the buffer is read-only."
 
 
 ;; ----------------------------------------------------------------------------------
-;; sacha-phony-open-file
-;; ----------------------------------------------------------------------------------
-
-;; dired open file
-(phony-defun sacha-phony-open-file ("open file")
-  "Open file under cursor"
-  (dired-find-file))
-
-;; ----------------------------------------------------------------------------------
-;; sacha-phony-goto-line
-;; ----------------------------------------------------------------------------------
-
-;; go to line N
-(phony-defun sacha-phony-goto-line ("go to line" (n number))
-  "Go to line N"
-  (goto-line n))
-
-;; ----------------------------------------------------------------------------------
 ;; buffer commands
 ;; ----------------------------------------------------------------------------------
 
@@ -336,6 +318,24 @@ unless the buffer is read-only."
   (yank))
 
 ;; ----------------------------------------------------------------------------------
+;; sacha-phony-open-file
+;; ----------------------------------------------------------------------------------
+
+;; dired open file
+(phony-defun sacha-phony-open-file ("open file")
+  "Open file under cursor"
+  (dired-find-file))
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-goto-line
+;; ----------------------------------------------------------------------------------
+
+;; go to line N
+(phony-defun sacha-phony-goto-line ("go to line" (n number))
+  "Go to line N"
+  (goto-line n))
+
+;; ----------------------------------------------------------------------------------
 ;; control c control c
 ;; ----------------------------------------------------------------------------------
 
@@ -498,20 +498,6 @@ unless the buffer is read-only."
        (message "OVERVIEW")))))
 
 ;; ----------------------------------------------------------------------------------
-;; narrow + widen commands
-;; ----------------------------------------------------------------------------------
-
-;; narrow org tree
-(phony-defun sacha-phony-narrow ("narrow")
-  "Narrow subtree"
-  (org-narrow-to-subtree))
-
-;; widen org tree
-(phony-defun sacha-phony-widen ("widen")
-  "Widen subtree"
-  (widen))
-
-;; ----------------------------------------------------------------------------------
 ;; org mode source blocks
 ;; ----------------------------------------------------------------------------------
 
@@ -559,6 +545,20 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-org-todo-state ("to do state")
   "Change TODO state of an item."
   (org-todo))
+
+;; ----------------------------------------------------------------------------------
+;; narrow + widen commands
+;; ----------------------------------------------------------------------------------
+
+;; narrow org tree
+(phony-defun sacha-phony-narrow ("narrow")
+  "Narrow subtree"
+  (org-narrow-to-subtree))
+
+;; widen org tree
+(phony-defun sacha-phony-widen ("widen")
+  "Widen subtree"
+  (widen))
 
 ;; ----------------------------------------------------------------------------------
 ;; tab commands
