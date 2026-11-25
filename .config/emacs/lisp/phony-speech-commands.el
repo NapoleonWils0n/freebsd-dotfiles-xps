@@ -243,7 +243,7 @@ unless the buffer is read-only."
 
 ;; window-layout-rotate-anticlockwise
 (phony-defun sacha-phony-window-layout-rotate-anticlockwise ("window anti-clockwise")
-  "Window rotate anticlockwise."
+  "Window rotate anti-clockwise."
   (window-layout-rotate-anticlockwise))
 
 ;; ----------------------------------------------------------------------------------
