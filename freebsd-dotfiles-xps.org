@@ -3001,7 +3001,7 @@ unless the buffer is read-only."
   (yank))
 #+end_src
 
-******* sacha-phony-open-file
+******* open file
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3014,7 +3014,7 @@ unless the buffer is read-only."
   (dired-find-file))
 #+end_src
 
-******* sacha-phony-goto-line
+******* goto line
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3027,7 +3027,7 @@ unless the buffer is read-only."
   (goto-line n))
 #+end_src
 
-******* sacha-phony-ctrl-c-ctrl-c
+******* ctrl-c ctrl-c
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3360,7 +3360,7 @@ unless the buffer is read-only."
     (tab-bar-move-tab-to n)))
 #+end_src
 
-******* display-line-numbers-mode
+******* display line numbers
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3524,7 +3524,7 @@ unless the buffer is read-only."
 #+end_src
 
 ****** mangowm 
-******* MangoWM window manager - layouts
+******* window manager - layouts
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3571,7 +3571,7 @@ unless the buffer is read-only."
     ("right" . "right")))
 #+end_src
 
-******* MangoWM workspace / tag commands (1..9)
+******* switch workspace (1..9)
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3585,7 +3585,7 @@ unless the buffer is read-only."
     (call-process "mmsg" nil 0 nil "dispatch" (format "view,%d" n))))
 #+end_src
 
-******* MangoWM move window to workspace / tag commands (1..9)
+******* move window to workspace (1..9)
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3599,7 +3599,7 @@ unless the buffer is read-only."
     (call-process "mmsg" nil 0 nil "dispatch" (format "tag,%d" n))))
 #+end_src
 
-******* MangoWM move window
+******* move window
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3612,7 +3612,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" (format "move_client,%s" dir)))
 #+end_src
 
-******* MangoWM focus windows
+******* focus windows
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3635,7 +3635,7 @@ unless the buffer is read-only."
     (call-process "mmsg" nil 0 nil "dispatch" (format "%s,%s" dispatcher arg))))
 #+end_src
 
-******* MangoWM resize window
+******* resize window
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3656,7 +3656,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" (format "resizewin,%s" dir)))
 #+end_src
 
-******* MangoWM windows to monitor
+******* windows to monitor
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3674,7 +3674,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" "tagmon," "right"))
 #+end_src
 
-******* MangoWM move cursor to monitor
+******* move cursor to monitor
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3692,7 +3692,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" "focusmon," "right"))
 #+end_src
 
-******* MangoWM window commands
+******* window commands
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3745,7 +3745,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" "toggle_scratchpad,"))
 #+end_src
 
-******* MangoWM tag numbers (1..9) dictionary
+******* workspace numbers (1..9) dictionary
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3758,7 +3758,7 @@ unless the buffer is read-only."
            collect (cons (sacha-number-to-words i) i)))
 #+end_src
 
-******* MangoWM comboview (view multiple tags simultaneously)
+******* comboview (view multiple tags simultaneously)
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3776,7 +3776,7 @@ unless the buffer is read-only."
     (call-process "mmsg" nil 0 nil "dispatch" (format "comboview,%s" mask))))
 #+end_src
 
-******* MangoWM tag navigation & master controls
+******* workspace navigation & master controls
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3804,7 +3804,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" "zoom,"))
 #+end_src
 
-******* MangoWM exchange windows
+******* exchange windows
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
@@ -3817,7 +3817,7 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" (format "exchange_client,%s" dir)))
 #+end_src
 
-******* MangoWM jump mode
+******* jump mode
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
