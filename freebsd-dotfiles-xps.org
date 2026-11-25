@@ -3829,6 +3829,62 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" "togglejump"))
 #+end_src
 
+****** shell commands
+******* shell commands heading
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; shell commands
+;; ----------------------------------------------------------------------------------
+#+end_src
+
+******* invidious play url from clipboard
+
+#+begin_src emacs-lisp
+;; invidious play url from clipboard
+(phony-defun sacha-phony-shell-invidious-clipboard ("invidious clipboard")
+  "invidious play url from clipboard"
+  (my-mpv-play-invidious-clipboard))
+#+end_src
+
+******* mpv play url from clipboard
+
+#+begin_src emacs-lisp
+;; mpv play url from clipboard
+(phony-defun sacha-phony-shell-mpv-clipboard ("mpv clipboard")
+  "mpv play url from clipboard"
+  (mpv-play-clipboard))
+#+end_src
+
+******* pinch
+
+#+begin_src emacs-lisp
+;; pinch send url from clipboard to mpd
+(phony-defun sacha-phony-shell-pinch ("pinch")
+  "Pinch send url from clipboard to mpd."
+  (let ((url (wl-paste)))
+    (when (and url (not (string-empty-p url)))
+      (call-process "pinch" nil 0 nil "-i" url))))
+#+end_src
+
+******* screenshot laptop
+
+#+begin_src emacs-lisp
+;; screenshot laptop
+(phony-defun sacha-phony-shell-screenshot-laptop ("screenshot laptop")
+  "Screenshot laptop"
+  (call-process "grim" nil 0 nil "-o" "eDP-1"))
+#+end_src
+
+******* screenshot monitor
+
+#+begin_src emacs-lisp
+;; screenshot monitor
+(phony-defun sacha-phony-shell-screenshot-monitor ("screenshot monitor")
+  "Screenshot laptop"
+  (call-process "grim" nil 0 nil "-o" "DP-3"))
+#+end_src
+
 ****** emacs fix voice errors
 ******* fix common voice errors
 

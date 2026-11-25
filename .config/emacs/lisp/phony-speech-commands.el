@@ -1001,6 +1001,37 @@ unless the buffer is read-only."
   (call-process "mmsg" nil 0 nil "dispatch" "togglejump"))
 
 ;; ----------------------------------------------------------------------------------
+;; shell commands
+;; ----------------------------------------------------------------------------------
+
+;; invidious play url from clipboard
+(phony-defun sacha-phony-shell-invidious-clipboard ("invidious clipboard")
+  "invidious play url from clipboard"
+  (my-mpv-play-invidious-clipboard))
+
+;; mpv play url from clipboard
+(phony-defun sacha-phony-shell-mpv-clipboard ("mpv clipboard")
+  "mpv play url from clipboard"
+  (mpv-play-clipboard))
+
+;; pinch send url from clipboard to mpd
+(phony-defun sacha-phony-shell-pinch ("pinch")
+  "Pinch send url from clipboard to mpd."
+  (let ((url (wl-paste)))
+    (when (and url (not (string-empty-p url)))
+      (call-process "pinch" nil 0 nil "-i" url))))
+
+;; screenshot laptop
+(phony-defun sacha-phony-shell-screenshot-laptop ("screenshot laptop")
+  "Screenshot laptop"
+  (call-process "grim" nil 0 nil "-o" "eDP-1"))
+
+;; screenshot monitor
+(phony-defun sacha-phony-shell-screenshot-monitor ("screenshot monitor")
+  "Screenshot laptop"
+  (call-process "grim" nil 0 nil "-o" "DP-3"))
+
+;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
 ;; ----------------------------------------------------------------------------------
 
