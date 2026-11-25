@@ -3282,11 +3282,11 @@ unless the buffer is read-only."
   (org-todo))
 #+end_src
 
-******* narrow + widen commands
+******* narrow and widen commands
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; narrow + widen commands
+;; narrow and widen commands
 ;; ----------------------------------------------------------------------------------
 
 ;; narrow org tree
@@ -3482,9 +3482,11 @@ unless the buffer is read-only."
 		(activate-mark)))
 
 (phony-defun pick-list ("pick" "list")
+        "Pick list."
 	(sacha-mark-list))
 
 (phony-defun toggle-list ("toggle" "list")
+        "Toggle item to list"
 	(unless (region-active-p)
 		(if (org-list-struct)
 				(sacha-mark-list)
