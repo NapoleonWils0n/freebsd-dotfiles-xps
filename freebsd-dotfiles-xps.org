@@ -2902,7 +2902,7 @@ unless the buffer is read-only."
   "Window flip left right."
   (window-layout-flip-leftright))
 
-;; window-layout-flip-leftright
+;; window-layout-flip-topdown
 (phony-defun sacha-phony-window-layout-flip-topdown ("window top down")
   "Window flip top down."
   (window-layout-flip-topdown))
