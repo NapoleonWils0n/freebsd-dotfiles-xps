@@ -723,9 +723,11 @@ unless the buffer is read-only."
 		(activate-mark)))
 
 (phony-defun pick-list ("pick" "list")
+        "Pick list."
 	(sacha-mark-list))
 
 (phony-defun toggle-list ("toggle" "list")
+        "Toggle item to list"
 	(unless (region-active-p)
 		(if (org-list-struct)
 				(sacha-mark-list)
@@ -800,7 +802,7 @@ unless the buffer is read-only."
 
 ;; switch to workspace by number
 (phony-defun sacha-phony-mangowm-workspace ("workspace" (n number))
-  "Switch to MangoWM workspace N for N in 1..9."
+  "Switch to MangoWM workspace 1..9"
   (when (and (integerp n) (<= 1 n 9))
     (call-process "mmsg" nil 0 nil "dispatch" (format "view,%d" n))))
 
@@ -810,7 +812,7 @@ unless the buffer is read-only."
 
 ;; move window to workspace number
 (phony-defun sacha-phony-mangowm-move-to-workspace ("move to workspace" (n number))
-  "Move MangoWM window to workspace N for N in 1..9."
+  "Move MangoWM window to workspace 1..9"
   (when (and (integerp n) (<= 1 n 9))
     (call-process "mmsg" nil 0 nil "dispatch" (format "tag,%d" n))))
 
