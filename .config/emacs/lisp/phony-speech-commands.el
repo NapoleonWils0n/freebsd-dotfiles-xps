@@ -920,7 +920,7 @@ unless the buffer is read-only."
 
 ;; toggle maximize window
 (phony-defun sacha-phony-mango-toggle-maximize ("maximize")
-  "Minimize MangoWM window."
+  "Maximize MangoWM window."
   (call-process "mmsg" nil 0 nil "dispatch" "togglemaximizescreen,"))
 
 ;; close focused MangoWM window
@@ -930,7 +930,7 @@ unless the buffer is read-only."
 
 ;; focus the previously active window
 (phony-defun sacha-phony-mango-focus-last ("focus last")
-  "Minimize MangoWM window."
+  "Focus the previously active MangoWM window."
   (call-process "mmsg" nil 0 nil "dispatch" "focuslast,"))
 
 ;; toggle_scratchpad
@@ -1030,7 +1030,7 @@ unless the buffer is read-only."
 
 ;; screenshot monitor
 (phony-defun sacha-phony-shell-screenshot-monitor ("screenshot monitor")
-  "Screenshot laptop"
+  "Screenshot monitor"
   (call-process "grim" nil 0 nil "-o" "DP-3"))
 
 ;; ----------------------------------------------------------------------------------
