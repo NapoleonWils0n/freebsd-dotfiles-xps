@@ -2952,11 +2952,11 @@ unless the buffer is read-only."
     (delete-region start (point))))
 #+end_src
 
-******* undo + redo
+******* undo and redo
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; undo + redo
+;; undo and redo
 ;; ----------------------------------------------------------------------------------
 
 ;; undo
@@ -2975,11 +2975,11 @@ unless the buffer is read-only."
   (undo-tree-visualize))
 #+end_src
 
-******* copy + paste
+******* copy and paste
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; copy + paste
+;; copy and paste
 ;; ----------------------------------------------------------------------------------
 
 ;; Copy current line or active region
