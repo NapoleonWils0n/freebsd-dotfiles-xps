@@ -2620,7 +2620,7 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 #+end_src
 
 **** lisp
-***** phony-speech-commands.el
+***** phony-speech-commands
 :PROPERTIES:
 :header-args: :noweb-ref phony-speech-commands.el :noweb-sep "\n\n"
 :END:
@@ -4018,7 +4018,7 @@ unless the buffer is read-only."
 (provide 'phony-speech-commands)
 #+end_src
 
-***** gptel-custom-tools.el
+***** gptel-custom-tools
 :PROPERTIES:
 :header-args: :noweb-ref gptel-custom-tools.el :noweb-sep "\n\n"
 :END:
