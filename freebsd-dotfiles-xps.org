@@ -2624,8 +2624,8 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 :PROPERTIES:
 :header-args: :noweb-ref phony-speech-commands.el :noweb-sep "\n\n"
 :END:
-
-****** phony-speech-commands.el
+****** parser-commands 
+******* phony-parser
 
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t; -*-
@@ -2642,8 +2642,11 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
 (require 'phony-parser)
 (require 'phony-stdlib)
 (define-error 'sacha-phony-not-parsed "Sentence not parsed." 'error)
+#+end_src
 
+******* sacha-phony-parser--sanitize
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; sacha-phony-parser--sanitize
 ;; ----------------------------------------------------------------------------------
@@ -2654,8 +2657,11 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   (let* ((cleaned (replace-regexp-in-string "^[[:space:]\"',.!?]+" "" s))
          (lowered (downcase cleaned)))
     (string-trim (replace-regexp-in-string "[,\\.!?:]" "" lowered))))
+#+end_src
 
+******* sacha-phony-compare-literal
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; sacha-phony-compare-literal
 ;; ----------------------------------------------------------------------------------
@@ -2665,8 +2671,11 @@ Supports docker containers, images, volumes, networks, contexts and docker-compo
   "Ignore case and ending punctuation."
   (string= (sacha-phony-parser--sanitize a)
            (sacha-phony-parser--sanitize b)))
+#+end_src
 
+******* sacha-phony-evaluate
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; sacha-phony-evaluate
 ;; ----------------------------------------------------------------------------------
@@ -2681,7 +2690,11 @@ Throw 'not-parsed if not parsed."
     (unless parses
       (signal 'sacha-phony-not-parsed sentence))
     (phony--evaluate-ast (caar parses))))
+#+end_src
 
+******* sacha-whisper-phony
+
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; sacha-whisper-phony
 ;; ----------------------------------------------------------------------------------
@@ -2695,8 +2708,11 @@ Useful in `speech-input-commands'."
 	 (concat (downcase (substring text 0 1))
 					 (if (> (length text) 1) (substring text 1) "")))
   "")
+#+end_src
 
+******* speech-input-phony-process
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; speech-input-phony-process
 ;; ----------------------------------------------------------------------------------
@@ -2727,10 +2743,13 @@ unless the buffer is read-only."
          (string-trim text "[ \t\n\r]+" nil)))
       (error
        (signal (car err) (cdr err))))))
+#+end_src
 
+******* sacha-number-to-words
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; phony numbers
+;; sacha-number-to-words
 ;; ----------------------------------------------------------------------------------
 
 (defun sacha-number-to-words (n)
@@ -2754,8 +2773,11 @@ unless the buffer is read-only."
           (concat (sacha-number-to-words hundreds) " hundred")
         (concat (sacha-number-to-words hundreds) " hundred and " (sacha-number-to-words rem)))))
    (t (number-to-string n))))
+#+end_src
 
+******* phony-define-open-rule
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; phony-define-open-rule
 ;; ----------------------------------------------------------------------------------
@@ -2783,32 +2805,47 @@ unless the buffer is read-only."
 (phony-defun current-line "line"
   :contributes-to target
   (bounds-of-thing-at-point 'line))
+#+end_src
 
+****** emacs
+******* command definitions
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; command definitions
+;; command definitions - for creating voice menu
 ;; ----------------------------------------------------------------------------------
 
+#+end_src
 
+******* sacha-phony-open-file
+
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; dired commands
+;; sacha-phony-open-file
 ;; ----------------------------------------------------------------------------------
 
 ;; dired open file
 (phony-defun sacha-phony-open-file ("open file")
   "Open file under cursor"
   (dired-find-file))
+#+end_src
 
+******* sacha-phony-goto-line
+
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; go to line number
+;; sacha-phony-goto-line
 ;; ----------------------------------------------------------------------------------
 
 ;; go to line N
 (phony-defun sacha-phony-goto-line ("go to line" (n number))
   "Go to line N"
   (goto-line n))
+#+end_src
 
+******* buffer commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; buffer commands
 ;; ----------------------------------------------------------------------------------
@@ -2842,8 +2879,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-messages ("messages")
   "Message buffer."
   (switch-to-buffer "*Messages*"))
+#+end_src
 
+******* window commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; window commands
 ;; ----------------------------------------------------------------------------------
@@ -2902,8 +2942,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-window-layout-rotate-anticlockwise ("window anti-clockwise")
   "Window rotate anticlockwise."
   (window-layout-rotate-anticlockwise))
+#+end_src
 
+******* delete commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; delete commands
 ;; ----------------------------------------------------------------------------------
@@ -2933,8 +2976,11 @@ unless the buffer is read-only."
   (let ((start (point)))
     (forward-word 1)
     (delete-region start (point))))
+#+end_src
 
+******* undo + redo
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; undo + redo
 ;; ----------------------------------------------------------------------------------
@@ -2953,8 +2999,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-undo-tree ("undo tree")
   "Show undo tree"
   (undo-tree-visualize))
+#+end_src
 
+******* copy + paste
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; copy + paste
 ;; ----------------------------------------------------------------------------------
@@ -2976,8 +3025,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-paste ("paste")
   "Paste from kill ring"
   (yank))
+#+end_src
 
+******* sacha-phony-ctrl-c-ctrl-c
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; control c control c
 ;; ----------------------------------------------------------------------------------
@@ -2986,8 +3038,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-ctrl-c-ctrl-c ("execute")
   "Run org-ctrl-c-ctrl-c"
   (call-interactively #'org-ctrl-c-ctrl-c))
+#+end_src
 
+******* paragraph commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; paragraph commands
 ;; ----------------------------------------------------------------------------------
@@ -3001,8 +3056,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-backwards-paragraph ("previous paragraph")
   "Go to prev paragraph"
   (backward-paragraph))
+#+end_src
 
+******* text commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; text commands
 ;; ----------------------------------------------------------------------------------
@@ -3031,8 +3089,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-insert-space ("space")
   "Insert space."
   (call-interactively #'just-one-space))
+#+end_src
 
+******* scroll commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; scroll commands
 ;; ----------------------------------------------------------------------------------
@@ -3056,8 +3117,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-scroll-bottom ("bottom")
   "Go to the last line of the buffer"
   (end-of-buffer))
+#+end_src
 
+******* cursor commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; cursor commands
 ;; ----------------------------------------------------------------------------------
@@ -3073,10 +3137,13 @@ unless the buffer is read-only."
   "Cursor down N lines"
   (dotimes (i n)
     (evil-next-line)))
+#+end_src
 
+******* spell checking
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; check spelling
+;; spell checking
 ;; ----------------------------------------------------------------------------------
 
 ;; spell check word
@@ -3088,8 +3155,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-ispell-buffer ("spell check buffer")
   "Spell check buffer"
   (ispell-buffer))
+#+end_src
 
+******* dictionary look up
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; dictionary look up definition of current word
 ;; ----------------------------------------------------------------------------------
@@ -3097,8 +3167,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-dictionary ("dictionary")
   "Look up definition"
   (dictionary-lookup-definition))
+#+end_src
 
+******* org mode
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; org mode
 ;; ----------------------------------------------------------------------------------
@@ -3146,8 +3219,11 @@ unless the buffer is read-only."
        (org-overview)
        (setq org-cycle-global-status 'overview)
        (message "OVERVIEW")))))
+#+end_src
 
+******* narrow + widen commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; narrow + widen commands
 ;; ----------------------------------------------------------------------------------
@@ -3161,8 +3237,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-widen ("widen")
   "Widen subtree"
   (widen))
+#+end_src
 
+******* org mode source blocks
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; org mode source blocks
 ;; ----------------------------------------------------------------------------------
@@ -3186,8 +3265,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-previous-src-block ("previous block")
   "Jump to prev block"
   (org-babel-previous-src-block))
+#+end_src
 
+******* org babel tangle
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; org babel tangle
 ;; ----------------------------------------------------------------------------------
@@ -3203,8 +3285,11 @@ unless the buffer is read-only."
   "Tangle current file"
   (when buffer-file-name
     (org-babel-tangle-file buffer-file-name)))
+#+end_src
 
+******* org to do state
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; org todo state
 ;; ----------------------------------------------------------------------------------
@@ -3213,8 +3298,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-org-todo-state ("to do state")
   "Change TODO state of an item."
   (org-todo))
+#+end_src
 
+******* tab commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; tab commands
 ;; ----------------------------------------------------------------------------------
@@ -3270,8 +3358,11 @@ unless the buffer is read-only."
   "Move current tab to position N"
   (when (numberp n)
     (tab-bar-move-tab-to n)))
+#+end_src
 
+******* display-line-numbers-mode
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; display-line-numbers-mode
 ;; ----------------------------------------------------------------------------------
@@ -3280,8 +3371,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-line-number ("line numbers")
   "Toggle line numbers"
   (display-line-numbers-mode 'toggle))
+#+end_src
 
+******* magit stage and commit
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; magit stage and commit
 ;; ----------------------------------------------------------------------------------
@@ -3299,8 +3393,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-git-commit ("git" "commit")
   "Magit stage & commit"
   (sacha-phony-magit-stage-and-commit))
+#+end_src
 
+******* treesitter commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; treesitter commands
 ;; ----------------------------------------------------------------------------------
@@ -3309,8 +3406,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-treesitter ("tree sitter")
   "Explore tree-sitter"
   (treesit-explore-mode))
+#+end_src
 
+******* selection commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; selection commands
 ;; ----------------------------------------------------------------------------------
@@ -3390,8 +3490,11 @@ unless the buffer is read-only."
 				(sacha-mark-list)
 			(mark-paragraph)))
 	(org-toggle-item nil))
+#+end_src
 
+******* help buffer
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; help buffer
 ;; ----------------------------------------------------------------------------------
@@ -3400,8 +3503,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-help-buffer ("help")
   "Open Emacs help"
   (help-for-help))
+#+end_src
 
+******* bookmarks voice commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; bookmarks voice commands
 ;; ----------------------------------------------------------------------------------
@@ -3415,10 +3521,14 @@ unless the buffer is read-only."
          (docstring (format "Jump to bookmark %s." bm-name)))
     (eval `(phony-defun ,sym-name (,bm-name)
              (bookmark-jump ,bm-name)))))
+#+end_src
 
+****** mangowm 
+******* MangoWM window manager - layouts
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
-;; MangoWM window manager
+;; MangoWM window manager - layouts
 ;; ----------------------------------------------------------------------------------
 
 ;; MangoWM layouts
@@ -3443,8 +3553,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mangowm-layout ("layout" (layout sacha-mangowm-layout))
   "Switch MangoWM layout."
   (call-process "mmsg" nil 0 nil "dispatch" "setlayout," layout))
+#+end_src
 
+******* movement dictionary
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; movement dictionary
 ;; ----------------------------------------------------------------------------------
@@ -3456,8 +3569,11 @@ unless the buffer is read-only."
     ("down"  . "down")
     ("left"  . "left")
     ("right" . "right")))
+#+end_src
 
+******* MangoWM workspace / tag commands (1..9)
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM workspace / tag commands (1..9)
 ;; ----------------------------------------------------------------------------------
@@ -3467,8 +3583,11 @@ unless the buffer is read-only."
   "Switch to MangoWM workspace N for N in 1..9."
   (when (and (integerp n) (<= 1 n 9))
     (call-process "mmsg" nil 0 nil "dispatch" (format "view,%d" n))))
+#+end_src
 
+******* MangoWM move window to workspace / tag commands (1..9)
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move window to workspace / tag commands (1..9)
 ;; ----------------------------------------------------------------------------------
@@ -3478,8 +3597,11 @@ unless the buffer is read-only."
   "Move MangoWM window to workspace N for N in 1..9."
   (when (and (integerp n) (<= 1 n 9))
     (call-process "mmsg" nil 0 nil "dispatch" (format "tag,%d" n))))
+#+end_src
 
+******* MangoWM move window
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move window
 ;; ----------------------------------------------------------------------------------
@@ -3488,8 +3610,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mangowm-move ("move" (dir sacha-mangowm-move-direction))
   "Move MangoWM window in direction DIR."
   (call-process "mmsg" nil 0 nil "dispatch" (format "move_client,%s" dir)))
+#+end_src
 
+******* MangoWM focus windows
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM focus windows
 ;; ----------------------------------------------------------------------------------
@@ -3508,8 +3633,11 @@ unless the buffer is read-only."
   "Switch MangoWM window focus in direction DIR."
   (pcase-let ((`(,dispatcher . ,arg) dir))
     (call-process "mmsg" nil 0 nil "dispatch" (format "%s,%s" dispatcher arg))))
+#+end_src
 
+******* MangoWM resize window
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM resize window
 ;; ----------------------------------------------------------------------------------
@@ -3526,8 +3654,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mangowm-resize ("resize" (dir sacha-mangowm-resize-direction))
   "Resize MangoWM window in direction DIR."
   (call-process "mmsg" nil 0 nil "dispatch" (format "resizewin,%s" dir)))
+#+end_src
 
+******* MangoWM windows to monitor
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM windows to monitor
 ;; ----------------------------------------------------------------------------------
@@ -3541,8 +3672,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-monitor-right ("monitor right")
   "Move window to the right monitor"
   (call-process "mmsg" nil 0 nil "dispatch" "tagmon," "right"))
+#+end_src
 
+******* MangoWM move cursor to monitor
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move cursor to monitor
 ;; ----------------------------------------------------------------------------------
@@ -3556,8 +3690,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-cursor-right ("cursor right")
   "Move cursor to the right monitor"
   (call-process "mmsg" nil 0 nil "dispatch" "focusmon," "right"))
+#+end_src
 
+******* MangoWM window commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM window commands
 ;; ----------------------------------------------------------------------------------
@@ -3606,8 +3743,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-toggle-scratchpad ("scratch pad")
   "Toggle scratchpad."
   (call-process "mmsg" nil 0 nil "dispatch" "toggle_scratchpad,"))
+#+end_src
 
+******* MangoWM tag numbers (1..9) dictionary
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM tag numbers (1..9) dictionary
 ;; ----------------------------------------------------------------------------------
@@ -3616,7 +3756,11 @@ unless the buffer is read-only."
   "MangoWM tag numbers 1 through 9 mapped to string representations."
   (cl-loop for i from 1 to 9
            collect (cons (sacha-number-to-words i) i)))
+#+end_src
 
+******* MangoWM comboview (view multiple tags simultaneously)
+
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM comboview (view multiple tags simultaneously)
 ;; ----------------------------------------------------------------------------------
@@ -3630,8 +3774,11 @@ unless the buffer is read-only."
   (let* ((tags (delq nil (list n1 n2 n3 n4)))
          (mask (string-join (mapcar #'number-to-string tags) "|")))
     (call-process "mmsg" nil 0 nil "dispatch" (format "comboview,%s" mask))))
+#+end_src
 
+******* MangoWM tag navigation & master controls
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM tag navigation & master controls
 ;; ----------------------------------------------------------------------------------
@@ -3655,8 +3802,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-zoom ("zoom")
   "Swap the focused MangoWM window with the master window."
   (call-process "mmsg" nil 0 nil "dispatch" "zoom,"))
+#+end_src
 
+******* MangoWM exchange windows
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM exchange windows
 ;; ----------------------------------------------------------------------------------
@@ -3665,8 +3815,11 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mangowm-exchange-window ("exchange" (dir sacha-mangowm-move-direction))
   "MangoWM swap the focused window with its neighbor in direction."
   (call-process "mmsg" nil 0 nil "dispatch" (format "exchange_client,%s" dir)))
+#+end_src
 
+******* MangoWM jump mode
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM jump mode
 ;; ----------------------------------------------------------------------------------
@@ -3674,8 +3827,12 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-overview ("jump mode")
   "Jump Mode for MangoWM."
   (call-process "mmsg" nil 0 nil "dispatch" "togglejump"))
+#+end_src
 
+****** emacs fix voice errors
+******* fix common voice errors
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
 ;; ----------------------------------------------------------------------------------
@@ -3754,8 +3911,11 @@ unless the buffer is read-only."
 
 (with-eval-after-load 'whisper
   (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
+#+end_src
 
+******* voice command help buffer
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; voice command help buffer
 ;; ----------------------------------------------------------------------------------
@@ -3846,8 +4006,11 @@ unless the buffer is read-only."
     (if win
         (delete-window win)
       (phony-speech-commands-help))))
+#+end_src
 
+******* provide phony-speech-commands
 
+#+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; provide phony-speech-commands
 ;; ----------------------------------------------------------------------------------

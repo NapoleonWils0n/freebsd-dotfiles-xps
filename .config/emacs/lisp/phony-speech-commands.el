@@ -13,7 +13,6 @@
 (require 'phony-stdlib)
 (define-error 'sacha-phony-not-parsed "Sentence not parsed." 'error)
 
-
 ;; ----------------------------------------------------------------------------------
 ;; sacha-phony-parser--sanitize
 ;; ----------------------------------------------------------------------------------
@@ -25,7 +24,6 @@
          (lowered (downcase cleaned)))
     (string-trim (replace-regexp-in-string "[,\\.!?:]" "" lowered))))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; sacha-phony-compare-literal
 ;; ----------------------------------------------------------------------------------
@@ -35,7 +33,6 @@
   "Ignore case and ending punctuation."
   (string= (sacha-phony-parser--sanitize a)
            (sacha-phony-parser--sanitize b)))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; sacha-phony-evaluate
@@ -65,7 +62,6 @@ Useful in `speech-input-commands'."
 	 (concat (downcase (substring text 0 1))
 					 (if (> (length text) 1) (substring text 1) "")))
   "")
-
 
 ;; ----------------------------------------------------------------------------------
 ;; speech-input-phony-process
@@ -98,9 +94,8 @@ unless the buffer is read-only."
       (error
        (signal (car err) (cdr err))))))
 
-
 ;; ----------------------------------------------------------------------------------
-;; phony numbers
+;; sacha-number-to-words
 ;; ----------------------------------------------------------------------------------
 
 (defun sacha-number-to-words (n)
@@ -124,7 +119,6 @@ unless the buffer is read-only."
           (concat (sacha-number-to-words hundreds) " hundred")
         (concat (sacha-number-to-words hundreds) " hundred and " (sacha-number-to-words rem)))))
    (t (number-to-string n))))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; phony-define-open-rule
@@ -154,14 +148,13 @@ unless the buffer is read-only."
   :contributes-to target
   (bounds-of-thing-at-point 'line))
 
+;; ----------------------------------------------------------------------------------
+;; command definitions - for creating voice menu
+;; ----------------------------------------------------------------------------------
+
 
 ;; ----------------------------------------------------------------------------------
-;; command definitions
-;; ----------------------------------------------------------------------------------
-
-
-;; ----------------------------------------------------------------------------------
-;; dired commands
+;; sacha-phony-open-file
 ;; ----------------------------------------------------------------------------------
 
 ;; dired open file
@@ -170,14 +163,13 @@ unless the buffer is read-only."
   (dired-find-file))
 
 ;; ----------------------------------------------------------------------------------
-;; go to line number
+;; sacha-phony-goto-line
 ;; ----------------------------------------------------------------------------------
 
 ;; go to line N
 (phony-defun sacha-phony-goto-line ("go to line" (n number))
   "Go to line N"
   (goto-line n))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; buffer commands
@@ -212,7 +204,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-messages ("messages")
   "Message buffer."
   (switch-to-buffer "*Messages*"))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; window commands
@@ -273,7 +264,6 @@ unless the buffer is read-only."
   "Window rotate anticlockwise."
   (window-layout-rotate-anticlockwise))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; delete commands
 ;; ----------------------------------------------------------------------------------
@@ -304,7 +294,6 @@ unless the buffer is read-only."
     (forward-word 1)
     (delete-region start (point))))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; undo + redo
 ;; ----------------------------------------------------------------------------------
@@ -323,7 +312,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-undo-tree ("undo tree")
   "Show undo tree"
   (undo-tree-visualize))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; copy + paste
@@ -347,7 +335,6 @@ unless the buffer is read-only."
   "Paste from kill ring"
   (yank))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; control c control c
 ;; ----------------------------------------------------------------------------------
@@ -356,7 +343,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-ctrl-c-ctrl-c ("execute")
   "Run org-ctrl-c-ctrl-c"
   (call-interactively #'org-ctrl-c-ctrl-c))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; paragraph commands
@@ -371,7 +357,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-backwards-paragraph ("previous paragraph")
   "Go to prev paragraph"
   (backward-paragraph))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; text commands
@@ -402,7 +387,6 @@ unless the buffer is read-only."
   "Insert space."
   (call-interactively #'just-one-space))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; scroll commands
 ;; ----------------------------------------------------------------------------------
@@ -427,7 +411,6 @@ unless the buffer is read-only."
   "Go to the last line of the buffer"
   (end-of-buffer))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; cursor commands
 ;; ----------------------------------------------------------------------------------
@@ -444,9 +427,8 @@ unless the buffer is read-only."
   (dotimes (i n)
     (evil-next-line)))
 
-
 ;; ----------------------------------------------------------------------------------
-;; check spelling
+;; spell checking
 ;; ----------------------------------------------------------------------------------
 
 ;; spell check word
@@ -459,7 +441,6 @@ unless the buffer is read-only."
   "Spell check buffer"
   (ispell-buffer))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; dictionary look up definition of current word
 ;; ----------------------------------------------------------------------------------
@@ -467,7 +448,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-dictionary ("dictionary")
   "Look up definition"
   (dictionary-lookup-definition))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; org mode
@@ -517,7 +497,6 @@ unless the buffer is read-only."
        (setq org-cycle-global-status 'overview)
        (message "OVERVIEW")))))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; narrow + widen commands
 ;; ----------------------------------------------------------------------------------
@@ -531,7 +510,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-widen ("widen")
   "Widen subtree"
   (widen))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; org mode source blocks
@@ -557,7 +535,6 @@ unless the buffer is read-only."
   "Jump to prev block"
   (org-babel-previous-src-block))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; org babel tangle
 ;; ----------------------------------------------------------------------------------
@@ -574,7 +551,6 @@ unless the buffer is read-only."
   (when buffer-file-name
     (org-babel-tangle-file buffer-file-name)))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; org todo state
 ;; ----------------------------------------------------------------------------------
@@ -583,7 +559,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-org-todo-state ("to do state")
   "Change TODO state of an item."
   (org-todo))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; tab commands
@@ -641,7 +616,6 @@ unless the buffer is read-only."
   (when (numberp n)
     (tab-bar-move-tab-to n)))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; display-line-numbers-mode
 ;; ----------------------------------------------------------------------------------
@@ -650,7 +624,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-line-number ("line numbers")
   "Toggle line numbers"
   (display-line-numbers-mode 'toggle))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; magit stage and commit
@@ -670,7 +643,6 @@ unless the buffer is read-only."
   "Magit stage & commit"
   (sacha-phony-magit-stage-and-commit))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; treesitter commands
 ;; ----------------------------------------------------------------------------------
@@ -679,7 +651,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-treesitter ("tree sitter")
   "Explore tree-sitter"
   (treesit-explore-mode))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; selection commands
@@ -761,7 +732,6 @@ unless the buffer is read-only."
 			(mark-paragraph)))
 	(org-toggle-item nil))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; help buffer
 ;; ----------------------------------------------------------------------------------
@@ -770,7 +740,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-help-buffer ("help")
   "Open Emacs help"
   (help-for-help))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; bookmarks voice commands
@@ -786,9 +755,8 @@ unless the buffer is read-only."
     (eval `(phony-defun ,sym-name (,bm-name)
              (bookmark-jump ,bm-name)))))
 
-
 ;; ----------------------------------------------------------------------------------
-;; MangoWM window manager
+;; MangoWM window manager - layouts
 ;; ----------------------------------------------------------------------------------
 
 ;; MangoWM layouts
@@ -814,7 +782,6 @@ unless the buffer is read-only."
   "Switch MangoWM layout."
   (call-process "mmsg" nil 0 nil "dispatch" "setlayout," layout))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; movement dictionary
 ;; ----------------------------------------------------------------------------------
@@ -827,7 +794,6 @@ unless the buffer is read-only."
     ("left"  . "left")
     ("right" . "right")))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM workspace / tag commands (1..9)
 ;; ----------------------------------------------------------------------------------
@@ -837,7 +803,6 @@ unless the buffer is read-only."
   "Switch to MangoWM workspace N for N in 1..9."
   (when (and (integerp n) (<= 1 n 9))
     (call-process "mmsg" nil 0 nil "dispatch" (format "view,%d" n))))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move window to workspace / tag commands (1..9)
@@ -849,7 +814,6 @@ unless the buffer is read-only."
   (when (and (integerp n) (<= 1 n 9))
     (call-process "mmsg" nil 0 nil "dispatch" (format "tag,%d" n))))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move window
 ;; ----------------------------------------------------------------------------------
@@ -858,7 +822,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mangowm-move ("move" (dir sacha-mangowm-move-direction))
   "Move MangoWM window in direction DIR."
   (call-process "mmsg" nil 0 nil "dispatch" (format "move_client,%s" dir)))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM focus windows
@@ -879,7 +842,6 @@ unless the buffer is read-only."
   (pcase-let ((`(,dispatcher . ,arg) dir))
     (call-process "mmsg" nil 0 nil "dispatch" (format "%s,%s" dispatcher arg))))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM resize window
 ;; ----------------------------------------------------------------------------------
@@ -897,7 +859,6 @@ unless the buffer is read-only."
   "Resize MangoWM window in direction DIR."
   (call-process "mmsg" nil 0 nil "dispatch" (format "resizewin,%s" dir)))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM windows to monitor
 ;; ----------------------------------------------------------------------------------
@@ -912,7 +873,6 @@ unless the buffer is read-only."
   "Move window to the right monitor"
   (call-process "mmsg" nil 0 nil "dispatch" "tagmon," "right"))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM move cursor to monitor
 ;; ----------------------------------------------------------------------------------
@@ -926,7 +886,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-cursor-right ("cursor right")
   "Move cursor to the right monitor"
   (call-process "mmsg" nil 0 nil "dispatch" "focusmon," "right"))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM window commands
@@ -977,7 +936,6 @@ unless the buffer is read-only."
   "Toggle scratchpad."
   (call-process "mmsg" nil 0 nil "dispatch" "toggle_scratchpad,"))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM tag numbers (1..9) dictionary
 ;; ----------------------------------------------------------------------------------
@@ -1000,7 +958,6 @@ unless the buffer is read-only."
   (let* ((tags (delq nil (list n1 n2 n3 n4)))
          (mask (string-join (mapcar #'number-to-string tags) "|")))
     (call-process "mmsg" nil 0 nil "dispatch" (format "comboview,%s" mask))))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM tag navigation & master controls
@@ -1026,7 +983,6 @@ unless the buffer is read-only."
   "Swap the focused MangoWM window with the master window."
   (call-process "mmsg" nil 0 nil "dispatch" "zoom,"))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM exchange windows
 ;; ----------------------------------------------------------------------------------
@@ -1036,7 +992,6 @@ unless the buffer is read-only."
   "MangoWM swap the focused window with its neighbor in direction."
   (call-process "mmsg" nil 0 nil "dispatch" (format "exchange_client,%s" dir)))
 
-
 ;; ----------------------------------------------------------------------------------
 ;; MangoWM jump mode
 ;; ----------------------------------------------------------------------------------
@@ -1044,7 +999,6 @@ unless the buffer is read-only."
 (phony-defun sacha-phony-mango-overview ("jump mode")
   "Jump Mode for MangoWM."
   (call-process "mmsg" nil 0 nil "dispatch" "togglejump"))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
@@ -1124,7 +1078,6 @@ unless the buffer is read-only."
 
 (with-eval-after-load 'whisper
   (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; voice command help buffer
@@ -1216,7 +1169,6 @@ unless the buffer is read-only."
     (if win
         (delete-window win)
       (phony-speech-commands-help))))
-
 
 ;; ----------------------------------------------------------------------------------
 ;; provide phony-speech-commands
