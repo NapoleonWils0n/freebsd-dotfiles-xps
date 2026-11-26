@@ -3300,6 +3300,34 @@ unless the buffer is read-only."
   (widen))
 #+end_src
 
+******* org tree slide mode
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; org tree slide
+;; ----------------------------------------------------------------------------------
+
+;; org tree side mode
+(phony-defun sacha-phony-org-tree-slide-mode ("slide mode")
+  "org tree slide mode"
+  (org-tree-slide-mode))
+
+;; org tree side content
+(phony-defun sacha-phony-org-tree-slide-content ("slide content")
+  "org tree slide content"
+  (org-tree-slide-content))
+
+;; org tree next slide
+(phony-defun sacha-phony-org-tree-slide-next ("next slide")
+  "org tree next slide"
+  (org-tree-slide-move-next-tree))
+
+;; org tree previous side
+(phony-defun sacha-phony-org-tree-slide-previous ("previous slide")
+  "org tree previous slide"
+  (org-tree-slide-move-previous-tree))
+#+end_src
+
 ******* tab commands
 
 #+begin_src emacs-lisp
