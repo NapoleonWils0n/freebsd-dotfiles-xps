@@ -9018,6 +9018,7 @@ pkg prime-list
 - FreeBSD-set-minimal
 - FreeBSD-set-src
 - ImageMagick7
+- Imath
 - abook
 - adwaita-qt5
 - adwaita-qt6
@@ -9067,12 +9068,14 @@ pkg prime-list
 - hs-pandoc
 - imv
 - jq
+- kf6-kimageformats
 - kodi
 - kodi-addon-inputstream.adaptive
 - ladspa
 - libc6-shim
 - libheif
 - libinput
+- libjxl
 - libnotify
 - libtool
 - libva-intel-media-driver
@@ -9104,6 +9107,7 @@ pkg prime-list
 - oath-toolkit
 - obs-studio
 - ollama
+- openexr
 - openvpn
 - p5-Graph-Easy
 - pavucontrol
@@ -9114,12 +9118,18 @@ pkg prime-list
 - podman-suite
 - poudriere
 - py311-podman-compose
+- py312-numpy
+- py312-onnxruntime
+- py312-qt6-pyqt
+- py312-soundfile
 - python3
 - qbittorrent
 - qjackctl
 - qt5-style-plugins
 - qt5-wayland
 - qt5ct
+- qt6-multimedia
+- qt6-speech
 - qt6-wayland
 - qt6ct
 - realesrgan-ncnn-vulkan
@@ -9142,6 +9152,7 @@ pkg prime-list
 - tree-sitter-cli
 - ts
 - unbound
+- vlc
 - vm-bhyve-devel
 - vulkan-tools
 - wayland
